@@ -276,7 +276,7 @@ def validate_registration():
         return jsonify({"status":"ERROR" ,"message": "ERROR"})
     
 
-@app.route("/searchGameSuggestions")    # route name for JS
+@app.route("/search_gameSuggestions")    # route name for JS
 def searchGameSuggestions():
     q = request.args.get("q")
     if q:

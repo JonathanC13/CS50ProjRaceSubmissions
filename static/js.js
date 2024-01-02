@@ -670,21 +670,53 @@ function validate_record_submission() {
     return false;
 }
 
-
+/*
 async function searchGameListener(evt) {
-    console.log(evt.currentTarget.value);
+    //console.log(evt.currentTarget.value);
     let response = await fetch('/searchGameSuggestions?q=' + evt.currentTarget.value);
     let suggestions = await response.json();
-    console.log(suggestions);
+    //console.log(suggestions);
     let html = '';
-    for (let iGameID in suggestions) {
-        let optionVal = suggestions[iGameID].strGameName.replace('<', '&lt;').replace('&', '&amp;');
+    for (let id in suggestions) {
+        let optionVal = suggestions[id].strGameName.replace('<', '&lt;').replace('&', '&amp;');
         // <option value="game">
         html += '<option value="' + optionVal + '">';
     }
-    console.log(html);
+    //console.log(html);
     document.querySelector('#list_game').innerHTML = html;
 }
+*/
+
+
+async function searchSuggestionsListener(evt) {
+    //console.log(evt.currentTarget.value); // input value in the field
+    //currSearchField
+    //
+
+    let searchField = evt.currentTarget.currSearchField;
+    let dbColName = evt.currentTarget.currDBColName;
+
+    console.log(searchField);
+
+    /*
+    let pyFunc = '/search_'+searchField+'Suggestions?q=' + evt.currentTarget.value;
+
+    let response = await fetch(pyFunc);
+    let suggestions = await response.json();
+    //console.log(suggestions);
+    let html = '';
+    for (let id in suggestions) {
+
+        let optionVal = suggestions[id][dbColName].replace('<', '&lt;').replace('&', '&amp;');
+        // <option value="game">
+        html += '<option value="' + optionVal + '">';
+    }
+    //console.log(html);
+    let idList = '#list_' + searchField;
+    document.querySelector(idList).innerHTML = html;
+    */
+}
+
 
 $( document ).ready(function() {
     //console.log( "ready!" );
@@ -815,10 +847,68 @@ $( document ).ready(function() {
         txt_YT_URL.addEventListener('change', displayYTPrev); //inputHandler);
     }
 
+    
+    // for search field suggestions
+    var dictSearchFields = {
+        "game":
+            {
+                "dbColName":"strGameName",
+                "inputId":"search_game"
+            },
+        "platform":
+            {
+                "dbColName":"strPlatformName",
+                "inputId":"search_platform"
+            },
+        "display_name":
+            {
+                "dbColName":"strDisplayName",
+                "inputId":"search_display_name"
+            },
+        "vehicle":
+            {
+                "dbColName":"strVehicleName",
+                "inputId":"search_vehicle"
+            },
+        "track":
+            {
+                "dbColName":"strTrackName",
+                "inputId":"search_track"
+            },
+        "game_mode":
+            {
+                "dbColName":"strGameModeName",
+                "inputId":"search_game_mode"
+            }
+    };
 
-    // for game suggestions
-    const searchGameField = document.getElementById("search_game");
-    searchGameField.addEventListener('input', searchGameListener);
+    var arrSearchVars = [];
+    let i = 0;
+
+    for (const key of Object.keys(dictSearchFields))
+    {
+        /*
+        console.log("====");
+        console.log(key);
+        console.log(dictSearchFields[key]["dbColName"]);
+        console.log(dictSearchFields[key]["inputId"]);
+        */
+        /*
+        const inputSearchField = document.getElementById('search_game');
+        inputSearchField.addEventListener('input', searchSuggestionsListener);
+        inputSearchField.currSearchField = 'key';
+        inputSearchField.currDBColName = dictSearchFields[key]["dbColName"];
+        */
+        
+        arrSearchVars[i] = document.getElementById(dictSearchFields[key]["inputId"]);
+        arrSearchVars[i].addEventListener('input', searchSuggestionsListener);
+        arrSearchVars[i].currSearchField = key;
+        arrSearchVars[i].currDBColName = dictSearchFields[key]["dbColName"];
+
+        i ++;
+    }
+
+    
 });
 
 
