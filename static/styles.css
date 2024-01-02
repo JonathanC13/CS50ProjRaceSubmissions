@@ -1,0 +1,211 @@
+/* Size for brand */
+nav .navbar-brand
+{
+    font-size: xx-large;
+}
+
+/* Colors for brand */
+nav .navbar-brand .blue
+{
+    color: #537fbe;
+}
+nav .navbar-brand .red
+{
+    color: #ea433b;
+}
+nav .navbar-brand .yellow
+{
+    color: #f5b82e;
+}
+nav .navbar-brand .green
+{
+    color: #2e944b;
+}
+
+/*.active = class, a = element */
+.active a{
+    color:#f5b82e !important;
+}
+
+
+
+body {
+    background-color: #212529;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+table {
+    background-color: transparent;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+table th,
+table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+tbody tr:nth-of-type(odd) {
+    background-color: rgb(179, 208, 255, 0.3)
+}
+
+
+span {
+    word-break: break-all;
+}
+
+#register_msg {
+    color:#ea433b;
+}
+
+.borderRed {
+    border-style: solid;
+    border-color:red;
+}
+
+.borderBlue {
+    border-style: solid;
+    border-color:blue;
+}
+
+.borderDark {
+    border-radius: 5px;
+    border-style: solid;
+    border-color:#212529;
+}
+
+textarea {
+    resize: none;
+}
+
+#search_col, #submission_col, #profile_col, #settings_col, #submit_col {
+    border-radius: 5px;
+    background-image: url("/static/carbon_fiber.png");
+    background-position: left top;
+    background-repeat: repeat;
+}
+
+#submission_col_container, #submit_col_container, #profile_col_container, #settings_col_container, #search_col_container, 
+#profile_col_container, #profile_comments_col_container {
+    border-radius: 5px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color:#737A80;
+}
+
+.sinkCol {
+    padding: 5px;
+}
+
+.sinkDiv {
+    height: 100%;
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    background-color:#5B6065;
+    border-style: solid;
+    border-color: #5B5B65;
+}
+
+
+.blankDiv {
+    margin: 5px;
+}
+
+.titleColor {
+    color: #f5b82e;
+}
+
+.contentColor {
+    color: white;
+}
+
+#search_col_container {
+    border-radius: 5px;
+    background-image: url("/static/r32_rear.jpg");
+    background-position: center;
+    background-repeat: repeat;
+}
+
+#submit_col_container {
+    border-radius: 5px;
+    background-image: url("/static/f1_redbull.jpg");
+    background-repeat: no-repeat;
+    background-attachment:scroll;
+    background-position: -600px -400px;
+}
+
+#settings_col_container {
+    border-radius: 5px;
+    background-image: url("/static/mclaren_rear.jpg");
+    background-position: center;
+    background-repeat: repeat;
+}
+
+#profile_info_col, #profile_comments_col {
+    padding: 20px 22px 20px 22px;
+}
+
+#subtitle_div {
+    width: 100%;  
+    border-bottom: 1px solid #8f9d93; 
+    text-align: center;
+}
+
+#subtitle_span {
+    padding: 0 10px;
+    color:white;
+}
+
+#search_submit, #display_name_change_submit, #password_change_submit, #btn_login_submit, #submission_submit, #register_submit{
+    width:100%;
+    background-color: #f5b82e;
+    color:black;
+}
+
+#reg_display_name, #reg_username, #reg_password, #reg_password_again,
+#username, #password, 
+#search_game, #search_platform, #search_display_name, #search_vehicle, #search_track, #search_game_mode {
+    text-align: center;
+}
+
+#login_msg, #register_msg, #submission_msg {
+    background-color: #212529;
+    color:red;
+}
+
+#ta_submit {
+    width:100%;
+    text-align: left;
+    word-wrap:break-word;
+}
+
+#txt_submit_track, #txt_submit_gamemode {
+    vertical-align: top;
+}
+
+#img_game_cover {
+    content: url("/static/game_cover_placeholder.png");
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+#img_YT_prev {
+    content: url("/static/Youtube_logo.png");
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.img_center {
+    margin: 0;
+    position: relative;
+    transform: translate(0%, 0%);
+}
+
+.textLeftAlign {
+    text-align: left;
+}

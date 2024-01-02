@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <body style="background-image: url('/static/subi_hawk.jpg')">
+        <!--profile/comments-->
+        <input id="page_type" type="hidden" value="{{ page_type }}">
+        <div id="profile_top" class="container">
+            <div class="row">
+                <div class="borderRed col-sm-1"></div>
+                <div id="profile_col" class="borderRed col-sm-10">
+                    
+                    <div class="row">
+                    
+                        <div id="profile_info_col" class="borderRed col-sm">
+                            <div id="profile_col_container" class="container">
+                                <div class="row">
+                                    <div class="borderRed col-sm-2">profile pic</div>
+                                    <div class="borderRed col-sm">Display name</div>
+                                </div>
+                                <div id="subtitle_div">
+                                    <span id="subtitle_span">
+                                        Stats <!--Padding is optional-->
+                                    </span>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="borderRed col-sm-7">Records submitted:</div>
+                                    <div class="borderRed col-sm">#</div>
+                                </div>
+                                <div class="row">
+                                    <div class="borderRed col-sm-7">Most submitted game:</div>
+                                    <div class="borderRed col-sm">#</div>
+                                </div>
+                                <div class="row">
+                                    <div class="borderRed col-sm-7">Most submitted track:</div>
+                                    <div class="borderRed col-sm">#</div>
+                                </div>
+                                <div class="row">
+                                    <div class="borderRed col-sm-7">Most submitted vehicle:</div>
+                                    <div class="borderRed col-sm">#</div>
+                                </div>
+                                <div class="row">
+                                    <div class="borderRed col-sm-7">Most submitted game mode:</div>
+                                    <div class="borderRed col-sm">#</div>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!--
+                        <div id="profile_comments_col" class="borderRed col-sm">
+                            <div id="profile_comments_col_container" class="container">
+                                <div id="subtitle_div">
+                                    <span id="subtitle_span">
+                                        Comments 
+                                    </span>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="borderRed col-sm-3">Comments</div>  
+                                    <div class="borderRed col-sm-7"><hr class="solid"></div>
+                                    <div class="borderRed col-sm-2">Date desc</div>                                  
+                                </div>                                
+                                <div id="comment_rows">                                    
+                                </div>
+                            </div>
+                        </div>
+                    -->
+                    </div>                       
+                
+                </div>
+                <div class="borderRed col-sm-1"></div>
+            </div>
+        </div>
+        <!--/profile/comments-->
+
+        <br>
+
+        <!--submissions-->
+        <div id="submissions_section" class="container">
+        </div>
+        <!--/submissions-->
+    </body>
+{% endblock %}

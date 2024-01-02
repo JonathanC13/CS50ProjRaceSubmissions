@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <body style="background-image: url('/static/f1_dark.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="borderRed col-sm-2">col-sm-2</div>
+                <div id="submit_col" class="borderRed col-sm-8">
+                    <div id="subtitle_div">
+                        <span id="subtitle_span">
+                          Submit <!--Padding is optional-->
+                        </span>
+                    </div>
+                    <br>
+                    <p style="color: red;">* means required</p>
+                    <div id="submit_col_container" class="container">
+                        <br>
+                        <div class="row">
+                            <div class="borderRed col-sm">
+                                <input autocomplete="off" autofocus class="form-control" id="txt_submit_game" name="txt_submit_game" placeholder="* Game" type="text">
+                            </div>
+                            <div class="borderRed col-sm">
+                                <input autocomplete="off" autofocus class="form-control" id="txt_submit_platform" name="txt_submit_platform" placeholder="* Platform" type="text">
+                            </div>
+                            <div class="borderRed col-sm">
+                                <input autocomplete="off" autofocus class="form-control" id="txt_submit_vehicle" name="txt_submit_vehicle" placeholder="* vehicle" type="text">
+                            </div>
+                            <div class="borderRed col-sm">
+                                <input autocomplete="off" autofocus class="form-control" id="txt_YT_URL" name="txt_YT_URL" placeholder="YT Embedded URL" type="text">                                
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="borderRed col-sm-3">
+                                <img id="img_game_cover" alt="Game cover"> 
+                            </div>
+                            
+                            
+                            <div class="borderRed col-sm-6">
+                                <div class="row">
+                                    <div class="borderRed col-sm">
+                                        <input autocomplete="off" autofocus class="form-control" id="txt_submit_track" name="txt_submit_track" placeholder="* Track" type="text">
+                                    </div>
+                                    <div class="borderRed col-sm">
+                                        <input autocomplete="off" autofocus class="form-control" id="txt_submit_gamemode" name="txt_submit_gamemode" placeholder="* Game mode" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="borderRed col-sm-3">
+                                <img id="img_YT_prev" class="img_center borderBlue" alt="YT prev">
+                                <iframe id="iframe_YTvid" style="display:none" width="100%" height="100%" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="borderRed col-sm">Full time
+                                <div class="row">
+                                    <div class="borderRed col-sm">
+                                        <input autocomplete="off" autofocus class="form-control" id="in_submit_fulltime_HH" name="in_submit_fulltime_HH" placeholder="* HH" type="number" min="0">
+                                    </div>
+                                    <div class="borderRed col-sm">
+                                        <input autocomplete="off" autofocus class="form-control" id="in_submit_fulltime_MM" name="in_submit_fulltime_MM" placeholder="* MM" type="number" min="0" max="59">
+                                    </div>
+                                    <div class="borderRed col-sm">
+                                        <input autocomplete="off" autofocus class="form-control" id="in_submit_fulltime_SS" name="in_submit_fulltime_SS" placeholder="* SS" type="number" min="0" max="59">
+                                    </div>
+                                    <div class="borderRed col-sm">
+                                        <input autocomplete="off" autofocus class="form-control" id="in_submit_fulltime_sss" name="in_submit_fulltime_sss" placeholder="* sss" type="number" min="0" max="999">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="borderRed col-sm">Best lap time
+                                <div class="row">
+                                    <div class="borderRed col-sm">
+                                        <input autocomplete="off" autofocus class="form-control" id="in_submit_bestlaptime_HH" name="in_submit_bestlaptime_HH" placeholder="HH" type="number" min="0">
+                                    </div>
+                                    <div class="borderRed col-sm">
+                                        <input autocomplete="off" autofocus class="form-control" id="in_submit_bestlaptime_MM" name="in_submit_bestlaptime_MM" placeholder="MM" type="number" min="0" max="59">
+                                    </div>
+                                    <div class="borderRed col-sm">
+                                        <input autocomplete="off" autofocus class="form-control" id="in_submit_bestlaptime_SS" name="in_submit_bestlaptime_SS" placeholder="SS" type="number" min="0" max="59">
+                                    </div>
+                                    <div class="borderRed col-sm">
+                                        <input autocomplete="off" autofocus class="form-control" id="in_submit_bestlaptime_sss" name="in_submit_bestlaptime_sss" placeholder="sss" type="number" min="0" max="999">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="borderRed col-sm">
+                                <textarea id="ta_submit_desc" placeholder="Description"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="borderRed col-sm"></div>
+                            <div class="borderRed col-sm">
+                                <button id="submission_submit" class="btn btn-primary" type="submit" onclick="validate_record_submission()">Submit</button>
+                            </div>
+                            <div class="borderRed col-sm"></div>
+                        </div>
+                        <span id="submission_msg"></span>
+                        <br>
+                    </div>
+                    <br>
+                </div>
+                <div class="borderRed col-sm-2">col-sm-2</div>
+            </div>
+        </div>
+    </body>
+{% endblock %}

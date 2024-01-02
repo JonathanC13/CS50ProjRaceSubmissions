@@ -1,0 +1,66 @@
+Diagram url: lucid.app/lucidchart
+
+You can query the database by running
+
+$ cat filename.sql | sqlite3 movies.db
+$ cat ./sqlFolder/sql_init_tables.sql | sqlite3 raceSubmissions.db 
+
+where filename.sql is the file containing your SQL query.
+
+You can also run
+
+$ cat filename.sql | sqlite3 movies.db > output.txt
+
+to redirect the output of the query to a text file called output.txt. 
+(This can be useful for checking how many rows are returned by your query!)
+
+
+.schema to see how the tables were initialized.
+
+
+sqlite3 db.db   // open or create db.
+
+
+--https://www.sqlite.org/lang_datefunc.html
+
+select datetime('now', 'localtime');
+
+For record's time, enforce format of HH:MM:SS:SSS
+
+
+
+
+
+---- other
+
+-- https://stackoverflow.com/questions/63127252/render-template-in-flask-from-ajax-call
+
+
+After A LOT of digging around, I finally managed to find a solution to this issue. Adding a success function to the ajax call that redirects to another route.
+
+mypage.js
+
+$.ajax({
+        url: Flask.url_for('genre_picks'),
+        type: "POST",
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify(genres),
+        success: function(response) {
+            window.location.href = response.redirect
+        }
+    });
+init
+
+@app.route('/genre_picks', methods=["POST", "GET"])
+def genre_picks():
+    if request.method == "POST":
+        genres = request.json
+        return jsonify({'redirect': url_for("example", path=genres)})
+
+@app.route('/example/<path>')
+def example(path):
+    genres = path
+    return render_template("example.html", genres=genres)
+
+--/

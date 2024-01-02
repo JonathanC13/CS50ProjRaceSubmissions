@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <body style="background-image: url('/static/garage.jpg')">
+        <form action="/register" method="post">
+            
+            <div class="row">
+                <div class="col-sm-5"></div>
+                <div class="col-sm-2">
+                    <input autocomplete="off" autofocus class="form-control" id="reg_display_name" name="reg_display_name" placeholder="Display name" type="text">
+                </div>
+                <div class="col-sm-5"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-sm-5"></div>
+                <div class="col-sm-2">
+                    <input autocomplete="off" class="form-control" id="reg_username" name="reg_username" placeholder="Username" type="text">
+                </div>
+                <div class="col-sm-5"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-sm-5"></div>
+                <div class="col-sm-2">
+                    <input autocomplete="off" class="form-control" id="reg_password" name="reg_password" placeholder="Password" type="password">
+                </div>
+                <div class="col-sm-5"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-sm-5"></div>
+                <div class="col-sm-2">
+                    <input autocomplete="off" class="form-control" id="reg_password_again" name="reg_password_again" placeholder="Password (again)" type="password">    
+                </div>
+                <div class="col-sm-5"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-sm-5"></div>
+                <div class="col-sm-2">
+                    <button id="register_submit" class="btn btn-primary" onclick="return register()">Register</button>
+                </div>
+                <div class="col-sm-5"></div>
+            </div>
+            <br>
+            <span id="register_msg">{{ register_msg }}</span>
+        </form>
+    </body>
+{% endblock %}

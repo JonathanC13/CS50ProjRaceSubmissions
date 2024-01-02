@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <body style="background-image: url('/static/McLaren.jpg')">
+        <div class="container">            
+            <div class="row">
+                <div class="borderRed col-sm-4">col-sm-4</div>
+                <div id="settings_col" class="borderRed col-sm-4">
+                    <br>
+                    <div id="settings_col_container" class="borderRed container">
+                        <div id="subtitle_div">
+                            <span id="subtitle_span">
+                                Profile settings <!--Padding is optional-->
+                            </span>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="borderRed col-sm"></div>
+                            <div class="borderRed col-sm">Profile pic</div>
+                            <div class="borderRed col-sm"></div>
+                        </div>
+                        <div class="row">
+                            <div class="borderRed col-sm">
+                                <input autocomplete="off" autofocus class="form-control" id="txt_display_name_change" name="txt_display_name_change" placeholder="Display name" type="text">
+                            </div>
+                            <div class="borderRed col-sm">
+                                <button id="display_name_change_submit" class="btn btn-primary" type="submit">Change</button>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="row">
+                            <div class="borderDark col-sm">
+                                <div id="subtitle_div">
+                                    <span id="subtitle_span">
+                                        Password <!--Padding is optional-->
+                                    </span>
+                                </div>
+                                <br>
+                                <div class="mb-3">
+                                    <input autocomplete="off" class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+                                </div>
+                                <div class="mb-3">
+                                    <input autocomplete="off" class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+                                </div>
+                                <div class="mb-3">
+                                    <input autocomplete="off" class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+                                </div>
+                                <button id="password_change_submit" class="btn btn-primary" type="submit">Change password</button>
+                                <br>
+                            </div>                            
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="borderRed col-sm-4">col-sm-4</div>
+            </div>
+        </div>
+    </body>
+{% endblock %}
