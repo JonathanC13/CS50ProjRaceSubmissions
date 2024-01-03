@@ -275,15 +275,33 @@ def validate_registration():
     else:
         return jsonify({"status":"ERROR" ,"message": "ERROR"})
     
-
-@app.route("/search_gameSuggestions")    # route name for JS
+"""
+@app.route("/searchSuggestions")    # route name for JS
 def searchGameSuggestions():
     q = request.args.get("q")
+
     if q:
         gameSuggestions = db.execute("SELECT * FROM tblGames WHERE strGameName LIKE ?", "%" + q + "%")
     else:
         gameSuggestions = []
     return jsonify(gameSuggestions)
+"""
+
+@app.route("/searchSuggestions", methods=["POST"])    # route name for JS
+def searchSuggestions():
+    if request.method == "POST":
+        data = request.json
+        table = data["table"]
+        column = data["column"]
+        userSearch = data["userSearch"]
+
+        sqlQuery = "SELECT * FROM " + table + " WHERE " + column + " LIKE ?"
+
+        rows = db.execute(sqlQuery, "%" + userSearch + "%")
+
+        return jsonify(rows)
+
+    return
     
 
 @app.route("/submit_record", methods=["POST"])
@@ -430,13 +448,13 @@ Profile settings
     a. layout *good
 
 TODO
-- suggestions in the search:
-    - game          ** ok, now make reusable JS and py function for all search
+- suggestions in the submit:
+    - game          
     - platform
     - vehicle
     - track
     - game mode
-    - 
+    - * add note that suggestions are items that exist, but you can add new
 - API from game image
 - profile info
 - submission butons: search (when in profile - will search game + game mode) / delete

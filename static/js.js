@@ -694,27 +694,39 @@ async function searchSuggestionsListener(evt) {
     //
 
     let searchField = evt.currentTarget.currSearchField;
+    let dbTable = evt.currentTarget.currDbTable;
     let dbColName = evt.currentTarget.currDBColName;
+    let userSearchTerm = evt.currentTarget.value
+    
+    const obj = {table: dbTable, column: dbColName, userSearch: userSearchTerm};
+    const myJSON = JSON.stringify(obj);
 
-    console.log(searchField);
+    $.ajax({
+        url: "/searchSuggestions",
+        type: "POST",
+        dataType: 'json',
+        contentType: 'application/json',
+        data: myJSON
+    }).done(function(response) {
+        let suggestions = response;
+        //console.log(suggestions);
+        let html = '';
+        //html += '<option value="existing">';
 
-    /*
-    let pyFunc = '/search_'+searchField+'Suggestions?q=' + evt.currentTarget.value;
+        for (let id in suggestions) {
 
-    let response = await fetch(pyFunc);
-    let suggestions = await response.json();
-    //console.log(suggestions);
-    let html = '';
-    for (let id in suggestions) {
-
-        let optionVal = suggestions[id][dbColName].replace('<', '&lt;').replace('&', '&amp;');
-        // <option value="game">
-        html += '<option value="' + optionVal + '">';
-    }
-    //console.log(html);
-    let idList = '#list_' + searchField;
-    document.querySelector(idList).innerHTML = html;
-    */
+            let optionVal = suggestions[id][dbColName].replace('<', '&lt;').replace('&', '&amp;');
+            // <option value="game">
+            html += '<option value="' + optionVal + '">';
+        }
+        //console.log(html);
+        let idList = '#list_' + searchField;
+        //console.log(idList);
+        document.querySelector(idList).innerHTML = html;
+    }).fail(function(response) {
+        alert('Failure, dev has low IQ.');
+    });
+    
 }
 
 
@@ -852,31 +864,37 @@ $( document ).ready(function() {
     var dictSearchFields = {
         "game":
             {
+                "table":"tblGames",
                 "dbColName":"strGameName",
                 "inputId":"search_game"
             },
         "platform":
             {
+                "table":"tblPlatforms",
                 "dbColName":"strPlatformName",
                 "inputId":"search_platform"
             },
         "display_name":
             {
+                "table":"tblUsers",
                 "dbColName":"strDisplayName",
                 "inputId":"search_display_name"
             },
         "vehicle":
             {
+                "table":"tblVehicles",
                 "dbColName":"strVehicleName",
                 "inputId":"search_vehicle"
             },
         "track":
             {
+                "table":"tblTracks",
                 "dbColName":"strTrackName",
                 "inputId":"search_track"
             },
         "game_mode":
             {
+                "table":"tblGameMode",
                 "dbColName":"strGameModeName",
                 "inputId":"search_game_mode"
             }
@@ -903,6 +921,7 @@ $( document ).ready(function() {
         arrSearchVars[i] = document.getElementById(dictSearchFields[key]["inputId"]);
         arrSearchVars[i].addEventListener('input', searchSuggestionsListener);
         arrSearchVars[i].currSearchField = key;
+        arrSearchVars[i].currDbTable = dictSearchFields[key]["table"];
         arrSearchVars[i].currDBColName = dictSearchFields[key]["dbColName"];
 
         i ++;
