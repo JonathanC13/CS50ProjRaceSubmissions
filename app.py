@@ -447,7 +447,18 @@ Profile
 Profile settings
     a. layout *good
 
+
+Pract 
+    fetch master and rebase branch
+    push branch
+    create pull request with main
+    
+
 TODO
+
+
+
+
 - suggestions in the submit:
     - game          
     - platform
