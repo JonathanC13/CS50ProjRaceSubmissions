@@ -692,6 +692,7 @@ async function searchSuggestionsListener(evt) {
     //console.log(evt.currentTarget.value); // input value in the field
     //currSearchField
     //
+    //console.log("hello");
 
     let searchField = evt.currentTarget.currSearchField;
     let dbTable = evt.currentTarget.currDbTable;
@@ -700,6 +701,7 @@ async function searchSuggestionsListener(evt) {
     
     const obj = {table: dbTable, column: dbColName, userSearch: userSearchTerm};
     const myJSON = JSON.stringify(obj);
+    //console.log(myJSON);
 
     $.ajax({
         url: "/searchSuggestions",
@@ -860,7 +862,7 @@ $( document ).ready(function() {
     }
 
     
-    // for search field suggestions
+    // for search field AND submit field suggestions
     var dictSearchFields = {
         "game":
             {
@@ -897,6 +899,36 @@ $( document ).ready(function() {
                 "table":"tblGameMode",
                 "dbColName":"strGameModeName",
                 "inputId":"search_game_mode"
+            },
+        "submitGame":
+            {
+                "table":"tblGames",
+                "dbColName":"strGameName",
+                "inputId":"txt_submit_game"
+            },
+        "submitPlatform":
+            {
+                "table":"tblPlatforms",
+                "dbColName":"strPlatformName",
+                "inputId":"txt_submit_platform"
+            },
+        "submitVehicle":
+            {
+                "table":"tblVehicles",
+                "dbColName":"strVehicleName",
+                "inputId":"txt_submit_vehicle"
+            },
+        "submitTrack":
+            {
+                "table":"tblTracks",
+                "dbColName":"strTrackName",
+                "inputId":"txt_submit_track"
+            },
+        "submitGameMode":
+            {
+                "table":"tblGameMode",
+                "dbColName":"strGameModeName",
+                "inputId":"txt_submit_gamemode"
             }
     };
 
@@ -908,6 +940,7 @@ $( document ).ready(function() {
         /*
         console.log("====");
         console.log(key);
+        console.log(dictSearchFields[key]["table"]);
         console.log(dictSearchFields[key]["dbColName"]);
         console.log(dictSearchFields[key]["inputId"]);
         */
@@ -917,8 +950,12 @@ $( document ).ready(function() {
         inputSearchField.currSearchField = 'key';
         inputSearchField.currDBColName = dictSearchFields[key]["dbColName"];
         */
-        
-        arrSearchVars[i] = document.getElementById(dictSearchFields[key]["inputId"]);
+        arrSearchVars[i] = (document.getElementById(dictSearchFields[key]["inputId"]) == null) ? '':document.getElementById(dictSearchFields[key]["inputId"]);
+        if (arrSearchVars[i] == '')
+        {
+            continue;
+        }
+
         arrSearchVars[i].addEventListener('input', searchSuggestionsListener);
         arrSearchVars[i].currSearchField = key;
         arrSearchVars[i].currDbTable = dictSearchFields[key]["table"];
