@@ -365,7 +365,10 @@ function build_submission_section(results, mode) {
                     </div>
                     <div class="col-sm-3 textLeftAlign sinkCol">
                         <div class="sinkDiv">
-                            buttons
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on topAAA">
+                                Tooltip on top
+                            </button>
+                                         
                         </div>
                     </div>
                 

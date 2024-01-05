@@ -427,25 +427,7 @@ def submit_record():
 
 
 """
-wallpapers  * good for the templates I have, keep adding as adding new pages
-layout for home * good
-layout for search, that re uses home * good
-    - Default Home and click Home, no search section *good
-    - Click Search in nav while in Home, show search section *good
-    - Click Search in nav when not in Search, go to Search page and show Search section *good
-    - Click Search in search section, build submission section with search results 
 
-Submit:
-    a. layout *ok
-        Individual input fields for HH:MM:SS.SSS
-            if need to determine difference compared to another record, get the parts of both, compare the parts, and build
-            the final string.
-
-Profile
-    a. layout *good
-
-Profile settings
-    a. layout *good
 
 
 Pract 
@@ -456,21 +438,11 @@ Pract
 
 TODO
 
-
-
-
-- suggestions in the submit:
-    - game          
-    - platform
-    - vehicle
-    - track
-    - game mode
-    - * add note that suggestions are items that exist, but you can add new
 - API from game image
 - profile info
-- submission butons: search (when in profile - will search game + game mode) / delete
+- submission butons: search (when in profile - will search game + game mode) / delete -----
     - search button always shows
-    - delete only shows if the currently logged in account owns it
+    - delete only shows if the currently logged in account owns it --------
 - onclick on any submission box will auto search with that param, hover hint that this will happen
 - Under full time, it will determine what place the time is: 7th (Based on Game + Game mode)
 - Custom Page system. 10 submissions per page
