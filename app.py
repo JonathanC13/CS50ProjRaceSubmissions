@@ -454,12 +454,13 @@ TODO
 - API from game image
 - profile info
 
-- submission butons: search (when in profile - will search game + game mode) / delete -----
+- submission butons: search (when in profile - will search game + game mode) / delete ----- HERE
     - search button always shows
         TODO: execute
     - delete only shows if the currently logged in account owns it 
         TODO: delete function
-    --------
+
+-------
 
 - onclick on any submission box will auto search with that param, hover hint that this will happen
 - Under full time, it will determine what place the time is: 7th (Based on Game + Game mode)
