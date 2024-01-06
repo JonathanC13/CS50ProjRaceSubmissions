@@ -35,6 +35,10 @@ def index():
     """Home page: show the latest race submissions"""
     return render_template("home.html", page_type="Home")
 
+@app.route("/blankTest")
+def blankTest():
+    return render_template("blankTest.html")
+
 
 @app.route("/nav_index_JS", methods=["POST"])
 def nav_index_JS():

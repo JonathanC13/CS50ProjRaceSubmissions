@@ -317,7 +317,8 @@ function build_submission_section(results, mode) {
     //console.log(results);
     
     var html_section =
-    `<div class="row">
+    `<button data-toggle="tooltip" title="text">AAAA</button>
+    <div class="row">
         <div class="col-sm-1"></div>
         <div id="submission_col" class="col-sm-10">
             <div id="subtitle_div">
@@ -364,12 +365,13 @@ function build_submission_section(results, mode) {
                         </div>
                     </div>
                     <div class="col-sm-3 textLeftAlign sinkCol">
-                        <div class="sinkDiv">
-                            <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on topAAA">
-                                Tooltip on top
-                            </button>
-                                         
-                        </div>
+                        <button id="tooltip" type="button">Click Me!
+                            <span id="tooltiptext">Tooltip text</span>
+                        </button>
+                        <button id="tooltip" type="button">Click Me2!
+                            <span id="tooltiptext">Tooltip text2</span>
+                        </button>
+                        
                     </div>
                 
                 </div>
@@ -736,6 +738,7 @@ async function searchSuggestionsListener(evt) {
 
 
 $( document ).ready(function() {
+
     //console.log( "ready!" );
     var page_type = document.getElementById("page_type") == null ? '' : document.getElementById("page_type").value;
     //console.log(page_type);
@@ -966,6 +969,17 @@ $( document ).ready(function() {
 
         i ++;
     }
+
+    // bootstrap v5 +, enable tooltip manually
+    // for pages with scroll, it causes "javascript added non-passive event listener to a scroll-blocking" error
+    /*
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+    */
+
+
 
     
 });
