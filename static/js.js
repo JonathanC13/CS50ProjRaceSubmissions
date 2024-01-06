@@ -271,6 +271,22 @@ function login_submit() {
 
 function search(mode) {
     
+    // get user id if logged in
+    // session["user_id"]
+    user_id = "";
+
+    $.ajax({
+        type:"post",
+        url:"/getSessionUserId",
+        data:{}
+    }).done(function(response) {
+        user_id = response["userId"];
+    }).fail(function(response) {
+        //alert('Failure, dev has low IQ.');
+    });
+    // /get user id if logged in
+
+    // submission results
     var submissions_section = document.getElementById("submissions_section");
     
     if(!submissions_section)
@@ -305,20 +321,20 @@ function search(mode) {
     }).done(function(response) {
         //console.log(response);
         //window.location.href = response.redirect;
-        $('#submissions_section').html(build_submission_section(response, mode));
+        $('#submissions_section').html(build_submission_section(response, mode, user_id));
     }).fail(function(response) {
         alert('Failure, dev has low IQ.');
     });
+    // /submission results
     
 }
 
 
-function build_submission_section(results, mode) {
+function build_submission_section(results, mode, user_id) {
     //console.log(results);
     
     var html_section =
-    `<button data-toggle="tooltip" title="text">AAAA</button>
-    <div class="row">
+    `<div class="row">
         <div class="col-sm-1"></div>
         <div id="submission_col" class="col-sm-10">
             <div id="subtitle_div">
@@ -348,6 +364,7 @@ function build_submission_section(results, mode) {
     if(results != "")
     {
         $.each(results, function(index, value) {
+            deleteDisplay = (value.iUserID == user_id)?';':'none;';
             html_section += 
             `<div id="submission_col_container" class="container">
                 <div class="row">
@@ -364,15 +381,18 @@ function build_submission_section(results, mode) {
                             <span class="contentColor">` + value.strSubmittedDateFormatted + ` EST</span>
                         </div>
                     </div>
-                    <div class="col-sm-3 textLeftAlign sinkCol">
-                        <button id="tooltip" type="button">Click Me!
-                            <span id="tooltiptext">Tooltip text</span>
+                    
+                    <div class="col-sm sinkCol">
+                        <button id="tooltip" class="submissionButtons" type="button" style="display:` + deleteDisplay + `">Delete
+                            <span id="tooltiptext">Delete your submission</span>
                         </button>
-                        <button id="tooltip" type="button">Click Me2!
-                            <span id="tooltiptext">Tooltip text2</span>
-                        </button>
-                        
                     </div>
+                    <div class="col-sm sinkCol">
+                        <button id="tooltip" class="submissionButtons" type="button">Search
+                            <span id="tooltiptext">Search game + game mode</span>
+                        </button>
+                    </div>
+                    
                 
                 </div>
                 <div class="row">

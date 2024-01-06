@@ -87,6 +87,15 @@ def user_settings():
 def nav_user_settings_JS():
     return jsonify({'redirect': url_for("user_settings")})
 
+@app.route("/getSessionUserId", methods=["POST"])
+def getSessionUserId():
+    if request.method == "POST":
+        if session.get('user_id') is not None:
+            return jsonify({"userId":session["user_id"]})
+        
+    return jsonify({"userId":""})
+    
+
 
 @app.route("/populate_submissions_search", methods=["GET", "POST"])
 def populate_submissions_search():
@@ -444,9 +453,14 @@ TODO
 
 - API from game image
 - profile info
+
 - submission butons: search (when in profile - will search game + game mode) / delete -----
     - search button always shows
-    - delete only shows if the currently logged in account owns it --------
+        TODO: execute
+    - delete only shows if the currently logged in account owns it 
+        TODO: delete function
+    --------
+
 - onclick on any submission box will auto search with that param, hover hint that this will happen
 - Under full time, it will determine what place the time is: 7th (Based on Game + Game mode)
 - Custom Page system. 10 submissions per page
