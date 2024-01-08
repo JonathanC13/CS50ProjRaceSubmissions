@@ -456,9 +456,13 @@ TODO
 
 - submission butons: search (when in profile - will search game + game mode) / delete ----- HERE
     - search button always shows
-        TODO: execute
+        DONE
+            - Click 'Search', goes to 'Search' Nav and put the 'game' and 'gamemode' to search and populate the list
+                - From here, click profile or home will clear the search fields and loads the appropriate results.
+            
     - delete only shows if the currently logged in account owns it 
         TODO: delete function
+            delete then refresh the current page
 
 -------
 

@@ -72,17 +72,17 @@ function register() {
 }
 
 
-function show_search_section(on) {
+function show_search_section(page) {
     var search_section = document.getElementById("search_section");
 
-    if(search_section && on == 0)
+    if(search_section && page == "Search")
     {
         document.getElementById("search_section").style.display = "block";   
         document.getElementById("page_type").value = "Search"
-        console.log(document.getElementById("page_type").value);
+        //console.log(document.getElementById("page_type").value);
         return 0;
     }
-    else if (search_section && on == 1)
+    else if (search_section && page == "Home")
     {
         document.getElementById("search_section").style.display = "none";   
         document.getElementById("page_type").value = "Home"
@@ -100,7 +100,7 @@ function nav_home_JS() {
 
     if(page_type == "Search")
     {
-        show_search_section(1);
+        show_search_section("Home");
     }
     else
     {
@@ -111,9 +111,10 @@ function nav_home_JS() {
             contentType: 'application/json',
             data: ""
         }).done(function(response) {
-            console.log(response.redirect);
+            //console.log(response.redirect);
             
             window.location.href = response.redirect;
+
         }).fail(function(response) {
             alert('Failure, dev has low IQ.');
         });
@@ -123,11 +124,13 @@ function nav_home_JS() {
         $( this ).removeClass("active");
     });
 
+    search("Default");
+
 }
 
 
 function nav_search_JS() {
-    var ret = show_search_section(0);
+    var ret = show_search_section("Search");
     if(ret != 0)
     {
         $.ajax({
@@ -273,7 +276,7 @@ function search(mode) {
     
     // get user id if logged in
     // session["user_id"]
-    user_id = "";
+    var user_id = "";
 
     $.ajax({
         type:"post",
@@ -308,10 +311,24 @@ function search(mode) {
     else if(mode == "Profile")
     {
         search_params = JSON.stringify({"mode":"Profile"});
+
+        document.getElementById("search_game").value = "";
+        document.getElementById("search_platform").value = "";
+        document.getElementById("search_display_name").value = "";
+        document.getElementById("search_vehicle").value = "";
+        document.getElementById("search_track").value = "";
+        document.getElementById("search_game_mode").value = "";
     }
     else
     {
         search_params = JSON.stringify({"mode":"Default"});
+
+        document.getElementById("search_game").value = "";
+        document.getElementById("search_platform").value = "";
+        document.getElementById("search_display_name").value = "";
+        document.getElementById("search_vehicle").value = "";
+        document.getElementById("search_track").value = "";
+        document.getElementById("search_game_mode").value = "";
     }
 
     $.ajax({
@@ -388,7 +405,7 @@ function build_submission_section(results, mode, user_id) {
                         </button>
                     </div>
                     <div class="col-sm sinkCol">
-                        <button id="tooltip" class="submissionButtons" type="button">Search
+                        <button id="tooltip" class="submissionButtons" type="button" onclick="searchFromRecord('` + value.strGameName + `', '` + value.strGameModeName + `')">Search
                             <span id="tooltiptext">Search game + game mode</span>
                         </button>
                     </div>
@@ -757,20 +774,64 @@ async function searchSuggestionsListener(evt) {
 }
 
 
+function searchFromRecord(game, game_mode) {
+
+    var mode = "Search";
+
+    // get user id if logged in
+    // session["user_id"]
+    var user_id = "";
+
+    $.ajax({
+        type:"post",
+        url:"/getSessionUserId",
+        data:{}
+    }).done(function(response) {
+        user_id = response["userId"];
+    }).fail(function(response) {
+        //alert('Failure, dev has low IQ.');
+    });
+    // /get user id if logged in
+
+    var page_type = document.getElementById("page_type") == null ? '' : document.getElementById("page_type").value;
+
+    var strGame = game.trim();
+    var strGameMode = game_mode.trim();
+
+    const myJSON = JSON.stringify({"mode":mode,
+                    "strGameName":strGame,
+                    "strPlatformName":"",
+                    "strDisplayName":"",
+                    "strVehicleName":"",
+                    "strTrackName":"",
+                    "strGameModeName":strGameMode
+                    });
+
+    $.ajax({
+        url: "/populate_submissions_search",
+        type: "POST",
+        data: {search_json:myJSON}
+    }).done(function(response) {
+
+        nav_search_JS();
+        document.getElementById("search_game").value = strGame;
+        document.getElementById("search_game_mode").value = strGameMode;
+
+        $('#submissions_section').html(build_submission_section(response, mode, user_id));
+    }).fail(function(response) {
+        alert('Failure, dev has low IQ.');
+    });
+}
+
+
 $( document ).ready(function() {
 
     //console.log( "ready!" );
     var page_type = document.getElementById("page_type") == null ? '' : document.getElementById("page_type").value;
     //console.log(page_type);
     // show if page type = "search"
-    if (page_type == "Search")
-    {
-        show_search_section(0);
-    }
-    else
-    {
-        show_search_section(1);
-    }
+    show_search_section(page_type);
+
     // /show if page type = "search"
 
     // load default submissions
@@ -983,6 +1044,7 @@ $( document ).ready(function() {
         }
 
         arrSearchVars[i].addEventListener('input', searchSuggestionsListener);
+        arrSearchVars[i].addEventListener('focus', searchSuggestionsListener);
         arrSearchVars[i].currSearchField = key;
         arrSearchVars[i].currDbTable = dictSearchFields[key]["table"];
         arrSearchVars[i].currDBColName = dictSearchFields[key]["dbColName"];
