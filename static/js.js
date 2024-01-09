@@ -311,13 +311,6 @@ function search(mode) {
     else if(mode == "Profile")
     {
         search_params = JSON.stringify({"mode":"Profile"});
-
-        document.getElementById("search_game").value = "";
-        document.getElementById("search_platform").value = "";
-        document.getElementById("search_display_name").value = "";
-        document.getElementById("search_vehicle").value = "";
-        document.getElementById("search_track").value = "";
-        document.getElementById("search_game_mode").value = "";
     }
     else
     {
@@ -400,12 +393,12 @@ function build_submission_section(results, mode, user_id) {
                     </div>
                     
                     <div class="col-sm sinkCol">
-                        <button id="tooltip" class="submissionButtons" type="button" style="display:` + deleteDisplay + `">Delete
+                        <button id="tooltip" class="submissionButtons" type="button" style="display:` + deleteDisplay + `" onclick="deleteSubmission('` + value.iUserID + `','` + value.iSubmissionID + `')">Delete
                             <span id="tooltiptext">Delete your submission</span>
                         </button>
                     </div>
                     <div class="col-sm sinkCol">
-                        <button id="tooltip" class="submissionButtons" type="button" onclick="searchFromRecord('` + value.strGameName + `', '` + value.strGameModeName + `')">Search
+                        <button id="tooltip" class="submissionButtons" type="button" onclick="searchFromSubmission('` + value.strGameName + `', '` + value.strGameModeName + `')">Search
                             <span id="tooltiptext">Search game + game mode</span>
                         </button>
                     </div>
@@ -774,7 +767,7 @@ async function searchSuggestionsListener(evt) {
 }
 
 
-function searchFromRecord(game, game_mode) {
+function searchFromSubmission(game, game_mode) {
 
     var mode = "Search";
 
@@ -822,6 +815,53 @@ function searchFromRecord(game, game_mode) {
         alert('Failure, dev has low IQ.');
     });
 }
+
+
+function deleteSubmission(owner, submission_id) {
+
+    
+        if (owner != user_id)
+        {
+            alert("This submission is not yours to delete!");
+            return;
+        }
+
+        var submission_id = submission_id.trim();
+
+        const myJSON = JSON.stringify({"user_id":user_id, "submission_id":submission_id});
+
+        $.ajax({
+            url: "/deleteSubmission",
+            type: "POST",
+            data: {search_json:myJSON}
+            }).done(function(response) {
+                if (response["status"] == "ERROR")
+                {
+                    alert(response["message"]);
+                }
+                else
+                {
+                    location.reload();
+                }
+            }).fail(function(response) {
+                alert('Failure, dev has low IQ.');
+            });
+    
+}
+
+
+function getUserID(myCallback) {
+    $.ajax({
+        type:"post",
+        url:"/getSessionUserId",
+        data:{}
+    }).done(function(response) {
+        myCallback(response["userId"]);
+    }).fail(function(response) {
+        myCallback(-1);
+    });
+
+} // TODO CALLBACK FUNCTION ??? FOR getting user ID and THEN delete. Also fix for other place that uses 2 ajax call in one funct
 
 
 $( document ).ready(function() {

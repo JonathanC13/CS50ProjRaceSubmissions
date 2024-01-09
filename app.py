@@ -437,6 +437,30 @@ def submit_record():
         return jsonify({"status":"GOOD", "message": "Record successfully added!", "redirect": url_for("submit")})  # url for is the function name 
     else:
         return jsonify({"status":"ERROR" ,"message": "ERROR"})
+    
+
+@app.route("/deleteSubmission", methods=["POST"])
+def deleteSubmission():
+    if request.method == "POST":
+        data = request.json
+        userID = data["user_id"]
+        submissionID = data["submission_id"]
+
+        rows = db.execute("""SELECT * FROM tblSubmissions WHERE iSubmissionID = ? AND iUserID = ?""", submissionID, userID)
+
+        if len(rows) == 0:
+            return jsonify({"status":"ERROR" ,"message": "No rows to delete!"})
+        elif len(rows) > 1:
+            return jsonify({"status":"ERROR" ,"message": "Somehow too may rows!"})
+        elif len(rows) == 1:
+            numRowsDel = db.execute("""DELETE FROM tblSubmissions WHERE iSubmissionID = ? AND iUserID = ?""", submissionID, userID)
+            
+            if numRowsDel == 1:
+                return jsonify({"status":"ERROR" ,"message": "Submission deleted!"})
+            else:
+                return jsonify({"status":"ERROR" ,"message": "Something has gone horribly wrong!"})
+        else:
+            return jsonify({"status":"ERROR" ,"message": "???"})
 
 
 """
@@ -454,17 +478,6 @@ TODO
 - API from game image
 - profile info
 
-- submission butons: search (when in profile - will search game + game mode) / delete ----- HERE
-    - search button always shows
-        DONE
-            - Click 'Search', goes to 'Search' Nav and put the 'game' and 'gamemode' to search and populate the list
-                - From here, click profile or home will clear the search fields and loads the appropriate results.
-            
-    - delete only shows if the currently logged in account owns it 
-        TODO: delete function
-            delete then refresh the current page
-
--------
 
 - onclick on any submission box will auto search with that param, hover hint that this will happen
 - Under full time, it will determine what place the time is: 7th (Based on Game + Game mode)
