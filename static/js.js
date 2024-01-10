@@ -276,19 +276,14 @@ function search(mode) {
     
     // get user id if logged in
     // session["user_id"]
-    var user_id = "";
-
-    $.ajax({
-        type:"post",
-        url:"/getSessionUserId",
-        data:{}
-    }).done(function(response) {
-        user_id = response["userId"];
-    }).fail(function(response) {
-        //alert('Failure, dev has low IQ.');
-    });
+    var dictParams = {"callbackType":"search",
+                        "mode":mode};
+    getUserID(dictParams, searchInitiate);
     // /get user id if logged in
+}
 
+
+function searchInitiate(user_id, mode) {
     // submission results
     var submissions_section = document.getElementById("submissions_section");
     
@@ -336,7 +331,6 @@ function search(mode) {
         alert('Failure, dev has low IQ.');
     });
     // /submission results
-    
 }
 
 
@@ -769,22 +763,20 @@ async function searchSuggestionsListener(evt) {
 
 function searchFromSubmission(game, game_mode) {
 
-    var mode = "Search";
-
     // get user id if logged in
     // session["user_id"]
-    var user_id = "";
+    var dictParams = {  "callbackType":"search_from_sub",
+                        "game": game,
+                        "game_mode": game_mode
+                    };
 
-    $.ajax({
-        type:"post",
-        url:"/getSessionUserId",
-        data:{}
-    }).done(function(response) {
-        user_id = response["userId"];
-    }).fail(function(response) {
-        //alert('Failure, dev has low IQ.');
-    });
+    getUserID(dictParams, searchFromSubmissionInitiate);
     // /get user id if logged in
+}
+
+
+function searchFromSubmissionInitiate(user_id, game, game_mode) {
+    let mode = "Search";
 
     var page_type = document.getElementById("page_type") == null ? '' : document.getElementById("page_type").value;
 
@@ -818,50 +810,77 @@ function searchFromSubmission(game, game_mode) {
 
 
 function deleteSubmission(owner, submission_id) {
+    // get user id if logged in
+    // session["user_id"]
+    var dictParams = {  "callbackType":"delete_sub",
+                        "owner": owner,
+                        "submission_id": submission_id
+                    };
 
-    
-        if (owner != user_id)
-        {
-            alert("This submission is not yours to delete!");
-            return;
-        }
-
-        var submission_id = submission_id.trim();
-
-        const myJSON = JSON.stringify({"user_id":user_id, "submission_id":submission_id});
-
-        $.ajax({
-            url: "/deleteSubmission",
-            type: "POST",
-            data: {search_json:myJSON}
-            }).done(function(response) {
-                if (response["status"] == "ERROR")
-                {
-                    alert(response["message"]);
-                }
-                else
-                {
-                    location.reload();
-                }
-            }).fail(function(response) {
-                alert('Failure, dev has low IQ.');
-            });
-    
+    getUserID(dictParams, deleteSubmissionInitiate);
+    // /get user id if logged in
 }
 
 
-function getUserID(myCallback) {
+function deleteSubmissionInitiate(user_id, owner, submission_id) {
+    if (owner != user_id)
+    {
+        alert("This submission is not yours to delete!");
+        return;
+    }
+    
+    var submission_id = submission_id.trim();
+
+    const myJSON = JSON.stringify({"user_id":user_id, "submission_id":submission_id});
+
+    $.ajax({
+        url: "/deleteSubmission",
+        type: "POST",
+        data: {delete_json:myJSON}
+        }).done(function(response) {
+            if (response["status"] == "ERROR")
+            {
+                alert(response["message"]);
+            }
+            else
+            {   
+                console.log("reload");
+                location.reload();
+            }
+        }).fail(function(response) {
+            alert('Failure, dev has low IQ.');
+    });
+}
+
+
+function getUserID(dictParams, myCallback) {
     $.ajax({
         type:"post",
         url:"/getSessionUserId",
         data:{}
     }).done(function(response) {
-        myCallback(response["userId"]);
+        if(dictParams["callbackType"] == "search") 
+        {
+            myCallback(response["user_id"], dictParams["mode"]);
+        }
+        else if (dictParams["callbackType"] == "search_from_sub")
+        {
+            myCallback(response["user_id"], dictParams["game"], dictParams["game_mode"]);
+        }
+        else if (dictParams["callbackType"] == "delete_sub")
+        {
+            myCallback(response["user_id"], dictParams["owner"], dictParams["submission_id"]);
+        }
+        else
+        {
+            alert("Error 100");
+        }
+        
     }).fail(function(response) {
-        myCallback(-1);
+        alert("Error 101");
     });
 
-} // TODO CALLBACK FUNCTION ??? FOR getting user ID and THEN delete. Also fix for other place that uses 2 ajax call in one funct
+}
 
 
 $( document ).ready(function() {
