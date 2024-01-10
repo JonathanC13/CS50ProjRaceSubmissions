@@ -91,9 +91,9 @@ def nav_user_settings_JS():
 def getSessionUserId():
     if request.method == "POST":
         if session.get('user_id') is not None:
-            return jsonify({"userId":session["user_id"]})
+            return jsonify({"user_id":session["user_id"]})
         
-    return jsonify({"userId":""})
+    return jsonify({"user_id":""})
     
 
 
@@ -441,13 +441,15 @@ def submit_record():
 
 @app.route("/deleteSubmission", methods=["POST"])
 def deleteSubmission():
+    
     if request.method == "POST":
-        data = request.json
+        print("there")
+        data = json.loads(request.form.get("delete_json"))
         userID = data["user_id"]
         submissionID = data["submission_id"]
 
         rows = db.execute("""SELECT * FROM tblSubmissions WHERE iSubmissionID = ? AND iUserID = ?""", submissionID, userID)
-
+        
         if len(rows) == 0:
             return jsonify({"status":"ERROR" ,"message": "No rows to delete!"})
         elif len(rows) > 1:
@@ -456,12 +458,11 @@ def deleteSubmission():
             numRowsDel = db.execute("""DELETE FROM tblSubmissions WHERE iSubmissionID = ? AND iUserID = ?""", submissionID, userID)
             
             if numRowsDel == 1:
-                return jsonify({"status":"ERROR" ,"message": "Submission deleted!"})
+                return jsonify({"status":"Success" ,"message": "Submission deleted!"})
             else:
                 return jsonify({"status":"ERROR" ,"message": "Something has gone horribly wrong!"})
         else:
             return jsonify({"status":"ERROR" ,"message": "???"})
-
 
 """
 
@@ -474,6 +475,11 @@ Pract
     
 
 TODO
+
+- Submit form aesthetics
+- message to indicate delete successful:
+    - message box
+    - instead of reload, Ajax rebuild
 
 - API from game image
 - profile info

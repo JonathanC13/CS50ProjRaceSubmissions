@@ -130,12 +130,16 @@ textarea {
 }
 
 #submit_col_container {
+    background-color:#737A80;
+    /*
     border-radius: 5px;
     background-image: url("/static/f1_redbull.jpg");
     background-repeat: no-repeat;
     background-attachment:scroll;
     background-position: -600px -400px;
+    */
 }
+
 
 #settings_col_container {
     border-radius: 5px;
