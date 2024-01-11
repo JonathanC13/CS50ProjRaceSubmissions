@@ -87,12 +87,26 @@ textarea {
     background-repeat: repeat;
 }
 
-#submission_col_container, #submit_col_container, #profile_col_container, #settings_col_container, #search_col_container, 
+#submission_col_container, #profile_col_container, #settings_col_container, #search_col_container, 
 #profile_col_container, #profile_comments_col_container {
     border-radius: 5px;
     padding-top: 15px;
     padding-bottom: 15px;
     background-color:#737A80;
+}
+
+#ta_submit_desc {
+    border-radius: 5px;
+    width: 100%;
+}
+
+#submit_col_container {
+    border-radius: 5px;
+    background-color:#737A80;
+
+    background-image: url("/static/r32_rear.jpg");
+    background-position: center;
+    background-repeat: repeat;
 }
 
 .sinkCol {
@@ -109,6 +123,18 @@ textarea {
     border-color: #5B5B65;
 }
 
+
+.submitInputDiv {
+    height: 100%;
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.submitTitles {
+    color: #f5b82e;
+    text-shadow: 1px 1px 3px black,1px 1px 3px black,1px 1px 3px black,1px 1px 3px black; /*top right, top left, bot left, bot right*/
+}
 
 .blankDiv {
     margin: 5px;
@@ -127,17 +153,6 @@ textarea {
     background-image: url("/static/r32_rear.jpg");
     background-position: center;
     background-repeat: repeat;
-}
-
-#submit_col_container {
-    background-color:#737A80;
-    /*
-    border-radius: 5px;
-    background-image: url("/static/f1_redbull.jpg");
-    background-repeat: no-repeat;
-    background-attachment:scroll;
-    background-position: -600px -400px;
-    */
 }
 
 
