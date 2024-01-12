@@ -362,6 +362,8 @@ function build_submission_section(results, mode, user_id) {
 
     html_section +=
                 `</span>
+                <span id="submissionListMessage">
+                </span>
             </div>
             <br>`;
 
@@ -387,7 +389,7 @@ function build_submission_section(results, mode, user_id) {
                     </div>
                     
                     <div class="col-sm sinkCol">
-                        <button id="tooltip" class="submissionButtons" type="button" style="display:` + deleteDisplay + `" onclick="deleteSubmission('` + value.iUserID + `','` + value.iSubmissionID + `')">Delete
+                        <button id="tooltip" class="submissionButtons" type="button" style="display:` + deleteDisplay + `" onclick="deleteSubmission('` + mode + `','` + value.iUserID + `','` + value.iSubmissionID + `')">Delete
                             <span id="tooltiptext">Delete your submission</span>
                         </button>
                     </div>
@@ -489,7 +491,7 @@ function build_submission_section(results, mode, user_id) {
         html_section += 
         `<div id="submission_col_container" class="container">
             <div class="row">
-                <div class="col-sm">No submissions so far!</div>
+                <div class="col-sm submitTitles">No submissions so far!</div>
             </div>
         </div>
         <br>`;
@@ -684,8 +686,10 @@ function validate_record_submission() {
                 document.getElementById("in_submit_bestlaptime_sss").value = "";
                 document.getElementById("ta_submit_desc").value = "";
 
-                document.getElementById("submission_msg").style.color = "green";
+                msg_sumbit.style.color = "green";
                 msg_sumbit.textContent = response["message"];   
+                
+                topFunction();
             }
             else
             {
@@ -809,10 +813,11 @@ function searchFromSubmissionInitiate(user_id, game, game_mode) {
 }
 
 
-function deleteSubmission(owner, submission_id) {
+function deleteSubmission(mode, owner, submission_id) {
     // get user id if logged in
     // session["user_id"]
-    var dictParams = {  "callbackType":"delete_sub",
+    var dictParams = {  "callbackType": "delete_sub",
+                        "mode": mode,
                         "owner": owner,
                         "submission_id": submission_id
                     };
@@ -822,7 +827,7 @@ function deleteSubmission(owner, submission_id) {
 }
 
 
-function deleteSubmissionInitiate(user_id, owner, submission_id) {
+function deleteSubmissionInitiate(user_id, owner, submission_id, mode) {
     if (owner != user_id)
     {
         alert("This submission is not yours to delete!");
@@ -844,8 +849,11 @@ function deleteSubmissionInitiate(user_id, owner, submission_id) {
             }
             else
             {   
-                console.log("reload");
-                location.reload();
+                search(mode);
+
+                topFunction();
+
+                alert(response["message"]);
             }
         }).fail(function(response) {
             alert('Failure, dev has low IQ.');
@@ -869,7 +877,7 @@ function getUserID(dictParams, myCallback) {
         }
         else if (dictParams["callbackType"] == "delete_sub")
         {
-            myCallback(response["user_id"], dictParams["owner"], dictParams["submission_id"]);
+            myCallback(response["user_id"], dictParams["owner"], dictParams["submission_id"], dictParams["mode"]);
         }
         else
         {
@@ -880,6 +888,12 @@ function getUserID(dictParams, myCallback) {
         alert("Error 101");
     });
 
+}
+
+
+function topFunction() {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
 
 

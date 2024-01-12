@@ -476,10 +476,6 @@ Pract
 
 TODO
 
-- message to indicate delete successful:
-    - message box
-    - instead of reload, Ajax rebuild
-
 - API from game image
 - profile info
 
