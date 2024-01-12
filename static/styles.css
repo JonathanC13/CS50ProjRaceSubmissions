@@ -56,10 +56,6 @@ span {
     word-break: break-all;
 }
 
-#register_msg {
-    color:#ea433b;
-}
-
 .borderRed {
     border-style: solid;
     border-color:red;
@@ -178,6 +174,10 @@ textarea {
     color:white;
 }
 
+#submissionMessage {
+    display:none;
+}
+
 #search_submit, #display_name_change_submit, #password_change_submit, #btn_login_submit, #submission_submit, #register_submit{
     width:100%;
     background-color: #f5b82e;
@@ -190,7 +190,7 @@ textarea {
     text-align: center;
 }
 
-#login_msg, #register_msg, #submission_msg {
+#login_msg, #register_msg, #submission_msg , #submissionListMessage{
     background-color: #212529;
     color:red;
 }
