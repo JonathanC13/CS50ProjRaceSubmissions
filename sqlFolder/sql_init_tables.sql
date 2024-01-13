@@ -162,7 +162,18 @@ SELECT *
     ORDER BY a.strSubmittedDate DESC
     LIMIT 10;
 
-
+SELECT a.iGameID, a.iTrackID, a.iGameModeID,
+        RANK () OVER ( 
+            PARTITION BY a.iGameID AND a.iTrackID AND a.iGameModeID
+            ORDER BY strFullTime ASC
+        ) strStanding 
+    FROM tblSubmissions a
+        INNER JOIN tblGames b ON b.iGameID = a.iGameID
+        INNER JOIN tblPlatforms c ON c.iPlatformID = a.iPlatformID
+        INNER JOIN tblVehicles d ON d.iVehicleID = a.iVehicleID
+        INNER JOIN tblTracks e ON e.iTrackID = a.iTrackID
+        INNER JOIN tblGameMode f ON f.iGameModeID = a.iGameModeID
+        INNER JOIN tblUsers g ON g.iUserID = a.iUserID;
 
 
 ---------

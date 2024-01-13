@@ -490,7 +490,9 @@ function build_submission_section(results, mode, user_id) {
                             <div class="col-sm-6 textLeftAlign sinkCol">
                                 <div class="sinkDiv">
                                     <span class="titleColor">Full Time: </span>
-                                    <span class="contentColor">` + value.strFullTime + `</span>
+                                    <span class="contentColor">` + value.strFullTime + `</span> - <span class="titleColor">(` + value.strStanding + `)</span>
+                                    <br>
+                                    (based on Game, Track, and Game mode)
                                 </div>
                             </div>
                             <div class="col-sm-6 textLeftAlign sinkCol">

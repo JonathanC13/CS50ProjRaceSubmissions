@@ -123,7 +123,24 @@ def populate_submissions_search():
 
             count = 0
 
-            sql_query = """SELECT *, datetime(strSubmittedDate, 'unixepoch', 'localtime') as 'strSubmittedDateFormatted'
+            """select *, (SELECT COUNT() + 1 FROM tblSubmissions AS t WHERE iGameID = tblSubmissions.iGameID AND iTrackID = tblSubmissions.iTrackID AND iGameModeID = tblSubmissions.iGameModeID AND strFullTime < tblSubmissions.strFullTime) FROM tblSubmissions;"""
+            """SELECT
+                Name,
+                Milliseconds,
+                AlbumId,
+                RANK () OVER ( 
+                    PARTITION BY AlbumId
+                    ORDER BY Milliseconds DESC
+                ) LengthRank 
+            FROM
+                tracks;
+            """
+
+            sql_query = """SELECT *, datetime(strSubmittedDate, 'unixepoch', 'localtime') as 'strSubmittedDateFormatted',
+                            RANK () OVER ( 
+                                PARTITION BY a.iGameID AND a.iTrackID AND a.iGameModeID
+                                ORDER BY strFullTime ASC
+                            ) strStanding
                         FROM tblSubmissions a
                             INNER JOIN tblGames b ON b.iGameID = a.iGameID
                             INNER JOIN tblPlatforms c ON c.iPlatformID = a.iPlatformID
@@ -149,7 +166,11 @@ def populate_submissions_search():
             sql_query = sql_query + " ORDER BY a.strSubmittedDate DESC;"                       
             
         elif (mode == "Profile"):
-            sql_query = """SELECT *, datetime(strSubmittedDate, 'unixepoch', 'localtime') as 'strSubmittedDateFormatted'
+            sql_query = """SELECT *, datetime(strSubmittedDate, 'unixepoch', 'localtime') as 'strSubmittedDateFormatted',
+                            RANK () OVER ( 
+                                PARTITION BY a.iGameID AND a.iTrackID AND a.iGameModeID
+                                ORDER BY strFullTime ASC
+                            ) strStanding
                         FROM tblSubmissions a
                             INNER JOIN tblGames b ON b.iGameID = a.iGameID
                             INNER JOIN tblPlatforms c ON c.iPlatformID = a.iPlatformID
@@ -165,7 +186,11 @@ def populate_submissions_search():
     # 
     #print("sql: " + str(sql_query))
     if (sql_query == None):
-        sql_query = """SELECT *, datetime(strSubmittedDate, 'unixepoch', 'localtime') as 'strSubmittedDateFormatted'
+        sql_query = """SELECT *, datetime(strSubmittedDate, 'unixepoch', 'localtime') as 'strSubmittedDateFormatted',
+                            RANK () OVER ( 
+                                PARTITION BY a.iGameID AND a.iTrackID AND a.iGameModeID
+                                ORDER BY strFullTime ASC
+                            ) strStanding
                         FROM tblSubmissions a
                             INNER JOIN tblGames b ON b.iGameID = a.iGameID
                             INNER JOIN tblPlatforms c ON c.iPlatformID = a.iPlatformID
@@ -477,6 +502,7 @@ Pract
 TODO
 
 - Under full time, it will determine what place the time is: 7th (Based on Game + track + Game mode)
+    - Adding post fix to strStanding (st, nd, rd, th) -- here
 - API from game image
 - profile info
 
@@ -484,6 +510,7 @@ TODO
 
 
 - Custom Page system. 10 submissions per page
+    - filter by full time only
     - button for first page
     - button for prev page
     - input box for cur page
