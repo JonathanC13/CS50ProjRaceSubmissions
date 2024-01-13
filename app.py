@@ -475,9 +475,7 @@ Pract
     
 
 TODO
-- onclick on any submission box will auto search with that param, hover hint that this will happen -- HERE
-    - hover
-    - click to search
+
 - Under full time, it will determine what place the time is: 7th (Based on Game + track + Game mode)
 - API from game image
 - profile info
