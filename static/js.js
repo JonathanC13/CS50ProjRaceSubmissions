@@ -393,8 +393,12 @@ function build_submission_section(results, mode, user_id) {
                     <!--row for Date, game, platform, and Search/Delete-->
                     <div class="col-sm-3 textLeftAlign sinkCol">
                         <div class="sinkDiv">
-                            <span class="titleColor">Display name: </span>
-                            <span class="contentColor">` + value.strDisplayName + `</span>
+                            <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + value.strDisplayName + `', '` + `` + `', '` + `` + `', '` + `` + `')">
+                                <span class="titleColor">Display name: </span>
+                                <span class="contentColor">` + value.strDisplayName + `</span>
+                                <span id="tooltiptext">Search Display name</span>
+                            </span>
+                            
                         </div>
                     </div>
                     <div class="col-sm-6 textLeftAlign sinkCol">
@@ -405,12 +409,14 @@ function build_submission_section(results, mode, user_id) {
                     </div>
                     
                     <div class="col-sm sinkCol">
-                        <button id="tooltip" class="submissionButtons" type="button" style="display:` + deleteDisplay + `" onclick="deleteSubmission('` + mode + `','` + value.iUserID + `','` + value.iSubmissionID + `')">Delete
+                        <button id="tooltip" class="submissionButtons" type="button" style="display:` + deleteDisplay + `" onclick="deleteSubmission('` + mode + `','` + value.iUserID + `','` + value.iSubmissionID + `')">
+                            Delete
                             <span id="tooltiptext">Delete your submission</span>
                         </button>
                     </div>
                     <div class="col-sm sinkCol">
-                        <button id="tooltip" class="submissionButtons" type="button" onclick="searchFromSubmission('` + value.strGameName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strTrackName + `', '` + value.strGameModeName + `')">Search
+                        <button id="tooltip" class="submissionButtons" type="button" onclick="searchFromSubmission('` + value.strGameName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strTrackName + `', '` + value.strGameModeName + `')">
+                            Search
                             <span id="tooltiptext">Search game + game mode</span>
                         </button>
                     </div>
@@ -423,25 +429,33 @@ function build_submission_section(results, mode, user_id) {
                             <span id="tooltip" onclick="searchFromSubmission('` + value.strGameName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `')">
                                 <span class="titleColor">Game: </span>
                                 <span class="contentColor">` + value.strGameName + `</span>
-                                <span id="tooltiptext">Search game</span>
+                                <span id="tooltiptext">Search Game</span>
                             </span>
                             
                         </div>
                     </div>
                     <div class="col-sm-3 textLeftAlign sinkCol">
                         <div class="sinkDiv">
-                            <span class="titleColor">Platform: </span>
-                            <span class="contentColor">` + value.strPlatformName + `</span>
+                            <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + value.strPlatformName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `')">
+                                <span class="titleColor">Platform: </span>
+                                <span class="contentColor">` + value.strPlatformName + `</span>
+                                <span id="tooltiptext">Search Platform</span>
+                            </span>
+                        
                         </div>
                     </div>
                     <div class="col-sm-3 textLeftAlign sinkCol">
                         <div class="sinkDiv">
-                            <span class="titleColor">Vehicle: </span>
-                            <span class="contentColor">` + value.strVehicleName + `</span>
+                            <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + `` + `', '` + value.strVehicleName + `', '` + `` + `', '` + `` + `')">
+                                <span class="titleColor">Vehicle: </span>
+                                <span class="contentColor">` + value.strVehicleName + `</span>
+                                <span id="tooltiptext">Search Vehicle</span>
+                            </span>
+                            
                         </div>
                     </div>
                     <div class="col-sm-3 textLeftAlign sinkCol">
-                        <div class="sinkDiv">
+                        <div class="sinkDiv">                            
                             <span class="titleColor">YT URL: </span>
                             <span class="contentColor">` + value.strProofYTURL + `</span>
                         </div>
@@ -453,14 +467,22 @@ function build_submission_section(results, mode, user_id) {
                         <div class="row">
                             <div class="col-sm-6 textLeftAlign sinkCol">
                                 <div class="sinkDiv">
-                                    <span class="titleColor">Track: </span>
-                                    <span class="contentColor">` + value.strTrackName + `</span>
+                                    <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strTrackName + `', '` + `` + `')">
+                                        <span class="titleColor">Track: </span>
+                                        <span class="contentColor">` + value.strTrackName + `</span>
+                                        <span id="tooltiptext">Search Track</span>
+                                    </span>                                    
+
                                 </div>
                             </div>
                             <div class="col-sm-6 textLeftAlign sinkCol">
                                 <div class="sinkDiv">
-                                    <span class="titleColor">Game mode: </span>
-                                    <span class="contentColor">` + value.strGameModeName + `</span>
+                                    <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strGameModeName + `')">
+                                        <span class="titleColor">Game mode: </span>
+                                        <span class="contentColor">` + value.strGameModeName + `</span>
+                                        <span id="tooltiptext">Search Game mode</span>
+                                    </span>
+                                    
                                 </div>
                             </div>
                         </div>
