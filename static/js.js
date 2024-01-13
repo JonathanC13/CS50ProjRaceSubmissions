@@ -130,6 +130,7 @@ function nav_home_JS() {
 
 
 function nav_search_JS() {
+    topFunction();
     var ret = show_search_section("Search");
     if(ret != 0)
     {
@@ -283,7 +284,7 @@ function search(mode) {
 }
 
 
-function searchInitiate(user_id, mode) {
+function searchInitiate(mode, user_id, optionalDict) {
     // submission results
     var submissions_section = document.getElementById("submissions_section");
     
@@ -294,7 +295,7 @@ function searchInitiate(user_id, mode) {
 
     if(mode == "Search")
     {
-        search_params = JSON.stringify({"mode":"Search",
+        search_params = JSON.stringify({"mode":mode,
                                     "strGameName":document.getElementById("search_game").value.trim(),
                                     "strPlatformName":document.getElementById("search_platform").value.trim(),
                                     "strDisplayName":document.getElementById("search_display_name").value.trim(),
@@ -305,7 +306,19 @@ function searchInitiate(user_id, mode) {
     }
     else if(mode == "Profile")
     {
-        search_params = JSON.stringify({"mode":"Profile"});
+        search_params = JSON.stringify({"mode":mode});
+    }
+    else if(mode == "search_from_sub")
+    {
+        search_params = JSON.stringify(optionalDict);
+
+        nav_search_JS();
+        document.getElementById("search_game").value = optionalDict["strGameName"];
+        document.getElementById("search_platform").value = optionalDict["strPlatformName"];
+        document.getElementById("search_display_name").value = optionalDict["strDisplayName"];
+        document.getElementById("search_vehicle").value = optionalDict["strVehicleName"];
+        document.getElementById("search_track").value = optionalDict["strTrackName"];
+        document.getElementById("search_game_mode").value = optionalDict["strGameModeName"];
     }
     else
     {
@@ -326,6 +339,7 @@ function searchInitiate(user_id, mode) {
     }).done(function(response) {
         //console.log(response);
         //window.location.href = response.redirect;
+
         $('#submissions_section').html(build_submission_section(response, mode, user_id));
     }).fail(function(response) {
         alert('Failure, dev has low IQ.');
@@ -344,7 +358,7 @@ function build_submission_section(results, mode, user_id) {
             <div id="subtitle_div">
                 <span id="subtitle_span">`;
     
-    if (mode == "Search")
+    if (mode == "Search" || mode == "search_from_sub")
     {
         html_section +=
                     `Search results`;       
@@ -367,10 +381,12 @@ function build_submission_section(results, mode, user_id) {
             </div>
             <br>`;
 
+    //searchFromSubmission('` + value.strGameName + `', '` + value.strPlatformName + `', '` + value.strDisplayName + `', '` + value.strVehicleName + `', '` + value.strTrackName + `', '` + value.strGameModeName + `')
     if(results != "")
     {
         $.each(results, function(index, value) {
             deleteDisplay = (value.iUserID == user_id)?';':'none;';
+
             html_section += 
             `<div id="submission_col_container" class="container">
                 <div class="row">
@@ -394,7 +410,7 @@ function build_submission_section(results, mode, user_id) {
                         </button>
                     </div>
                     <div class="col-sm sinkCol">
-                        <button id="tooltip" class="submissionButtons" type="button" onclick="searchFromSubmission('` + value.strGameName + `', '` + value.strGameModeName + `')">Search
+                        <button id="tooltip" class="submissionButtons" type="button" onclick="searchFromSubmission('` + value.strGameName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strTrackName + `', '` + value.strGameModeName + `')">Search
                             <span id="tooltiptext">Search game + game mode</span>
                         </button>
                     </div>
@@ -404,8 +420,12 @@ function build_submission_section(results, mode, user_id) {
                 <div class="row">
                     <div class="col-sm-3 textLeftAlign sinkCol">
                         <div class="sinkDiv">
-                            <span class="titleColor">Game: </span>
-                            <span class="contentColor">` + value.strGameName + `</span>
+                            <span id="tooltip" onclick="searchFromSubmission('` + value.strGameName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `')">
+                                <span class="titleColor">Game: </span>
+                                <span class="contentColor">` + value.strGameName + `</span>
+                                <span id="tooltiptext">Search game</span>
+                            </span>
+                            
                         </div>
                     </div>
                     <div class="col-sm-3 textLeftAlign sinkCol">
@@ -765,34 +785,43 @@ async function searchSuggestionsListener(evt) {
 }
 
 
-function searchFromSubmission(game, game_mode) {
+function searchFromSubmission(gameName, platformName, displayName, vehicleName, trackName, gameModeName) {
 
     // get user id if logged in
     // session["user_id"]
     var dictParams = {  "callbackType":"search_from_sub",
-                        "game": game,
-                        "game_mode": game_mode
+                        "mode": "search_from_sub",
+                        "strGameName": gameName.trim(),
+                        "strPlatformName": platformName.trim(),
+                        "strDisplayName": displayName.trim(),
+                        "strVehicleName": vehicleName.trim(),
+                        "strTrackName": trackName.trim(),
+                        "strGameModeName": gameModeName.trim()
                     };
 
-    getUserID(dictParams, searchFromSubmissionInitiate);
+    getUserID(dictParams, searchInitiate);
     // /get user id if logged in
 }
 
-
-function searchFromSubmissionInitiate(user_id, game, game_mode) {
+/*
+function searchFromSubmissionInitiate(user_id, game, track, game_mode) {
     let mode = "Search";
 
     var page_type = document.getElementById("page_type") == null ? '' : document.getElementById("page_type").value;
 
-    var strGame = game.trim();
-    var strGameMode = game_mode.trim();
+    var strGame = game;
+    var strPlatform = platform;
+    var strDisplayName = displayName;
+    var strVehicleName = vehicleName;
+    var strTrack = track;
+    var strGameMode = game_mode;
 
     const myJSON = JSON.stringify({"mode":mode,
                     "strGameName":strGame,
-                    "strPlatformName":"",
-                    "strDisplayName":"",
-                    "strVehicleName":"",
-                    "strTrackName":"",
+                    "strPlatformName":strPlatform,
+                    "strDisplayName":strDisplayName,
+                    "strVehicleName":strVehicleName,
+                    "strTrackName":strTrack,
                     "strGameModeName":strGameMode
                     });
 
@@ -804,6 +833,10 @@ function searchFromSubmissionInitiate(user_id, game, game_mode) {
 
         nav_search_JS();
         document.getElementById("search_game").value = strGame;
+        document.getElementById("search_platform").value = strPlatform;
+        document.getElementById("search_display_name").value = strDisplayName;
+        document.getElementById("search_vehicle_name").value = strVehicleName;
+        document.getElementById("search_track").value = strTrack;
         document.getElementById("search_game_mode").value = strGameMode;
 
         $('#submissions_section').html(build_submission_section(response, mode, user_id));
@@ -811,6 +844,7 @@ function searchFromSubmissionInitiate(user_id, game, game_mode) {
         alert('Failure, dev has low IQ.');
     });
 }
+*/
 
 
 function deleteSubmission(mode, owner, submission_id) {
@@ -827,7 +861,7 @@ function deleteSubmission(mode, owner, submission_id) {
 }
 
 
-function deleteSubmissionInitiate(user_id, owner, submission_id, mode) {
+function deleteSubmissionInitiate(mode, user_id, owner, submission_id) {
     if (owner != user_id)
     {
         alert("This submission is not yours to delete!");
@@ -869,15 +903,15 @@ function getUserID(dictParams, myCallback) {
     }).done(function(response) {
         if(dictParams["callbackType"] == "search") 
         {
-            myCallback(response["user_id"], dictParams["mode"]);
+            myCallback(dictParams["mode"], response["user_id"], "");
         }
         else if (dictParams["callbackType"] == "search_from_sub")
         {
-            myCallback(response["user_id"], dictParams["game"], dictParams["game_mode"]);
+            myCallback(dictParams["callbackType"], response["user_id"], dictParams);
         }
         else if (dictParams["callbackType"] == "delete_sub")
         {
-            myCallback(response["user_id"], dictParams["owner"], dictParams["submission_id"], dictParams["mode"]);
+            myCallback(dictParams["mode"], response["user_id"], dictParams["owner"], dictParams["submission_id"]);
         }
         else
         {
