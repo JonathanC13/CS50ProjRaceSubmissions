@@ -87,6 +87,7 @@ def user_settings():
 def nav_user_settings_JS():
     return jsonify({'redirect': url_for("user_settings")})
 
+
 @app.route("/getSessionUserId", methods=["POST"])
 def getSessionUserId():
     if request.method == "POST":
@@ -483,11 +484,26 @@ def deleteSubmission():
             numRowsDel = db.execute("""DELETE FROM tblSubmissions WHERE iSubmissionID = ? AND iUserID = ?""", submissionID, userID)
             
             if numRowsDel == 1:
-                return jsonify({"status":"Success" ,"message": "Submission deleted!"})
+                return jsonify({"status":"GOOD" ,"message": "Submission deleted!"})
             else:
                 return jsonify({"status":"ERROR" ,"message": "Something has gone horribly wrong!"})
         else:
             return jsonify({"status":"ERROR" ,"message": "???"})
+        
+
+@app.route('/getUserNumOfSubmissions', methods=["POST"])
+def getUserNumOfSubmissions():
+    if request.method == "POST":
+        sql_query = "SELECT count(iSubmissionID) as 'numSubCnt' FROM tblSubmissions WHERE iUserID = ?"
+
+        rows = db.execute(sql_query, session["user_id"])
+
+        if len(rows) == 1:
+            return jsonify({"status":"GOOD" ,"message": rows[0]["numSubCnt"]})
+        else:
+            return jsonify({"status":"ERROR" ,"message": "sql error"})
+    else:
+        return jsonify({"status":"ERROR" ,"message": "???"})
 
 """
 

@@ -955,6 +955,19 @@ function topFunction() {
 }
 
 
+function getUserNumOfSubmissions() {
+    $.ajax({
+        url: "/getUserNumOfSubmissions",
+        type: "POST",
+        data: {}
+        }).done(function(response) {
+            document.getElementById("idNumOfSub").textContent = response["message"];
+        }).fail(function(response) {
+            alert('Failure, dev has low IQ.');
+    });
+}
+
+
 $( document ).ready(function() {
 
     //console.log( "ready!" );
@@ -969,6 +982,10 @@ $( document ).ready(function() {
     var submissions_section = document.getElementById("submissions_section");
     
     if(submissions_section && page_type == "Profile") {
+        // get the user's statistics
+        getUserNumOfSubmissions();
+
+        // get submissions by the current user
         search("Profile");
     }
     else if (submissions_section)
