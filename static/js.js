@@ -968,6 +968,23 @@ function getUserNumOfSubmissions() {
 }
 
 
+function getUserMostSubmittedX(dictProfileFields) {
+    
+    const myJSON = JSON.stringify(dictProfileFields);
+    
+    $.ajax({
+        url: "/getUserMostSubmittedX",
+        type: "POST",
+        data: {json_data:myJSON}
+        }).done(function(response) {
+            //console.log(dictProfileFields["profileElemID"] + " : " + response["message"]);
+            document.getElementById(dictProfileFields["profileElemID"]).textContent = response["message"];
+        }).fail(function(response) {
+            alert('Failure, dev has low IQ.');
+    });
+}
+
+
 $( document ).ready(function() {
 
     //console.log( "ready!" );
@@ -984,6 +1001,42 @@ $( document ).ready(function() {
     if(submissions_section && page_type == "Profile") {
         // get the user's statistics
         getUserNumOfSubmissions();
+
+        var dictProfileFields = {
+            "game":
+                {
+                    "table":"tblGames",
+                    "dbIDCol":"iGameID",
+                    "dbNameCol":"strGameName",
+                    "profileElemID":"idMostSubGame"
+                },
+            "track":
+                {  
+                    "table":"tblTracks",
+                    "dbIDCol":"iTrackID",
+                    "dbNameCol":"strTrackName",
+                    "profileElemID":"idMostSubTrack"
+                },
+            "vehicle":
+                {  
+                    "table":"tblVehicles",
+                    "dbIDCol":"iVehicleID",
+                    "dbNameCol":"strVehicleName",
+                    "profileElemID":"idMostSubVehicle"
+                },
+            "gameMode":
+                {  
+                    "table":"tblGameMode",
+                    "dbIDCol":"iGameModeID",
+                    "dbNameCol":"strGameModeName",
+                    "profileElemID":"idMostSubGameMode"
+                }
+        }
+        
+        for (const key of Object.keys(dictProfileFields))
+        {
+            getUserMostSubmittedX(dictProfileFields[key]);            
+        }
 
         // get submissions by the current user
         search("Profile");

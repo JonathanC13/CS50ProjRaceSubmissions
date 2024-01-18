@@ -175,6 +175,13 @@ SELECT a.iGameID, a.iTrackID, a.iGameModeID,
         INNER JOIN tblGameMode f ON f.iGameModeID = a.iGameModeID
         INNER JOIN tblUsers g ON g.iUserID = a.iUserID;
 
+SELECT b.strGameName, count(a.iGameID) 
+                        FROM tblSubmissions a 
+                            INNER JOIN tblGames b ON b.iGameID = a.iGameID 
+                        WHERE a.iUserID = 3
+                        GROUP BY a.iGameID
+                        ORDER BY count(a.iGameID) DESC
+                            LIMIT 1
 
 ---------
 
