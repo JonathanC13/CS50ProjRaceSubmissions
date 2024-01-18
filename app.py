@@ -494,6 +494,7 @@ def deleteSubmission():
 @app.route('/getUserNumOfSubmissions', methods=["POST"])
 def getUserNumOfSubmissions():
     if request.method == "POST":
+
         sql_query = "SELECT count(iSubmissionID) as 'numSubCnt' FROM tblSubmissions WHERE iUserID = ?"
 
         rows = db.execute(sql_query, session["user_id"])
@@ -504,6 +505,37 @@ def getUserNumOfSubmissions():
             return jsonify({"status":"ERROR" ,"message": "sql error"})
     else:
         return jsonify({"status":"ERROR" ,"message": "???"})
+    
+
+@app.route('/getUserMostSubmittedX', methods=["POST"])
+def getUserMostSubmittedX():
+    if request.method == "POST":
+        
+        data = json.loads(request.form.get("json_data"))
+        table = data["table"]
+        idCol = data["dbIDCol"]
+        nameCol = data["dbNameCol"]
+
+        sql_query = """SELECT b.{nameColft}, count(a.{idColft}) 
+                        FROM tblSubmissions a 
+                            INNER JOIN {tableft} b ON b.{idColft} = a.{idColft} 
+                        WHERE a.iUserID = ?
+                        GROUP BY a.{idColft}
+                        ORDER BY count(a.{idColft}) DESC
+                            LIMIT 1""".format(nameColft = nameCol, idColft = idCol, tableft = table)
+        
+        
+        rows = db.execute(sql_query, session["user_id"])
+
+        print(rows)
+
+        if len(rows) == 1:
+            return jsonify({"status":"GOOD" ,"message": rows[0][nameCol]})
+        else:
+            return jsonify({"status":"ERROR" ,"message": "sql error"})
+    else:
+        return jsonify({"status":"ERROR" ,"message": "???"})
+    
 
 """
 
