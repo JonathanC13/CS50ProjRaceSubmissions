@@ -960,6 +960,21 @@ function topFunction() {
 }
 
 
+function getUserProfileDisplayInfo() {
+    // get user profile pic and display name
+    $.ajax({
+        url: "/getUserProfileDisplayInfo",
+        type: "POST",
+        data: {}
+        }).done(function(response) {
+            document.getElementById("idProfilePic").textContent = response["profilePic"];
+            document.getElementById("idDisplayName").textContent = response["displayName"];
+        }).fail(function(response) {
+            document.getElementById("idDisplayName").textContent = "error";
+    });
+}
+
+
 function getUserNumOfSubmissions() {
     $.ajax({
         url: "/getUserNumOfSubmissions",
@@ -968,7 +983,7 @@ function getUserNumOfSubmissions() {
         }).done(function(response) {
             document.getElementById("idNumOfSub").textContent = response["message"];
         }).fail(function(response) {
-            alert('Failure, dev has low IQ.');
+            document.getElementById("idNumOfSub").textContent = "error";
     });
 }
 
@@ -985,7 +1000,16 @@ function getUserMostSubmittedX(dictProfileFields) {
             //console.log(dictProfileFields["profileElemID"] + " : " + response["message"]);
             document.getElementById(dictProfileFields["profileElemID"]).textContent = response["message"];
         }).fail(function(response) {
-            alert('Failure, dev has low IQ.');
+            /*
+            console.log("--");
+            console.log(dictProfileFields["profileElemID"]);
+            console.log(dictProfileFields["table"]);
+            console.log(dictProfileFields["dbIDCol"]);
+            console.log(dictProfileFields["dbNameCol"]);
+            console.log("/--")
+            */
+            document.getElementById(dictProfileFields["profileElemID"]).textContent = "error";
+            //alert('Failure, dev has low IQ.');
     });
 }
 
@@ -1004,6 +1028,9 @@ $( document ).ready(function() {
     var submissions_section = document.getElementById("submissions_section");
     
     if(submissions_section && page_type == "profile") {
+
+        getUserProfileDisplayInfo();
+
         // get the user's statistics
         getUserNumOfSubmissions();
 

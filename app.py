@@ -516,13 +516,23 @@ def getUserMostSubmittedX():
         idCol = data["dbIDCol"]
         nameCol = data["dbNameCol"]
 
-        sql_query = """SELECT b.{nameColft}, count(a.{idColft}) 
+        
+        #sql_query = """SELECT b.{nameColft}, count(a.{idColft}) 
+        #                FROM tblSubmissions a 
+        #                    INNER JOIN {tableft} b ON b.{idColft} = a.{idColft} 
+        #                WHERE a.iUserID = ?
+        #                GROUP BY a.{idColft}
+        #                ORDER BY count(a.{idColft}) DESC
+        #                    LIMIT 1""".format(nameColft = nameCol, idColft = idCol, tableft = table)
+        # format causing > RuntimeError: fewer placeholder () than values (3)
+
+        sql_query = """SELECT b.""" + nameCol + """, count(a.""" + idCol + """) 
                         FROM tblSubmissions a 
-                            INNER JOIN {tableft} b ON b.{idColft} = a.{idColft} 
+                            INNER JOIN """ + table + """ b ON b.""" + idCol + """ = a.""" + idCol + """
                         WHERE a.iUserID = ?
-                        GROUP BY a.{idColft}
-                        ORDER BY count(a.{idColft}) DESC
-                            LIMIT 1""".format(nameColft = nameCol, idColft = idCol, tableft = table)
+                        GROUP BY a.""" + idCol + """
+                        ORDER BY count(a.""" + idCol + """) DESC
+                            LIMIT 1"""
         
         
         rows = db.execute(sql_query, session["user_id"])
@@ -536,6 +546,20 @@ def getUserMostSubmittedX():
     else:
         return jsonify({"status":"ERROR" ,"message": "???"})
     
+
+@app.route("/getUserProfileDisplayInfo", methods=["POST"])
+def getUserProfileDisplayInfo():
+    if request.method == "POST":
+        sql_query = "SELECT strDisplayName, strProfilePicSrc FROM tblUsers WHERE iUserID = ?"
+
+        rows = db.execute(sql_query, session["user_id"])
+
+        if len(rows) == 1:
+            return jsonify({"status":"GOOD", "displayName": rows[0]["strDisplayName"], "profilePic": rows[0]["strProfilePicSrc"]})
+        else:
+            return jsonify({"status":"ERROR" ,"message": "N/A"})
+    else:
+        return jsonify({"status":"ERROR" ,"message": "???"})
 
 """
 
@@ -554,7 +578,7 @@ TODO
 - Under full time, it will determine what place the time is: 7th (Based on Game + track + Game mode)
     - Adding post fix to strStanding (st, nd, rd, th) -- here
 - API from game image
-- profile info -- OK? no error anymore
+- profile info -- TODO: profile pic in getUserProfileDisplayInfo
 
 
 
@@ -568,12 +592,7 @@ TODO
     - button for last page
 
 onclick the record info: *TODO
-    a. game image -> searches the game
-    b. display name -> user's profile
-    c. car -> searches the game + car
-    d. track -> searches the game + track
-    e. game mode -> searches the game + game mode
-    f. anywhere else -> record explode to show fuller information
+    a. display name -> user's profile
 
 
 
