@@ -202,7 +202,7 @@ def populate_submissions_search():
                         ORDER BY a.strSubmittedDate DESC;"""
 
     if (mode == "search" or mode == "search_from_sub"):
-        rows = db.execute(sql_query, *params)   
+        rows = db.execute(sql_query, *params)
     elif (mode == "profile"):
         rows = db.execute(sql_query, session["user_id"])
     else:
@@ -583,6 +583,10 @@ TODO
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> dd6225ece4e5b2b7d6fa708e8974df76ee8b4783
 - Custom Page system. 10 submissions per page
     - filter by full time only
     - button for first page
