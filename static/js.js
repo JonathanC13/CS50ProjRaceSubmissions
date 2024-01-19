@@ -75,17 +75,17 @@ function register() {
 function show_search_section(page) {
     var search_section = document.getElementById("search_section");
 
-    if(search_section && page == "Search")
+    if(search_section && page == "search")
     {
         document.getElementById("search_section").style.display = "block";   
-        document.getElementById("page_type").value = "Search"
+        document.getElementById("page_type").value = "search"
         //console.log(document.getElementById("page_type").value);
         return 0;
     }
-    else if (search_section && page == "Home")
+    else if (search_section && page == "home")
     {
         document.getElementById("search_section").style.display = "none";   
-        document.getElementById("page_type").value = "Home"
+        document.getElementById("page_type").value = "home"
         return 1;
     }
     else
@@ -98,9 +98,9 @@ function show_search_section(page) {
 function nav_home_JS() {
     var page_type = document.getElementById("page_type") == null ? '' : document.getElementById("page_type").value;
 
-    if(page_type == "Search")
+    if(page_type == "search")
     {
-        show_search_section("Home");
+        show_search_section("home");
     }
     else
     {
@@ -124,14 +124,14 @@ function nav_home_JS() {
         $( this ).removeClass("active");
     });
 
-    search("Default");
+    search("default");
 
 }
 
 
 function nav_search_JS() {
     topFunction();
-    var ret = show_search_section("Search");
+    var ret = show_search_section("search");
     if(ret != 0)
     {
         $.ajax({
@@ -293,7 +293,7 @@ function searchInitiate(mode, user_id, optionalDict) {
         return;
     }
 
-    if(mode == "Search")
+    if(mode == "search")
     {
         search_params = JSON.stringify({"mode":mode,
                                     "strGameName":document.getElementById("search_game").value.trim(),
@@ -304,7 +304,7 @@ function searchInitiate(mode, user_id, optionalDict) {
                                     "strGameModeName":document.getElementById("search_game_mode").value.trim()
                                     });
     }
-    else if(mode == "Profile")
+    else if(mode == "profile")
     {
         search_params = JSON.stringify({"mode":mode});
     }
@@ -322,14 +322,19 @@ function searchInitiate(mode, user_id, optionalDict) {
     }
     else
     {
-        search_params = JSON.stringify({"mode":"Default"});
+        search_params = JSON.stringify({"mode":"default"});
 
-        document.getElementById("search_game").value = "";
-        document.getElementById("search_platform").value = "";
-        document.getElementById("search_display_name").value = "";
-        document.getElementById("search_vehicle").value = "";
-        document.getElementById("search_track").value = "";
-        document.getElementById("search_game_mode").value = "";
+        var searchContainer = document.getElementById("search_col_container");
+
+        if (searchContainer) {
+            document.getElementById("search_game").value = "";
+            document.getElementById("search_platform").value = "";
+            document.getElementById("search_display_name").value = "";
+            document.getElementById("search_vehicle").value = "";
+            document.getElementById("search_track").value = "";
+            document.getElementById("search_game_mode").value = "";
+        }
+
     }
 
     $.ajax({
@@ -358,12 +363,12 @@ function build_submission_section(results, mode, user_id) {
             <div id="subtitle_div">
                 <span id="subtitle_span">`;
     
-    if (mode == "Search" || mode == "search_from_sub")
+    if (mode == "search" || mode == "search_from_sub")
     {
         html_section +=
                     `Search results`;       
     }
-    else if (mode == "Profile")
+    else if (mode == "profile")
     {
         html_section +=
                     `Fastest times`;       
@@ -998,7 +1003,7 @@ $( document ).ready(function() {
     // load default submissions
     var submissions_section = document.getElementById("submissions_section");
     
-    if(submissions_section && page_type == "Profile") {
+    if(submissions_section && page_type == "profile") {
         // get the user's statistics
         getUserNumOfSubmissions();
 
@@ -1039,11 +1044,11 @@ $( document ).ready(function() {
         }
 
         // get submissions by the current user
-        search("Profile");
+        search("profile");
     }
     else if (submissions_section)
     {
-        search("Default");
+        search("default");
     }
     // /load default submissions
 

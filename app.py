@@ -33,7 +33,7 @@ def after_request(response):
 @app.route("/")
 def index():
     """Home page: show the latest race submissions"""
-    return render_template("home.html", page_type="Home")
+    return render_template("home.html", page_type="home")
 
 @app.route("/blankTest")
 def blankTest():
@@ -47,7 +47,7 @@ def nav_index_JS():
 
 @app.route("/nav_search")
 def nav_search():
-    return render_template("home.html", page_type="Search")
+    return render_template("home.html", page_type="search")
 
 
 @app.route("/nav_search_JS", methods=["POST"])
@@ -58,7 +58,7 @@ def nav_search_JS():
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
-    return render_template("profile.html", page_type="Profile")
+    return render_template("profile.html", page_type="profile")
 
 
 @app.route("/nav_profile_JS", methods=["POST"])
@@ -69,7 +69,7 @@ def nav_profile_JS():
 @app.route("/submit")
 @login_required
 def submit():
-    return render_template("submit.html", page_type="Submit")
+    return render_template("submit.html", page_type="submit")
 
 
 @app.route("/nav_submit_JS", methods=["POST"])
@@ -80,7 +80,7 @@ def nav_submit_JS():
 @app.route("/user_settings")
 @login_required
 def user_settings():
-    return render_template("user_settings.html", page_type="Settings")
+    return render_template("user_settings.html", page_type="settings")
 
 
 @app.route("/nav_user_settings_JS", methods=["POST"])
@@ -109,7 +109,7 @@ def populate_submissions_search():
         data = json.loads(request.form.get("search_json"))
         mode = data["mode"]
         
-        if (mode == "Search" or mode == "search_from_sub"):
+        if (mode == "search" or mode == "search_from_sub"):
 
             searchDict = {}
 
@@ -166,7 +166,7 @@ def populate_submissions_search():
 
             sql_query = sql_query + " ORDER BY a.strSubmittedDate DESC;"                       
             
-        elif (mode == "Profile"):
+        elif (mode == "profile"):
             sql_query = """SELECT *, datetime(strSubmittedDate, 'unixepoch', 'localtime') as 'strSubmittedDateFormatted',
                             RANK () OVER ( 
                                 PARTITION BY a.iGameID AND a.iTrackID AND a.iGameModeID
@@ -201,9 +201,9 @@ def populate_submissions_search():
                             INNER JOIN tblUsers g ON g.iUserID = a.iUserID
                         ORDER BY a.strSubmittedDate DESC;"""
 
-    if (mode == "Search" or mode == "search_from_sub"):
+    if (mode == "search" or mode == "search_from_sub"):
         rows = db.execute(sql_query, *params)   
-    elif (mode == "Profile"):
+    elif (mode == "profile"):
         rows = db.execute(sql_query, session["user_id"])
     else:
         rows = db.execute(sql_query)
@@ -224,7 +224,7 @@ def populate_submissions_search():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html", page_type="Log In", login_msg='')
+    return render_template("login.html", page_type="logIn", login_msg='')
 
 
 @app.route("/nav_login_JS", methods=["POST"])
@@ -273,7 +273,7 @@ def register():
     """User register"""
 
     __login_msg = ''
-    return render_template("register.html", page_type="Register", register_msg='')
+    return render_template("register.html", page_type="register", register_msg='')
 
 
 @app.route("/nav_register_JS", methods=["POST"])
@@ -527,12 +527,12 @@ def getUserMostSubmittedX():
         
         rows = db.execute(sql_query, session["user_id"])
 
-        print(rows)
+        #print(rows)
 
         if len(rows) == 1:
             return jsonify({"status":"GOOD" ,"message": rows[0][nameCol]})
         else:
-            return jsonify({"status":"ERROR" ,"message": "sql error"})
+            return jsonify({"status":"ERROR" ,"message": "N/A"})
     else:
         return jsonify({"status":"ERROR" ,"message": "???"})
     
@@ -552,7 +552,7 @@ TODO
 - Under full time, it will determine what place the time is: 7th (Based on Game + track + Game mode)
     - Adding post fix to strStanding (st, nd, rd, th) -- here
 - API from game image
-- profile info
+- profile info -- OK? no error anymore
 
 
 
