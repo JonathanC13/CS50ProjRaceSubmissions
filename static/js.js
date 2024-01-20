@@ -353,6 +353,27 @@ function searchInitiate(mode, user_id, optionalDict) {
 }
 
 
+function setStandingPostFix(strStanding) {
+
+    let ord = 'th';
+
+    if (strStanding % 10 == 1 && strStanding % 100 != 11)
+    {
+        ord = 'st';
+    }
+    else if (strStanding % 10 == 2 && strStanding % 100 != 12)
+    {
+        ord = 'nd';
+    }
+    else if (strStanding % 10 == 3 && strStanding % 100 != 13)
+    {
+        ord = 'rd';
+    }
+
+    return strStanding + ord;
+}
+
+
 function build_submission_section(results, mode, user_id) {
     //console.log(results);
     
@@ -391,6 +412,8 @@ function build_submission_section(results, mode, user_id) {
     {
         $.each(results, function(index, value) {
             deleteDisplay = (value.iUserID == user_id)?';':'none;';
+
+            subPlacement = setStandingPostFix(value.strStanding);
 
             html_section += 
             `<div id="submission_col_container" class="container">
@@ -495,7 +518,10 @@ function build_submission_section(results, mode, user_id) {
                             <div class="col-sm-6 textLeftAlign sinkCol">
                                 <div class="sinkDiv">
                                     <span class="titleColor">Full Time: </span>
-                                    <span class="contentColor">` + value.strFullTime + `</span> - <span class="titleColor">(` + value.strStanding + `)</span>
+                                    <span class="contentColor">` + value.strFullTime + `</span>
+                                    <br>
+                                    <span class="titleColor">Placement: </span>
+                                    <span class="contentColor">(` + subPlacement + `)</span>
                                     <br>
                                     (based on Game, Track, and Game mode)
                                 </div>

@@ -139,7 +139,7 @@ def populate_submissions_search():
 
             sql_query = """SELECT *, datetime(strSubmittedDate, 'unixepoch', 'localtime') as 'strSubmittedDateFormatted',
                             RANK () OVER ( 
-                                PARTITION BY a.iGameID AND a.iTrackID AND a.iGameModeID
+                                PARTITION BY a.iGameID, a.iTrackID, a.iGameModeID
                                 ORDER BY strFullTime ASC
                             ) strStanding
                         FROM tblSubmissions a
@@ -169,7 +169,7 @@ def populate_submissions_search():
         elif (mode == "profile"):
             sql_query = """SELECT *, datetime(strSubmittedDate, 'unixepoch', 'localtime') as 'strSubmittedDateFormatted',
                             RANK () OVER ( 
-                                PARTITION BY a.iGameID AND a.iTrackID AND a.iGameModeID
+                                PARTITION BY a.iGameID, a.iTrackID, a.iGameModeID
                                 ORDER BY strFullTime ASC
                             ) strStanding
                         FROM tblSubmissions a
@@ -189,7 +189,7 @@ def populate_submissions_search():
     if (sql_query == None):
         sql_query = """SELECT *, datetime(strSubmittedDate, 'unixepoch', 'localtime') as 'strSubmittedDateFormatted',
                             RANK () OVER ( 
-                                PARTITION BY a.iGameID AND a.iTrackID AND a.iGameModeID
+                                PARTITION BY a.iGameID, a.iTrackID, a.iGameModeID
                                 ORDER BY strFullTime ASC
                             ) strStanding
                         FROM tblSubmissions a
@@ -575,18 +575,17 @@ Pract
 
 TODO
 
-- Under full time, it will determine what place the time is: 7th (Based on Game + track + Game mode)
-    - Adding post fix to strStanding (st, nd, rd, th) -- here
 - API from game image
-- profile info -- TODO: profile pic in getUserProfileDisplayInfo
+- profile info -- TODO: 
+    - Get profile pic in getUserProfileDisplayInfo for profile page
+- settings page to update user settings
+    - display
+    - profile pic
+
+    
 
 
 
-
-<<<<<<< HEAD
-=======
-
->>>>>>> dd6225ece4e5b2b7d6fa708e8974df76ee8b4783
 - Custom Page system. 10 submissions per page
     - filter by full time only
     - button for first page
@@ -595,8 +594,7 @@ TODO
     - button for next page
     - button for last page
 
-onclick the record info: *TODO
-    a. display name -> user's profile
+
 
 
 

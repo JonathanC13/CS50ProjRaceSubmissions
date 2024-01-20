@@ -162,9 +162,9 @@ SELECT *
     ORDER BY a.strSubmittedDate DESC
     LIMIT 10;
 
-SELECT a.iGameID, a.iTrackID, a.iGameModeID,
+SELECT b.strGameName, e.strTrackName, f.strGameModeName, a.strFullTime,
         RANK () OVER ( 
-            PARTITION BY a.iGameID AND a.iTrackID AND a.iGameModeID
+            PARTITION BY a.iGameID, a.iTrackID, a.iGameModeID
             ORDER BY strFullTime ASC
         ) strStanding 
     FROM tblSubmissions a
