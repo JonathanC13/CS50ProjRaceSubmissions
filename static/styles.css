@@ -72,6 +72,14 @@ span {
     border-color:#212529;
 }
 
+
+.borderWhite {
+    border-radius: 5px;
+    border-style: solid;
+    border-color:white;
+}
+
+
 textarea {
     resize: none;
 }
@@ -178,7 +186,7 @@ textarea {
     display:none;
 }
 
-#search_submit, #display_name_change_submit, #password_change_submit, #btn_login_submit, #submission_submit, #register_submit{
+#search_submit, #display_name_change_submit, #password_change_submit, #btn_login_submit, #submission_submit, #register_submit, #display_pic_change{
     width:100%;
     background-color: #f5b82e;
     color:black;
@@ -190,7 +198,7 @@ textarea {
     text-align: center;
 }
 
-#login_msg, #register_msg, #submission_msg , #submissionListMessage{
+#login_msg, #register_msg, #submission_msg , #submissionListMessage, #user_settings_profile_pic_msg, #user_settings_display_name_msg, #user_settings_password_msg{
     background-color: #212529;
     color:red;
 }

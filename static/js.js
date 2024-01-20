@@ -760,16 +760,15 @@ function validate_record_submission() {
                 document.getElementById("in_submit_bestlaptime_SS").value = "";
                 document.getElementById("in_submit_bestlaptime_sss").value = "";
                 document.getElementById("ta_submit_desc").value = "";
-
-                msg_sumbit.style.color = "green";
-                msg_sumbit.textContent = response["message"];   
                 
-                topFunction();
+                msg_sumbit.style.color = "green";
+                
             }
-            else
-            {
-                msg_sumbit.textContent = response["message"];
-            }            
+             
+            msg_sumbit.textContent = response["message"];
+
+            topFunction();
+
         }).fail(function(response) {
             msg_sumbit.textContent = 'Failure, dev has low IQ.';
         });
@@ -956,7 +955,7 @@ function getUserID(dictParams, myCallback) {
         url:"/getSessionUserId",
         data:{}
     }).done(function(response) {
-        if(dictParams["callbackType"] == "search") 
+        if (dictParams["callbackType"] == "search") 
         {
             myCallback(dictParams["mode"], response["user_id"], "");
         }
@@ -967,6 +966,10 @@ function getUserID(dictParams, myCallback) {
         else if (dictParams["callbackType"] == "delete_sub")
         {
             myCallback(dictParams["mode"], response["user_id"], dictParams["owner"], dictParams["submission_id"]);
+        }
+        else if (dictParams["mode"] == "update_user_settings")
+        {
+            myCallback(dictParams);
         }
         else
         {
@@ -1037,6 +1040,95 @@ function getUserMostSubmittedX(dictProfileFields) {
             document.getElementById(dictProfileFields["profileElemID"]).textContent = "error";
             //alert('Failure, dev has low IQ.');
     });
+}
+
+
+function update_user_settings_initiate(dictParams){
+
+    let user_settings_profile_pic_msg = document.getElementById("user_settings_profile_pic_msg");
+    user_settings_profile_pic_msg.style.color = "red";
+
+    let user_settings_display_name_msg = document.getElementById("user_settings_profile_pic_msg");
+    user_settings_display_name_msg.style.color = "red";
+
+    let user_settings_password_msg = document.getElementById("user_settings_password_msg");
+    user_settings_password_msg.style.color = "red";
+
+    const myJSON = JSON.stringify(dictParams);
+    
+    $.ajax({
+        url: "/update_user_settings_initiate",
+        type: "POST",
+        data: {json_data:myJSON}
+        }).done(function(response) {
+
+            if (response["status"] = "GOOD") {
+                
+                user_settings_profile_pic_msg.style.color = "green";
+                user_settings_display_name_msg.style.color = "green";
+                user_settings_password_msg.style.color = "green";
+
+                // clear password inputs on success
+                document.getElementById("old_password").value = "";
+                document.getElementById("new_password").value = "";
+                document.getElementById("confirm_new_password").value = "";
+                
+            }
+
+            if (dictParams["update_section"] == "profile_pic")
+            {
+                user_settings_profile_pic_msg.textContent = response["message"];
+            }
+            else if (dictParams["update_section"] == "display_name")
+            {
+                user_settings_display_name_msg.textContent = response["message"];
+            }
+            else if (dictParams["update_section"] == "password")
+            {
+                user_settings_password_msg.textContent = response["message"];
+            }
+
+            topFunction();
+
+        }).fail(function(response) {
+            
+            alert('Failure, dev has low IQ.');
+    });
+}
+
+
+function update_user_settings(update_section) {
+
+    /*
+    Profile pic updates automatically once user chooses an acceptable file. Uh, like file type PNG or JPEG and will auto resize to a set size.
+    Display name updates on button click
+    Password updates on button click
+    */
+
+    var dictParams = {"callbackType":"update_user_settings_initiate",
+                        "mode":"update_user_settings",
+                        "update_section":update_section
+                    };
+
+    if (update_section == "profile_pic")
+    {
+        pass;
+        // open file explorer
+        // once they choose a file. check file format, resize, and attempt to save file into server. DB columns will save the file name, if same file name
+        //  exists, rename it with _+1.ext
+    }
+    else if (update_section == "display_name")
+    {
+        dictParams["new_display_name"] = document.getElementById("txt_display_name_change").value().trim();
+    }
+    else if (update_section == "password")
+    {
+        dictParams["old_password"] = document.getElementById("old_password").value().trim();
+        dictParams["new_password"] = document.getElementById("new_password").value().trim();
+        dictParams["confirm_new_password"] = document.getElementById("confirm_new_password").value().trim();
+    }
+    
+    getUserID(dictParams, update_user_settings_initiate);
 }
 
 

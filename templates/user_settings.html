@@ -21,15 +21,23 @@
                         </div>
                         <div class="row">
                             <div class="borderRed col-sm">
-                                <input autocomplete="off" autofocus class="form-control" id="txt_display_name_change" name="txt_display_name_change" placeholder="Display name" type="text">
+                                <button id="display_pic_change" class="btn btn-primary" onclick="update_user_settings('profile_pic')">Update profile picture</button>
+                            </div>
+                            <span id="user_settings_profile_pic_msg"></span>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="borderRed col-sm">
+                                <input autocomplete="off" autofocus class="form-control" id="txt_display_name_change" placeholder="Display name" type="text">
                             </div>
                             <div class="borderRed col-sm">
-                                <button id="display_name_change_submit" class="btn btn-primary" type="submit">Change</button>
+                                <button id="display_name_change_submit" class="btn btn-primary" onclick="update_user_settings('display_name')">Change</button>
                             </div>
+                            <span id="user_settings_display_name_msg"></span>
                         </div>
                         <br><br>
                         <div class="row">
-                            <div class="borderDark col-sm">
+                            <div class="borderWhite col-sm">
                                 <div id="subtitle_div">
                                     <span id="subtitle_span">
                                         Password <!--Padding is optional-->
@@ -37,16 +45,17 @@
                                 </div>
                                 <br>
                                 <div class="mb-3">
-                                    <input autocomplete="off" class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+                                    <input autocomplete="off" class="form-control mx-auto w-auto" id="old_password" placeholder="Old Password" type="password">
                                 </div>
                                 <div class="mb-3">
-                                    <input autocomplete="off" class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+                                    <input autocomplete="off" class="form-control mx-auto w-auto" id="new_password" placeholder="New Password" type="password">
                                 </div>
                                 <div class="mb-3">
-                                    <input autocomplete="off" class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+                                    <input autocomplete="off" class="form-control mx-auto w-auto" id="confirm_new_password" placeholder="Confirm new Password" type="password">
                                 </div>
-                                <button id="password_change_submit" class="btn btn-primary" type="submit">Change password</button>
+                                <button id="password_change_submit" class="btn btn-primary" onclick="update_user_settings('password')">Change password</button>
                                 <br>
+                                <span id="user_settings_password_msg"></span>
                             </div>                            
                         </div>
                     </div>

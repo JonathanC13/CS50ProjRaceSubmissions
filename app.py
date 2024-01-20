@@ -561,6 +561,25 @@ def getUserProfileDisplayInfo():
     else:
         return jsonify({"status":"ERROR" ,"message": "???"})
 
+
+app.route("/update_user_settings_initiate", methods=["POST"])
+def update_user_settings_initiate():
+    if request.method == "POST":
+        data = json.loads(request.form.get("json_data"))
+        updateSection = data["update_section"]
+
+        sql_query = ""
+
+        if (updateSection == "profile_pic"):
+            # todo
+            pass
+        elif (updateSection == "display_name"):
+            sql_query = "UPDATE strDisplayName = " + data["new_display_name"]
+        elif (updateSection == "password"):
+            # todo password validation
+            sql_query = "UPDATE strHashPW = " + data["new_password"]
+
+
 """
 
 
@@ -579,8 +598,8 @@ TODO
 - profile info -- TODO: 
     - Get profile pic in getUserProfileDisplayInfo for profile page
 - settings page to update user settings
-    - display
-    - profile pic
+    - display / password -- HERE
+    - profile pic -- TODO
 
     
 
