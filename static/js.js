@@ -967,9 +967,9 @@ function getUserID(dictParams, myCallback) {
         {
             myCallback(dictParams["mode"], response["user_id"], dictParams["owner"], dictParams["submission_id"]);
         }
-        else if (dictParams["mode"] == "update_user_settings")
+        else if (dictParams["callbackType"] == "get_user_display_info")
         {
-            myCallback(dictParams);
+            myCallback(response["user_id"], dictParams);
         }
         else
         {
@@ -989,17 +989,47 @@ function topFunction() {
 }
 
 
-function getUserProfileDisplayInfo() {
+function getUserProfileDisplayInfo(page_type) {
+
+    var dictParams = {  "callbackType": "get_user_display_info",
+                        "page_type": page_type
+                    };
+
+    getUserID(dictParams, getUserProfileDisplayInfo_initiate);
+}
+
+
+function getUserProfileDisplayInfo_initiate(user_id, dictParams) {
+    page_type = dictParams["page_type"];
+
+    const myJSON = JSON.stringify({"user_id":user_id});
+
     // get user profile pic and display name
     $.ajax({
         url: "/getUserProfileDisplayInfo",
         type: "POST",
-        data: {}
+        data: {json_data:myJSON}
         }).done(function(response) {
-            document.getElementById("idProfilePic").textContent = response["profilePic"];
-            document.getElementById("idDisplayName").textContent = response["displayName"];
+            //document.getElementById("idProfilePic").textContent = response["profilePic"];
+            //console.log(response);
+            //console.log(page_type);
+            if (page_type == "settings")
+            {                
+                document.getElementById("txt_display_name_change").value = response["displayName"];
+            }
+            else if (page_type == "profile")
+            {
+                document.getElementById("idDisplayName").textContent = response["displayName"];
+            }            
         }).fail(function(response) {
-            document.getElementById("idDisplayName").textContent = "error";
+            if (page_type == "settings")
+            {
+                document.getElementById("txt_display_name_change").value = "error";
+            }
+            else if (page_type == "profile")
+            {
+                document.getElementById("idDisplayName").textContent = "error";
+            }
     });
 }
 
@@ -1105,7 +1135,7 @@ function update_user_settings(update_section) {
     Password updates on button click
     */
 
-    var dictParams = {"callbackType":"update_user_settings_initiate",
+    var dictParams = {"callbackType":"update_user_settings",
                         "mode":"update_user_settings",
                         "update_section":update_section
                     };
@@ -1126,6 +1156,14 @@ function update_user_settings(update_section) {
         dictParams["old_password"] = document.getElementById("old_password").value().trim();
         dictParams["new_password"] = document.getElementById("new_password").value().trim();
         dictParams["confirm_new_password"] = document.getElementById("confirm_new_password").value().trim();
+
+        if (dictParams["new_password"] != dictParams["confirm_new_password"]) 
+        {
+            let user_settings_password_msg = document.getElementById("user_settings_password_msg");
+            user_settings_password_msg.style.color = "red";
+            user_settings_password_msg.textContent = "Please ensure new password and confirm password match!";
+            return;
+        }
     }
     
     getUserID(dictParams, update_user_settings_initiate);
@@ -1136,18 +1174,22 @@ $( document ).ready(function() {
 
     //console.log( "ready!" );
     var page_type = document.getElementById("page_type") == null ? '' : document.getElementById("page_type").value;
-    //console.log(page_type);
+    console.log(page_type);
     // show if page type = "search"
     show_search_section(page_type);
 
     // /show if page type = "search"
 
+    if (page_type == "settings")
+    {        
+        getUserProfileDisplayInfo(page_type);
+    }
+
     // load default submissions
     var submissions_section = document.getElementById("submissions_section");
     
     if(submissions_section && page_type == "profile") {
-
-        getUserProfileDisplayInfo();
+        getUserProfileDisplayInfo(page_type);
 
         // get the user's statistics
         getUserNumOfSubmissions();
@@ -1199,7 +1241,7 @@ $( document ).ready(function() {
 
     // load comment section
     var comment_rows = document.getElementById("comment_rows");
-    if(comment_rows) {
+    if (comment_rows) {
         build_comments();
     }
     // /load comment section

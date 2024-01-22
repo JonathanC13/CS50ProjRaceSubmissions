@@ -254,7 +254,7 @@ def login_SQL():
         return jsonify({"status": "GOOD", "redirect": url_for("profile")})
 
     else:
-        return jsonify({"status": "ERROR", "message": "ERROR"})
+        return jsonify({"status": "ERROR", "message": "GET"})
 
 
 @app.route("/logout")
@@ -312,7 +312,7 @@ def validate_registration():
 
         return jsonify({"status":"GOOD" ,"redirect": url_for("login")})
     else:
-        return jsonify({"status":"ERROR" ,"message": "ERROR"})
+        return jsonify({"status":"ERROR" ,"message": "GET"})
     
 """
 @app.route("/searchSuggestions")    # route name for JS
@@ -517,22 +517,15 @@ def getUserMostSubmittedX():
         nameCol = data["dbNameCol"]
 
         
-        #sql_query = """SELECT b.{nameColft}, count(a.{idColft}) 
-        #                FROM tblSubmissions a 
-        #                    INNER JOIN {tableft} b ON b.{idColft} = a.{idColft} 
-        #                WHERE a.iUserID = ?
-        #                GROUP BY a.{idColft}
-        #                ORDER BY count(a.{idColft}) DESC
-        #                    LIMIT 1""".format(nameColft = nameCol, idColft = idCol, tableft = table)
-        # format causing > RuntimeError: fewer placeholder () than values (3)
-
-        sql_query = """SELECT b.""" + nameCol + """, count(a.""" + idCol + """) 
+        sql_query = """SELECT b.{nameColft}, count(a.{idColft}) 
                         FROM tblSubmissions a 
-                            INNER JOIN """ + table + """ b ON b.""" + idCol + """ = a.""" + idCol + """
+                            INNER JOIN {tableft} b ON b.{idColft} = a.{idColft} 
                         WHERE a.iUserID = ?
-                        GROUP BY a.""" + idCol + """
-                        ORDER BY count(a.""" + idCol + """) DESC
-                            LIMIT 1"""
+                        GROUP BY a.{idColft}
+                        ORDER BY count(a.{idColft}) DESC
+                            LIMIT 1""".format(nameColft = nameCol, idColft = idCol, tableft = table)
+        # Need to fix > RuntimeError: fewer placeholder () than values (3) for app.py function getUserMostSubmittedX that happens sometimes due to timeout(?)
+
         
         
         rows = db.execute(sql_query, session["user_id"])
@@ -550,16 +543,19 @@ def getUserMostSubmittedX():
 @app.route("/getUserProfileDisplayInfo", methods=["POST"])
 def getUserProfileDisplayInfo():
     if request.method == "POST":
+        data = json.loads(request.form.get("json_data"))
+        userID = data["user_id"]
+
         sql_query = "SELECT strDisplayName, strProfilePicSrc FROM tblUsers WHERE iUserID = ?"
 
-        rows = db.execute(sql_query, session["user_id"])
+        rows = db.execute(sql_query, userID)
 
         if len(rows) == 1:
             return jsonify({"status":"GOOD", "displayName": rows[0]["strDisplayName"], "profilePic": rows[0]["strProfilePicSrc"]})
         else:
             return jsonify({"status":"ERROR" ,"message": "N/A"})
     else:
-        return jsonify({"status":"ERROR" ,"message": "???"})
+        return jsonify({"status":"ERROR" ,"message": "Get profile error!"})
 
 
 app.route("/update_user_settings_initiate", methods=["POST"])
@@ -567,17 +563,48 @@ def update_user_settings_initiate():
     if request.method == "POST":
         data = json.loads(request.form.get("json_data"))
         updateSection = data["update_section"]
+        newDisplayName = data["new_display_name"]
+        oldPassword = data["old_password"]
+        newPassword = data["new_password"]
 
-        sql_query = ""
+        sql_querySELECT = ""
+        sql_queryUPDATE = ""
 
         if (updateSection == "profile_pic"):
             # todo
             pass
         elif (updateSection == "display_name"):
-            sql_query = "UPDATE strDisplayName = " + data["new_display_name"]
+            sql_querySELECT = "SELECT strDisplayName "
+            sql_queryUPDATE = "UPDATE strDisplayName = " + newDisplayName + " "
         elif (updateSection == "password"):
-            # todo password validation
-            sql_query = "UPDATE strHashPW = " + data["new_password"]
+            sql_querySELECT = "SELECT strHashPW "
+            sql_queryUPDATE = "UPDATE strHashPW = " + newPassword + " "
+        else:
+            return jsonify({"status":"ERROR" ,"message": "No update section identified!"})
+        
+        sql_query = sql_query + " FROM tblUsers WHERE iUserID = ?"
+
+        rows = db.execute(sql_querySELECT, data["user_id"])
+
+        if len(rows) == 1:
+            # check select if 1 row returned, if 1 then execute update, if not return ERROR
+            if (updateSection == "password" and rows[0]["strHashPW"] != generate_password_hash(oldPassword)):
+                # old password validation
+                return jsonify({"status":"ERROR" ,"message": "Old password does not match!"})            
+            
+            numRowsUpdated = db.execute(sql_queryUPDATE, data["user_id"])
+
+            if numRowsUpdated == 1:
+                return jsonify({"status":"GOOD" ,"message": "Successfully changed!"})
+            else:
+                return jsonify({"status":"ERROR" ,"message": "Unsuccessfully changed!"})
+
+        else:
+            return jsonify({"status":"ERROR" ,"message": "QUERY ERROR!"})
+    else:
+        return jsonify({"status":"ERROR" ,"message": "GET!"})
+        
+        
 
 
 """
@@ -598,7 +625,7 @@ TODO
 - profile info -- TODO: 
     - Get profile pic in getUserProfileDisplayInfo for profile page
 - settings page to update user settings
-    - display / password -- HERE
+    - display / password -- TEST
     - profile pic -- TODO
 
     
