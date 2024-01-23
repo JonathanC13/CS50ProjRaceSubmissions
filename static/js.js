@@ -950,6 +950,7 @@ function deleteSubmissionInitiate(mode, user_id, owner, submission_id) {
 
 
 function getUserID(dictParams, myCallback) {
+    
     $.ajax({
         type:"post",
         url:"/getSessionUserId",
@@ -970,6 +971,11 @@ function getUserID(dictParams, myCallback) {
         else if (dictParams["callbackType"] == "get_user_display_info")
         {
             myCallback(response["user_id"], dictParams);
+        }
+        else if (dictParams["callbackType"] == "update_user_settings")
+        {
+            myCallback(response["user_id"], dictParams);
+            console.log("bbbb")
         }
         else
         {
@@ -1073,26 +1079,31 @@ function getUserMostSubmittedX(dictProfileFields) {
 }
 
 
-function update_user_settings_initiate(dictParams){
+function update_user_settings_initiate(user_id, dictParams){
 
     let user_settings_profile_pic_msg = document.getElementById("user_settings_profile_pic_msg");
     user_settings_profile_pic_msg.style.color = "red";
 
-    let user_settings_display_name_msg = document.getElementById("user_settings_profile_pic_msg");
+    let user_settings_display_name_msg = document.getElementById("user_settings_display_name_msg");
     user_settings_display_name_msg.style.color = "red";
 
     let user_settings_password_msg = document.getElementById("user_settings_password_msg");
     user_settings_password_msg.style.color = "red";
 
+    dictParams["user_id"] = user_id;
+
     const myJSON = JSON.stringify(dictParams);
+    console.log(myJSON);
     
     $.ajax({
         url: "/update_user_settings_initiate",
         type: "POST",
         data: {json_data:myJSON}
         }).done(function(response) {
+            alert("11111111")
+            console.log(response);
 
-            if (response["status"] = "GOOD") {
+            if (response["status"] == "GOOD") {
                 
                 user_settings_profile_pic_msg.style.color = "green";
                 user_settings_display_name_msg.style.color = "green";
@@ -1102,9 +1113,9 @@ function update_user_settings_initiate(dictParams){
                 document.getElementById("old_password").value = "";
                 document.getElementById("new_password").value = "";
                 document.getElementById("confirm_new_password").value = "";
-                
+                console.log("aaaa");
             }
-
+        
             if (dictParams["update_section"] == "profile_pic")
             {
                 user_settings_profile_pic_msg.textContent = response["message"];
@@ -1116,6 +1127,8 @@ function update_user_settings_initiate(dictParams){
             else if (dictParams["update_section"] == "password")
             {
                 user_settings_password_msg.textContent = response["message"];
+                console.log("aaaa");
+                return false;
             }
 
             topFunction();
@@ -1123,7 +1136,11 @@ function update_user_settings_initiate(dictParams){
         }).fail(function(response) {
             
             alert('Failure, dev has low IQ.');
+        
     });
+    console.log('222222222')
+    return false;
+
 }
 
 
@@ -1149,24 +1166,25 @@ function update_user_settings(update_section) {
     }
     else if (update_section == "display_name")
     {
-        dictParams["new_display_name"] = document.getElementById("txt_display_name_change").value().trim();
+        dictParams["new_display_name"] = document.getElementById("txt_display_name_change").value.trim();
     }
     else if (update_section == "password")
     {
-        dictParams["old_password"] = document.getElementById("old_password").value().trim();
-        dictParams["new_password"] = document.getElementById("new_password").value().trim();
-        dictParams["confirm_new_password"] = document.getElementById("confirm_new_password").value().trim();
+        dictParams["old_password"] = document.getElementById("old_password").value.trim();
+        dictParams["new_password"] = document.getElementById("new_password").value.trim();
+        dictParams["confirm_new_password"] = document.getElementById("confirm_new_password").value.trim();
 
         if (dictParams["new_password"] != dictParams["confirm_new_password"]) 
         {
             let user_settings_password_msg = document.getElementById("user_settings_password_msg");
             user_settings_password_msg.style.color = "red";
             user_settings_password_msg.textContent = "Please ensure new password and confirm password match!";
-            return;
+            return false;
         }
     }
     
     getUserID(dictParams, update_user_settings_initiate);
+
 }
 
 
@@ -1174,7 +1192,7 @@ $( document ).ready(function() {
 
     //console.log( "ready!" );
     var page_type = document.getElementById("page_type") == null ? '' : document.getElementById("page_type").value;
-    console.log(page_type);
+    //console.log(page_type);
     // show if page type = "search"
     show_search_section(page_type);
 

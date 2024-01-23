@@ -4,12 +4,12 @@
     <body style="background-image: url('/static/McLaren.jpg')">
         <div class="container">            
             <div class="row">
-                <div class="col-sm-4">col-sm-4</div>
+                <div class="col-sm-4"></div>
                 <div id="settings_col" class="col-sm-4">
                     <br>
                     <div id="settings_col_container" class="container">
                         <div id="subtitle_div">
-                            <span id="subtitle_span">
+                            <span class="submitTitles">
                                 Profile settings <!--Padding is optional-->
                             </span>
                         </div>
@@ -21,35 +21,43 @@
                         </div>
                         <div class="row">
                             <div class="col-sm">
-                                <button id="display_pic_change" class="btn btn-primary" onclick="update_user_settings('profile_pic')">Update profile picture</button>
+                                <button id="display_pic_change" class="btn btn-primary" onclick="return update_user_settings('profile_pic')">Update profile picture</button>
                             </div>
                             <span id="user_settings_profile_pic_msg"></span>
                         </div>
                         <br>
                         <div class="row">                            
-                            <div class="col-sm">Display name</div>                            
+                            <div class="col-sm">
+                                <span class="submitTitles">
+                                    Display name
+                                </span>
+                            </div>                            
                         </div>
                         <div class="row">
                             <div class="col-sm">
                                 <input autocomplete="off" autofocus class="form-control" id="txt_display_name_change" placeholder="Display name" type="text">
                             </div>
                             <div class="col-sm">
-                                <button id="display_name_change_submit" class="btn btn-primary" onclick="update_user_settings('display_name')">Change</button>
+                                <button id="display_name_change_submit" class="btn btn-primary" onclick="return update_user_settings('display_name')">Change</button>
                             </div>
                             <span id="user_settings_display_name_msg"></span>
                         </div>
                         <br><br>
                         <div class="row">
                             <div class="borderWhite col-sm">
-                                <form action="" method="">
+                                <form>
                                     <div id="subtitle_div">
-                                        <span id="subtitle_span">
+                                        <span class="submitTitles">
                                             Password <!--Padding is optional-->
                                         </span>
                                     </div>
                                     <br>
-                                    <div class="mb-3">
-                                        <input autocomplete="off" class="form-control mx-auto w-auto" id="old_password" placeholder="Old Password" type="password">
+                                    <div class="row">
+                                        <div class="col-sm-5"></div>
+                                        <div class="col-sm-2">
+                                            <input autocomplete="off" class="form-control mx-auto w-auto" id="old_password" placeholder="Old Password" type="password">
+                                        </div>
+                                        <div class="col-sm-5"></div>
                                     </div>
                                     <div class="mb-3">
                                         <input autocomplete="off" class="form-control mx-auto w-auto" id="new_password" placeholder="New Password" type="password">
@@ -57,7 +65,7 @@
                                     <div class="mb-3">
                                         <input autocomplete="off" class="form-control mx-auto w-auto" id="confirm_new_password" placeholder="Confirm new Password" type="password">
                                     </div>
-                                    <button id="password_change_submit" class="btn btn-primary" onclick="update_user_settings('password')">Change password</button>
+                                    <button id="password_change_submit" class="btn btn-primary" onclick="return update_user_settings('password')">Change password</button>
                                     <br>
                                     <span id="user_settings_password_msg"></span>
                                 </form>
@@ -66,7 +74,7 @@
                     </div>
                     <br>
                 </div>
-                <div class="col-sm-4">col-sm-4</div>
+                <div class="col-sm-4"></div>
             </div>
         </div>
     </body>
