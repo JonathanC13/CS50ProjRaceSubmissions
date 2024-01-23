@@ -202,6 +202,7 @@ textarea {
 
 #login_msg, #register_msg, #submission_msg , #submissionListMessage, #user_settings_profile_pic_msg, #user_settings_display_name_msg, #user_settings_password_msg{
     background-color: #212529;
+    border-radius: 5px;
     color:red;
 }
 

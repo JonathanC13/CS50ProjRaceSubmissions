@@ -595,9 +595,9 @@ def update_user_settings_initiate():
         
         if len(rows) == 1:
             sql_queryUPDATE = sql_queryUPDATE + "WHERE iUserID = ?"
-            
+        
             # check select if 1 row returned, if 1 then execute update, if not return ERROR
-            if (updateSection == "password" and rows[0]["strHashPW"] != generate_password_hash(oldPassword)):
+            if (updateSection == "password" and not check_password_hash(rows[0]["strHashPW"], oldPassword)):
                 # old password validation                
                 return jsonify({"status":"ERROR" ,"message": "Old password does not match!"})            
             

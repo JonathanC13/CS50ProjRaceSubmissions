@@ -45,7 +45,7 @@
                         <br><br>
                         <div class="row">
                             <div class="borderWhite col-sm">
-                                <form>
+                                <form action="javascript:void(0);">
                                     <div id="subtitle_div">
                                         <span class="submitTitles">
                                             Password <!--Padding is optional-->
@@ -53,21 +53,44 @@
                                     </div>
                                     <br>
                                     <div class="row">
-                                        <div class="col-sm-5"></div>
-                                        <div class="col-sm-2">
+                                        
+                                        <div class="col-sm">
                                             <input autocomplete="off" class="form-control mx-auto w-auto" id="old_password" placeholder="Old Password" type="password">
                                         </div>
-                                        <div class="col-sm-5"></div>
+                                        
                                     </div>
-                                    <div class="mb-3">
-                                        <input autocomplete="off" class="form-control mx-auto w-auto" id="new_password" placeholder="New Password" type="password">
-                                    </div>
-                                    <div class="mb-3">
-                                        <input autocomplete="off" class="form-control mx-auto w-auto" id="confirm_new_password" placeholder="Confirm new Password" type="password">
-                                    </div>
-                                    <button id="password_change_submit" class="btn btn-primary" onclick="return update_user_settings('password')">Change password</button>
                                     <br>
-                                    <span id="user_settings_password_msg"></span>
+                                    <div class="row">
+                                        
+                                        <div class="col-sm">
+                                            <input autocomplete="off" class="form-control mx-auto w-auto" id="new_password" placeholder="New Password" type="password">
+                                        </div>
+                                        
+                                    </div>                                    
+                                    <br>
+                                    <div class="row">
+                                        
+                                        <div class="col-sm">
+                                            <input autocomplete="off" class="form-control mx-auto w-auto" id="confirm_new_password" placeholder="Confirm new Password" type="password">
+                                        </div>
+                                        
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        
+                                        <div class="col-sm">
+                                            <button id="password_change_submit" class="btn btn-primary" onclick="return update_user_settings('password')">Change password</button>
+                                        </div>
+
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        
+                                        <div class="col-sm">
+                                            <span id="user_settings_password_msg"></span>
+                                        </div>
+                                    
+                                    </div>
                                 </form>
                             </div>                            
                         </div>

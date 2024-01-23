@@ -975,7 +975,6 @@ function getUserID(dictParams, myCallback) {
         else if (dictParams["callbackType"] == "update_user_settings")
         {
             myCallback(response["user_id"], dictParams);
-            console.log("bbbb")
         }
         else
         {
@@ -1093,15 +1092,15 @@ function update_user_settings_initiate(user_id, dictParams){
     dictParams["user_id"] = user_id;
 
     const myJSON = JSON.stringify(dictParams);
-    console.log(myJSON);
+    //console.log(myJSON);
     
     $.ajax({
         url: "/update_user_settings_initiate",
         type: "POST",
         data: {json_data:myJSON}
         }).done(function(response) {
-            alert("11111111")
-            console.log(response);
+            //console.log(dictParams["update_section"]);
+            //console.log(response);
 
             if (response["status"] == "GOOD") {
                 
@@ -1113,7 +1112,7 @@ function update_user_settings_initiate(user_id, dictParams){
                 document.getElementById("old_password").value = "";
                 document.getElementById("new_password").value = "";
                 document.getElementById("confirm_new_password").value = "";
-                console.log("aaaa");
+                
             }
         
             if (dictParams["update_section"] == "profile_pic")
@@ -1127,8 +1126,7 @@ function update_user_settings_initiate(user_id, dictParams){
             else if (dictParams["update_section"] == "password")
             {
                 user_settings_password_msg.textContent = response["message"];
-                console.log("aaaa");
-                return false;
+                
             }
 
             topFunction();
@@ -1138,8 +1136,6 @@ function update_user_settings_initiate(user_id, dictParams){
             alert('Failure, dev has low IQ.');
         
     });
-    console.log('222222222')
-    return false;
 
 }
 
