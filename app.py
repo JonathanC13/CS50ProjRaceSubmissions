@@ -548,7 +548,7 @@ def getUserProfileStats():
 
         dictReturn = {}
 
-        # get number of user submissions
+        # get number of user submissions 
         #sql_query = "SELECT count(iSubmissionID) as 'numSubCnt' FROM tblSubmissions WHERE iUserID = ?"
 
         rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = ? AND iUserID = ?", userID, userID)
