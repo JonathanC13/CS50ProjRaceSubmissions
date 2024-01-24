@@ -160,7 +160,7 @@ def populate_submissions_search():
                     else:
                         sql_query = sql_query + " AND"
 
-                    sql_query = sql_query + " UPPER(" + key + ") = ?"
+                    sql_query = sql_query + " UPPER(" + key + ") = ? "
 
                     count += 1
 
@@ -179,7 +179,7 @@ def populate_submissions_search():
                             INNER JOIN tblTracks e ON e.iTrackID = a.iTrackID
                             INNER JOIN tblGameMode f ON f.iGameModeID = a.iGameModeID
                             INNER JOIN tblUsers g ON g.iUserID = a.iUserID
-                        WHERE g.iUserID = ?
+                        WHERE g.iUserID = ? 
                         ORDER BY a.strSubmittedDate DESC;"""
         # else: select top 10 most recent
             
@@ -242,7 +242,7 @@ def login_SQL():
         username = data["username"]
         password = data["password"]
 
-        rows = db.execute("SELECT * FROM tblUsers WHERE strUserName = ?", username)
+        rows = db.execute("SELECT * FROM tblUsers WHERE strUserName = ? ", username)
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["strHashPW"], password):
@@ -290,12 +290,12 @@ def validate_registration():
         password = data["password"]
         password_again = data["password_again"]
 
-        rows = db.execute("SELECT * FROM tblUsers WHERE strDisplayName = ?", display_name)
+        rows = db.execute("SELECT * FROM tblUsers WHERE strDisplayName = ? ", display_name)
 
         if len(rows) > 0:
             return jsonify({"status":"ERROR" ,"message": "Display name already exists!"})
         
-        rows = db.execute("SELECT * FROM tblUsers WHERE strUserName = ?", username)
+        rows = db.execute("SELECT * FROM tblUsers WHERE strUserName = ? ", username)
 
         if len(rows) > 0:
             return jsonify({"status":"ERROR" ,"message": "Username already exists!"})
@@ -474,14 +474,14 @@ def deleteSubmission():
         userID = data["user_id"]
         submissionID = data["submission_id"]
 
-        rows = db.execute("""SELECT * FROM tblSubmissions WHERE iSubmissionID = ? AND iUserID = ?""", submissionID, userID)
+        rows = db.execute("SELECT * FROM tblSubmissions WHERE iSubmissionID = ? AND iUserID = ? ", submissionID, userID)
         
         if len(rows) == 0:
             return jsonify({"status":"ERROR" ,"message": "No rows to delete!"})
         elif len(rows) > 1:
             return jsonify({"status":"ERROR" ,"message": "Somehow too may rows!"})
         elif len(rows) == 1:
-            numRowsDel = db.execute("""DELETE FROM tblSubmissions WHERE iSubmissionID = ? AND iUserID = ?""", submissionID, userID)
+            numRowsDel = db.execute("DELETE FROM tblSubmissions WHERE iSubmissionID = ? AND iUserID = ? ", submissionID, userID)
             
             if numRowsDel == 1:
                 return jsonify({"status":"GOOD" ,"message": "Submission deleted!"})
@@ -495,7 +495,7 @@ def deleteSubmission():
 def getUserNumOfSubmissions():
     if request.method == "POST":
 
-        sql_query = "SELECT count(iSubmissionID) as 'numSubCnt' FROM tblSubmissions WHERE iUserID = ?"
+        sql_query = "SELECT count(iSubmissionID) as 'numSubCnt' FROM tblSubmissions WHERE iUserID = ? "
 
         rows = db.execute(sql_query, session["user_id"])
 
@@ -540,15 +540,89 @@ def getUserMostSubmittedX():
         return jsonify({"status":"ERROR" ,"message": "???"})
     
 
+@app.route("/getUserProfileStats", methods=["POST"])
+def getUserProfileStats():
+    if request.method == "POST":
+        data = json.loads(request.form.get("json_data"))
+        userID = data["user_id"]
+
+        dictReturn = {}
+
+        # get number of user submissions
+        #sql_query = "SELECT count(iSubmissionID) as 'numSubCnt' FROM tblSubmissions WHERE iUserID = ?"
+
+        rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = ? AND iUserID = ?", userID, userID)
+        
+        if len(rows) == 1:
+            dictReturn["idNumOfSub"] = rows[0]["subCnt"]
+        else:
+            dictReturn["idNumOfSub"] = "error"
+        # /get number of user submissions
+
+        # get most submitted game, track, vehicle, and game mode
+        dictProfileFields = {
+            "game":
+                {
+                    "table":"tblGames",
+                    "dbIDCol":"iGameID",
+                    "dbNameCol":"strGameName",
+                    "profileElemID":"idMostSubGame"
+                },
+            "track":
+                {  
+                    "table":"tblTracks",
+                    "dbIDCol":"iTrackID",
+                    "dbNameCol":"strTrackName",
+                    "profileElemID":"idMostSubTrack"
+                },
+            "vehicle":
+                {  
+                    "table":"tblVehicles",
+                    "dbIDCol":"iVehicleID",
+                    "dbNameCol":"strVehicleName",
+                    "profileElemID":"idMostSubVehicle"
+                },
+            "gameMode":
+                {  
+                    "table":"tblGameMode",
+                    "dbIDCol":"iGameModeID",
+                    "dbNameCol":"strGameModeName",
+                    "profileElemID":"idMostSubGameMode"
+                }
+        }
+
+        for key, val in dictProfileFields.items():
+            rows = db.execute("""SELECT b.{nameColft}, count(a.{idColft}) 
+                                FROM tblSubmissions a 
+                                    INNER JOIN {tableft} b ON b.{idColft} = a.{idColft} 
+                                WHERE a.iUserID = ? AND iUserID = ? 
+                                GROUP BY a.{idColft}
+                                ORDER BY count(a.{idColft}) DESC
+                                    LIMIT 1""".format(nameColft = val["dbNameCol"], idColft = val["dbIDCol"], tableft = val["table"]), userID, userID)   
+
+            if len(rows) == 1:
+                dictReturn[val["profileElemID"]] = rows[0][val["dbNameCol"]]
+            else:
+                dictReturn[val["profileElemID"]] = "error"      
+                
+        # /get most submitted game, track, vehicle, and game mode
+            
+        dictReturn["status"] = "GOOD"
+        return jsonify(dictReturn)
+
+    else:
+        return jsonify({"status":"ERROR" ,"message": "Get profile stats error!"})
+    
+
 @app.route("/getUserProfileDisplayInfo", methods=["POST"])
 def getUserProfileDisplayInfo():
     if request.method == "POST":
         data = json.loads(request.form.get("json_data"))
         userID = data["user_id"]
 
-        sql_query = "SELECT strDisplayName, strProfilePicSrc FROM tblUsers WHERE iUserID = ?"
+        #sql_query = "SELECT strDisplayName, strProfilePicSrc FROM tblUsers WHERE iUserID = ?"
 
-        rows = db.execute(sql_query, userID)
+        rows = db.execute("SELECT strDisplayName, strProfilePicSrc FROM tblUsers WHERE iUserID = ? AND iUserID = ?", userID, userID)
 
         if len(rows) == 1:
             return jsonify({"status":"GOOD", "displayName": rows[0]["strDisplayName"], "profilePic": rows[0]["strProfilePicSrc"]})
@@ -589,12 +663,12 @@ def update_user_settings_initiate():
         else:
             return jsonify({"status":"ERROR" ,"message": "No update section identified!"})
         
-        sql_querySELECT = sql_querySELECT + "FROM tblUsers a WHERE iUserID = ?"
+        sql_querySELECT = sql_querySELECT + "FROM tblUsers a WHERE iUserID = ? "
 
         rows = db.execute(sql_querySELECT, userID)
         
         if len(rows) == 1:
-            sql_queryUPDATE = sql_queryUPDATE + "WHERE iUserID = ?"
+            sql_queryUPDATE = sql_queryUPDATE + "WHERE iUserID = ? "
         
             # check select if 1 row returned, if 1 then execute update, if not return ERROR
             if (updateSection == "password" and not check_password_hash(rows[0]["strHashPW"], oldPassword)):

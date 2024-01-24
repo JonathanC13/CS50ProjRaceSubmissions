@@ -976,6 +976,10 @@ function getUserID(dictParams, myCallback) {
         {
             myCallback(response["user_id"], dictParams);
         }
+        else if (dictParams["callbackType"] == "get_user_profile_info")
+        {
+            myCallback(response["user_id"], dictParams);
+        }
         else
         {
             alert("Error 100");
@@ -1039,6 +1043,39 @@ function getUserProfileDisplayInfo_initiate(user_id, dictParams) {
 }
 
 
+function getUserProfileStats(page_type) {
+    var dictParams = {  "callbackType": "get_user_profile_info",
+                        "page_type": page_type
+                    };
+
+    getUserID(dictParams, getUserProfileStats_initiate);
+}
+
+
+function getUserProfileStats_initiate(user_id, dictParams) {
+    // get number of submissions, most submitted game, most submitted track, most submitted vehicle, and most submitted game mode
+
+    dictParams["user_id"] = user_id;
+
+    const myJSON = JSON.stringify(dictParams);
+
+    $.ajax({
+        url: "/getUserProfileStats",
+        type: "POST",
+        data: {json_data:myJSON}
+        }).done(function(response) {
+            for (var key in response){
+                if (key != "status")
+                {
+                    document.getElementById(key).textContent = response[key];                
+                }
+            }
+        }).fail(function(response) {
+            alert('Failure, dev has low IQ.');
+    });
+}
+
+/*
 function getUserNumOfSubmissions() {
     $.ajax({
         url: "/getUserNumOfSubmissions",
@@ -1064,18 +1101,11 @@ function getUserMostSubmittedX(dictProfileFields) {
             //console.log(dictProfileFields["profileElemID"] + " : " + response["message"]);
             document.getElementById(dictProfileFields["profileElemID"]).textContent = response["message"];
         }).fail(function(response) {
-            /*
-            console.log("--");
-            console.log(dictProfileFields["profileElemID"]);
-            console.log(dictProfileFields["table"]);
-            console.log(dictProfileFields["dbIDCol"]);
-            console.log(dictProfileFields["dbNameCol"]);
-            console.log("/--")
-            */
             document.getElementById(dictProfileFields["profileElemID"]).textContent = "error";
             //alert('Failure, dev has low IQ.');
     });
 }
+*/
 
 
 function update_user_settings_initiate(user_id, dictParams){
@@ -1205,7 +1235,10 @@ $( document ).ready(function() {
     if(submissions_section && page_type == "profile") {
         getUserProfileDisplayInfo(page_type);
 
+        getUserProfileStats();
+
         // get the user's statistics
+        /*
         getUserNumOfSubmissions();
 
         var dictProfileFields = {
@@ -1239,10 +1272,18 @@ $( document ).ready(function() {
                 }
         }
         
+        // I think looping and having so many calls causes this error sometimes:
+        // Need to fix > RuntimeError: fewer placeholder () than values (3) for app.py function getUserMostSubmittedX that happens sometimes due to timeout(?)
+        // I will perform the loop within the app.py function and see if the timeout does not occur for the above error
+        //      app.py: WOW SOLUTION FOR RuntimeError: fewer placeholder () than values (3)
+        //          Error line: rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = ?", userID)
+        //          WHERE iUserID = ? AND iUserID = ?", userID, userID) // IF CANT EVEN RECOGNIZE 1 placeholder, FORCE 2
         for (const key of Object.keys(dictProfileFields))
         {
             getUserMostSubmittedX(dictProfileFields[key]);            
         }
+        */
+
 
         // get submissions by the current user
         search("profile");
