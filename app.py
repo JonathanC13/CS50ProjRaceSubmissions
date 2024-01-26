@@ -704,7 +704,8 @@ Pract
 
 TODO
 
-- API from game image
+- API to get random race track image -- done 
+    -- document: https://pixabay.com/api/docs/
 - profile info -- TODO: 
     - Get profile pic in getUserProfileDisplayInfo for profile page
 - settings page to update user settings

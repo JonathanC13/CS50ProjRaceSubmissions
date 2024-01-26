@@ -217,7 +217,8 @@ textarea {
 }
 
 #img_game_cover {
-    content: url("/static/game_cover_placeholder.png");
+    /*content: url("/static/game_cover_placeholder.png");*/
+    border-radius: 5px;
     max-height: 100%;
     max-width: 100%;
     object-fit: contain;
@@ -225,6 +226,7 @@ textarea {
 
 #img_YT_prev {
     content: url("/static/Youtube_logo.png");
+    border-radius: 5px;
     max-height: 100%;
     max-width: 100%;
     object-fit: contain;

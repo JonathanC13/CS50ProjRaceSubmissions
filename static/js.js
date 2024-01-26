@@ -642,6 +642,38 @@ function getId(url) {
 }
 
 
+function displayGameImage(evt) {
+    let game_name = evt.currentTarget.value;
+
+    let max_images = 100;
+
+    if (game_name == "") {
+        document.getElementById("img_game_cover").setAttribute('src', '/static/game_cover_placeholder.png');
+        document.getElementById("image_credit").textContent = ""; 
+        document.getElementById("image_credit").style.display = "none";
+    }
+    else
+    {
+        var API_KEY = '42031889-3bea9610c40ae5e7c3894a8e2';
+        // https://pixabay.com/api/docs/
+        // not many images for specific games, so just generically pick a random race track image
+        var URL = "https://pixabay.com/api/?key="+API_KEY+"&q="+encodeURIComponent('car race track')+"&per_page="+max_images.toString();
+        $.getJSON(URL, function(data){
+            if (parseInt(data.totalHits) > 0)
+            {
+                //$.each(data.hits, function(i, hit){ console.log(hit.pageURL); });    
+                let image_number = Math.floor(Math.random() * max_images);
+                //console.log(image_number.toString());
+                //console.log(data.hits[image_number]["largeImageURL"]);
+                document.getElementById("img_game_cover").setAttribute('src', data.hits[image_number]["largeImageURL"]);
+                document.getElementById("image_credit").textContent = "credit: pixabay.com"
+                document.getElementById("image_credit").style.display = "";
+            }
+        });
+    }
+}
+
+
 function displayYTPrev(evt) {
     url = evt.currentTarget.value;
     if (url == "") {
@@ -1228,6 +1260,195 @@ $( document ).ready(function() {
     {        
         getUserProfileDisplayInfo(page_type);
     }
+    else if (page_type == "submit")
+    {
+        const txt_submit_game = document.getElementById("txt_submit_game") == null ? null : document.getElementById("txt_submit_game");
+        if (txt_submit_game != null) {
+            txt_submit_game.addEventListener('change', displayGameImage);   
+        }
+
+        const txt_YT_URL = document.getElementById("txt_YT_URL") == null ? null : document.getElementById("txt_YT_URL");
+        if (txt_YT_URL != null) {
+            txt_YT_URL.addEventListener('change', displayYTPrev); //inputHandler);
+        }
+
+        // submission time min and max
+
+        min_HH_MM_SS_sss = 0;
+        max_MM_SS = 59;
+
+        max_sss = 999;
+
+        // Full time hours
+        const in_submit_fulltime_HH = document.getElementById("in_submit_fulltime_HH") == null ? null : document.getElementById("in_submit_fulltime_HH");
+        if (in_submit_fulltime_HH != null) {
+            in_submit_fulltime_HH.addEventListener('input', enforce_min_max); //inputHandler);
+            in_submit_fulltime_HH.min_limit = min_HH_MM_SS_sss;
+            in_submit_fulltime_HH.max_limit = -1;
+            //document.getElementById("in_submit_fulltime_HH").addEventListener("input", enforce_min_max(in_submit_fulltime_HH, min_HH_MM_SS_sss, -1));
+        }
+
+        // Full time minutes
+        const in_submit_fulltime_MM = document.getElementById("in_submit_fulltime_MM") == null ? null : document.getElementById("in_submit_fulltime_MM");
+        if (in_submit_fulltime_MM != null) {
+            in_submit_fulltime_MM.addEventListener('input', enforce_min_max); //inputHandler);
+            in_submit_fulltime_MM.min_limit = min_HH_MM_SS_sss;
+            in_submit_fulltime_MM.max_limit = max_MM_SS;
+            //document.getElementById("in_submit_fulltime_HH").addEventListener("input", enforce_min_max(in_submit_fulltime_HH, min_HH_MM_SS_sss, -1));
+        }
+
+        const in_submit_fulltime_SS = document.getElementById("in_submit_fulltime_SS") == null ? null : document.getElementById("in_submit_fulltime_SS");
+        if (in_submit_fulltime_SS != null) {
+            in_submit_fulltime_SS.addEventListener('input', enforce_min_max); //inputHandler);
+            in_submit_fulltime_SS.min_limit = min_HH_MM_SS_sss;
+            in_submit_fulltime_SS.max_limit = max_MM_SS;
+        }
+
+        const in_submit_fulltime_sss = document.getElementById("in_submit_fulltime_sss") == null ? null : document.getElementById("in_submit_fulltime_sss");
+        if (in_submit_fulltime_sss != null) {
+            in_submit_fulltime_sss.addEventListener('input', enforce_min_max); //inputHandler);
+            in_submit_fulltime_sss.min_limit = min_HH_MM_SS_sss;
+            in_submit_fulltime_sss.max_limit = max_sss;
+        }
+
+        
+        // Full time hours
+        const in_submit_bestlaptime_HH = document.getElementById("in_submit_bestlaptime_HH") == null ? null : document.getElementById("in_submit_bestlaptime_HH");
+        if (in_submit_bestlaptime_HH != null) {
+            in_submit_bestlaptime_HH.addEventListener('input', enforce_min_max); //inputHandler);
+            in_submit_bestlaptime_HH.min_limit = min_HH_MM_SS_sss;
+            in_submit_bestlaptime_HH.max_limit = -1;
+            //document.getElementById("in_submit_fulltime_HH").addEventListener("input", enforce_min_max(in_submit_fulltime_HH, min_HH_MM_SS_sss, -1));
+        }
+
+        // Full time minutes
+        const in_submit_bestlaptime_MM = document.getElementById("in_submit_bestlaptime_MM") == null ? null : document.getElementById("in_submit_bestlaptime_MM");
+        if (in_submit_bestlaptime_MM != null) {
+            in_submit_bestlaptime_MM.addEventListener('input', enforce_min_max); //inputHandler);
+            in_submit_bestlaptime_MM.min_limit = min_HH_MM_SS_sss;
+            in_submit_bestlaptime_MM.max_limit = max_MM_SS;
+            //document.getElementById("in_submit_fulltime_HH").addEventListener("input", enforce_min_max(in_submit_fulltime_HH, min_HH_MM_SS_sss, -1));
+        }
+
+        const in_submit_bestlaptime_SS = document.getElementById("in_submit_bestlaptime_SS") == null ? null : document.getElementById("in_submit_bestlaptime_SS");
+        if (in_submit_bestlaptime_SS != null) {
+            in_submit_bestlaptime_SS.addEventListener('input', enforce_min_max); //inputHandler);
+            in_submit_bestlaptime_SS.min_limit = min_HH_MM_SS_sss;
+            in_submit_bestlaptime_SS.max_limit = max_MM_SS;
+        }
+
+        const in_submit_bestlaptime_sss = document.getElementById("in_submit_bestlaptime_sss") == null ? null : document.getElementById("in_submit_bestlaptime_sss");
+        if (in_submit_bestlaptime_sss != null) {
+            in_submit_bestlaptime_sss.addEventListener('input', enforce_min_max); //inputHandler);
+            in_submit_bestlaptime_sss.min_limit = min_HH_MM_SS_sss;
+            in_submit_bestlaptime_sss.max_limit = max_sss;
+        }
+
+        // /submissiontime min and max
+        
+        // for search field AND submit field suggestions
+        var dictSearchFields = {
+            "game":
+                {
+                    "table":"tblGames",
+                    "dbColName":"strGameName",
+                    "inputId":"search_game"
+                },
+            "platform":
+                {
+                    "table":"tblPlatforms",
+                    "dbColName":"strPlatformName",
+                    "inputId":"search_platform"
+                },
+            "display_name":
+                {
+                    "table":"tblUsers",
+                    "dbColName":"strDisplayName",
+                    "inputId":"search_display_name"
+                },
+            "vehicle":
+                {
+                    "table":"tblVehicles",
+                    "dbColName":"strVehicleName",
+                    "inputId":"search_vehicle"
+                },
+            "track":
+                {
+                    "table":"tblTracks",
+                    "dbColName":"strTrackName",
+                    "inputId":"search_track"
+                },
+            "game_mode":
+                {
+                    "table":"tblGameMode",
+                    "dbColName":"strGameModeName",
+                    "inputId":"search_game_mode"
+                },
+            "submitGame":
+                {
+                    "table":"tblGames",
+                    "dbColName":"strGameName",
+                    "inputId":"txt_submit_game"
+                },
+            "submitPlatform":
+                {
+                    "table":"tblPlatforms",
+                    "dbColName":"strPlatformName",
+                    "inputId":"txt_submit_platform"
+                },
+            "submitVehicle":
+                {
+                    "table":"tblVehicles",
+                    "dbColName":"strVehicleName",
+                    "inputId":"txt_submit_vehicle"
+                },
+            "submitTrack":
+                {
+                    "table":"tblTracks",
+                    "dbColName":"strTrackName",
+                    "inputId":"txt_submit_track"
+                },
+            "submitGameMode":
+                {
+                    "table":"tblGameMode",
+                    "dbColName":"strGameModeName",
+                    "inputId":"txt_submit_gamemode"
+                }
+        };
+
+        var arrSearchVars = [];
+        let i = 0;
+
+        for (const key of Object.keys(dictSearchFields))
+        {
+            /*
+            console.log("====");
+            console.log(key);
+            console.log(dictSearchFields[key]["table"]);
+            console.log(dictSearchFields[key]["dbColName"]);
+            console.log(dictSearchFields[key]["inputId"]);
+            */
+            /*
+            const inputSearchField = document.getElementById('search_game');
+            inputSearchField.addEventListener('input', searchSuggestionsListener);
+            inputSearchField.currSearchField = 'key';
+            inputSearchField.currDBColName = dictSearchFields[key]["dbColName"];
+            */
+            arrSearchVars[i] = (document.getElementById(dictSearchFields[key]["inputId"]) == null) ? '':document.getElementById(dictSearchFields[key]["inputId"]);
+            if (arrSearchVars[i] == '')
+            {
+                continue;
+            }
+
+            arrSearchVars[i].addEventListener('input', searchSuggestionsListener);
+            arrSearchVars[i].addEventListener('focus', searchSuggestionsListener);
+            arrSearchVars[i].currSearchField = key;
+            arrSearchVars[i].currDbTable = dictSearchFields[key]["table"];
+            arrSearchVars[i].currDBColName = dictSearchFields[key]["dbColName"];
+
+            i ++;
+        }
+    }
 
     // load default submissions
     var submissions_section = document.getElementById("submissions_section");
@@ -1275,9 +1496,10 @@ $( document ).ready(function() {
         // I think looping and having so many calls causes this error sometimes:
         // Need to fix > RuntimeError: fewer placeholder () than values (3) for app.py function getUserMostSubmittedX that happens sometimes due to timeout(?)
         // I will perform the loop within the app.py function and see if the timeout does not occur for the above error
-        //      app.py: WOW SOLUTION FOR RuntimeError: fewer placeholder () than values (3)
-        //          Error line: rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = ?", userID)
-        //          WHERE iUserID = ? AND iUserID = ?", userID, userID) // IF CANT EVEN RECOGNIZE 1 placeholder, FORCE 2
+        //      app.py: 
+        //          ERROR > RuntimeError: fewer placeholder () than values (3)
+        //          ERROR LINE > rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = ?", userID)
+        //          WOW SOLUTION > WHERE iUserID = ? AND iUserID = ?", userID, userID) // IF CANT EVEN RECOGNIZE 1 placeholder, FORCE 2
         for (const key of Object.keys(dictProfileFields))
         {
             getUserMostSubmittedX(dictProfileFields[key]);            
@@ -1316,189 +1538,6 @@ $( document ).ready(function() {
     */
     navbar_active(page_type);
     // /navbar active
-
-    // submission time min and max
-
-    min_HH_MM_SS_sss = 0;
-    max_MM_SS = 59;
-
-    max_sss = 999;
-
-    // Full time hours
-    const in_submit_fulltime_HH = document.getElementById("in_submit_fulltime_HH") == null ? null : document.getElementById("in_submit_fulltime_HH");
-    if (in_submit_fulltime_HH != null) {
-        in_submit_fulltime_HH.addEventListener('input', enforce_min_max); //inputHandler);
-        in_submit_fulltime_HH.min_limit = min_HH_MM_SS_sss;
-        in_submit_fulltime_HH.max_limit = -1;
-        //document.getElementById("in_submit_fulltime_HH").addEventListener("input", enforce_min_max(in_submit_fulltime_HH, min_HH_MM_SS_sss, -1));
-    }
-
-    // Full time minutes
-    const in_submit_fulltime_MM = document.getElementById("in_submit_fulltime_MM") == null ? null : document.getElementById("in_submit_fulltime_MM");
-    if (in_submit_fulltime_MM != null) {
-        in_submit_fulltime_MM.addEventListener('input', enforce_min_max); //inputHandler);
-        in_submit_fulltime_MM.min_limit = min_HH_MM_SS_sss;
-        in_submit_fulltime_MM.max_limit = max_MM_SS;
-        //document.getElementById("in_submit_fulltime_HH").addEventListener("input", enforce_min_max(in_submit_fulltime_HH, min_HH_MM_SS_sss, -1));
-    }
-
-    const in_submit_fulltime_SS = document.getElementById("in_submit_fulltime_SS") == null ? null : document.getElementById("in_submit_fulltime_SS");
-    if (in_submit_fulltime_SS != null) {
-        in_submit_fulltime_SS.addEventListener('input', enforce_min_max); //inputHandler);
-        in_submit_fulltime_SS.min_limit = min_HH_MM_SS_sss;
-        in_submit_fulltime_SS.max_limit = max_MM_SS;
-    }
-
-    const in_submit_fulltime_sss = document.getElementById("in_submit_fulltime_sss") == null ? null : document.getElementById("in_submit_fulltime_sss");
-    if (in_submit_fulltime_sss != null) {
-        in_submit_fulltime_sss.addEventListener('input', enforce_min_max); //inputHandler);
-        in_submit_fulltime_sss.min_limit = min_HH_MM_SS_sss;
-        in_submit_fulltime_sss.max_limit = max_sss;
-    }
-
-    
-    // Full time hours
-    const in_submit_bestlaptime_HH = document.getElementById("in_submit_bestlaptime_HH") == null ? null : document.getElementById("in_submit_bestlaptime_HH");
-    if (in_submit_bestlaptime_HH != null) {
-        in_submit_bestlaptime_HH.addEventListener('input', enforce_min_max); //inputHandler);
-        in_submit_bestlaptime_HH.min_limit = min_HH_MM_SS_sss;
-        in_submit_bestlaptime_HH.max_limit = -1;
-        //document.getElementById("in_submit_fulltime_HH").addEventListener("input", enforce_min_max(in_submit_fulltime_HH, min_HH_MM_SS_sss, -1));
-    }
-
-    // Full time minutes
-    const in_submit_bestlaptime_MM = document.getElementById("in_submit_bestlaptime_MM") == null ? null : document.getElementById("in_submit_bestlaptime_MM");
-    if (in_submit_bestlaptime_MM != null) {
-        in_submit_bestlaptime_MM.addEventListener('input', enforce_min_max); //inputHandler);
-        in_submit_bestlaptime_MM.min_limit = min_HH_MM_SS_sss;
-        in_submit_bestlaptime_MM.max_limit = max_MM_SS;
-        //document.getElementById("in_submit_fulltime_HH").addEventListener("input", enforce_min_max(in_submit_fulltime_HH, min_HH_MM_SS_sss, -1));
-    }
-
-    const in_submit_bestlaptime_SS = document.getElementById("in_submit_bestlaptime_SS") == null ? null : document.getElementById("in_submit_bestlaptime_SS");
-    if (in_submit_bestlaptime_SS != null) {
-        in_submit_bestlaptime_SS.addEventListener('input', enforce_min_max); //inputHandler);
-        in_submit_bestlaptime_SS.min_limit = min_HH_MM_SS_sss;
-        in_submit_bestlaptime_SS.max_limit = max_MM_SS;
-    }
-
-    const in_submit_bestlaptime_sss = document.getElementById("in_submit_bestlaptime_sss") == null ? null : document.getElementById("in_submit_bestlaptime_sss");
-    if (in_submit_bestlaptime_sss != null) {
-        in_submit_bestlaptime_sss.addEventListener('input', enforce_min_max); //inputHandler);
-        in_submit_bestlaptime_sss.min_limit = min_HH_MM_SS_sss;
-        in_submit_bestlaptime_sss.max_limit = max_sss;
-    }
-
-    // /submissiontime min and max
-
-    const txt_YT_URL = document.getElementById("txt_YT_URL") == null ? null : document.getElementById("txt_YT_URL");
-    if (txt_YT_URL != null) {
-        txt_YT_URL.addEventListener('change', displayYTPrev); //inputHandler);
-    }
-
-    
-    // for search field AND submit field suggestions
-    var dictSearchFields = {
-        "game":
-            {
-                "table":"tblGames",
-                "dbColName":"strGameName",
-                "inputId":"search_game"
-            },
-        "platform":
-            {
-                "table":"tblPlatforms",
-                "dbColName":"strPlatformName",
-                "inputId":"search_platform"
-            },
-        "display_name":
-            {
-                "table":"tblUsers",
-                "dbColName":"strDisplayName",
-                "inputId":"search_display_name"
-            },
-        "vehicle":
-            {
-                "table":"tblVehicles",
-                "dbColName":"strVehicleName",
-                "inputId":"search_vehicle"
-            },
-        "track":
-            {
-                "table":"tblTracks",
-                "dbColName":"strTrackName",
-                "inputId":"search_track"
-            },
-        "game_mode":
-            {
-                "table":"tblGameMode",
-                "dbColName":"strGameModeName",
-                "inputId":"search_game_mode"
-            },
-        "submitGame":
-            {
-                "table":"tblGames",
-                "dbColName":"strGameName",
-                "inputId":"txt_submit_game"
-            },
-        "submitPlatform":
-            {
-                "table":"tblPlatforms",
-                "dbColName":"strPlatformName",
-                "inputId":"txt_submit_platform"
-            },
-        "submitVehicle":
-            {
-                "table":"tblVehicles",
-                "dbColName":"strVehicleName",
-                "inputId":"txt_submit_vehicle"
-            },
-        "submitTrack":
-            {
-                "table":"tblTracks",
-                "dbColName":"strTrackName",
-                "inputId":"txt_submit_track"
-            },
-        "submitGameMode":
-            {
-                "table":"tblGameMode",
-                "dbColName":"strGameModeName",
-                "inputId":"txt_submit_gamemode"
-            }
-    };
-
-    var arrSearchVars = [];
-    let i = 0;
-
-    for (const key of Object.keys(dictSearchFields))
-    {
-        /*
-        console.log("====");
-        console.log(key);
-        console.log(dictSearchFields[key]["table"]);
-        console.log(dictSearchFields[key]["dbColName"]);
-        console.log(dictSearchFields[key]["inputId"]);
-        */
-        /*
-        const inputSearchField = document.getElementById('search_game');
-        inputSearchField.addEventListener('input', searchSuggestionsListener);
-        inputSearchField.currSearchField = 'key';
-        inputSearchField.currDBColName = dictSearchFields[key]["dbColName"];
-        */
-        arrSearchVars[i] = (document.getElementById(dictSearchFields[key]["inputId"]) == null) ? '':document.getElementById(dictSearchFields[key]["inputId"]);
-        if (arrSearchVars[i] == '')
-        {
-            continue;
-        }
-
-        arrSearchVars[i].addEventListener('input', searchSuggestionsListener);
-        arrSearchVars[i].addEventListener('focus', searchSuggestionsListener);
-        arrSearchVars[i].currSearchField = key;
-        arrSearchVars[i].currDbTable = dictSearchFields[key]["table"];
-        arrSearchVars[i].currDBColName = dictSearchFields[key]["dbColName"];
-
-        i ++;
-    }
 
     // bootstrap v5 +, enable tooltip manually
     // for pages with scroll, it causes "javascript added non-passive event listener to a scroll-blocking" error
