@@ -551,7 +551,8 @@ def getUserProfileStats():
         # get number of user submissions 
         #sql_query = "SELECT count(iSubmissionID) as 'numSubCnt' FROM tblSubmissions WHERE iUserID = ?"
 
-        rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = ? AND iUserID = ?", userID, userID)
+        # this error is pissing me off. RuntimeError: fewer placeholders () than values (3). JUST PUT THE PARAM IN THE SQL QUERY
+        rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = " + str(userID))
         
         if len(rows) == 1:
             dictReturn["idNumOfSub"] = rows[0]["subCnt"]
@@ -591,14 +592,15 @@ def getUserProfileStats():
                 }
         }
 
+        # I HATE the fewer placeholders than values WHEN I HAVE THE RIGHT NUMBER OF PLACEHOLDERS
         for key, val in dictProfileFields.items():
             rows = db.execute("""SELECT b.{nameColft}, count(a.{idColft}) 
                                 FROM tblSubmissions a 
                                     INNER JOIN {tableft} b ON b.{idColft} = a.{idColft} 
-                                WHERE a.iUserID = ? AND iUserID = ? 
+                                WHERE a.iUserID = {userID} 
                                 GROUP BY a.{idColft}
                                 ORDER BY count(a.{idColft}) DESC
-                                    LIMIT 1""".format(nameColft = val["dbNameCol"], idColft = val["dbIDCol"], tableft = val["table"]), userID, userID)   
+                                    LIMIT 1""".format(nameColft = val["dbNameCol"], idColft = val["dbIDCol"], tableft = val["table"], userID = str(userID)))   
 
             if len(rows) == 1:
                 dictReturn[val["profileElemID"]] = rows[0][val["dbNameCol"]]
@@ -622,7 +624,7 @@ def getUserProfileDisplayInfo():
 
         #sql_query = "SELECT strDisplayName, strProfilePicSrc FROM tblUsers WHERE iUserID = ?"
 
-        rows = db.execute("SELECT strDisplayName, strProfilePicSrc FROM tblUsers WHERE iUserID = ? AND iUserID = ?", userID, userID)
+        rows = db.execute("SELECT strDisplayName, strProfilePicSrc FROM tblUsers WHERE iUserID = " + str(userID))
 
         if len(rows) == 1:
             return jsonify({"status":"GOOD", "displayName": rows[0]["strDisplayName"], "profilePic": rows[0]["strProfilePicSrc"]})
@@ -711,6 +713,7 @@ TODO
 - settings page to update user settings
     - display / password -- TEST
     - profile pic -- TODO
+        -- HERE **************
 
     
 

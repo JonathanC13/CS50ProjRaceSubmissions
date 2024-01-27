@@ -1500,6 +1500,7 @@ $( document ).ready(function() {
         //          ERROR > RuntimeError: fewer placeholder () than values (3)
         //          ERROR LINE > rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = ?", userID)
         //          WOW SOLUTION > WHERE iUserID = ? AND iUserID = ?", userID, userID) // IF CANT EVEN RECOGNIZE 1 placeholder, FORCE 2
+        //      NEVER MIND, IT STILL BREACKS SOMETIMES> I'M GOING CRAZY
         for (const key of Object.keys(dictProfileFields))
         {
             getUserMostSubmittedX(dictProfileFields[key]);            

@@ -273,6 +273,13 @@ textarea {
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
+
+#img_profile_pic {
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+}
+
   
 /* Tooltip container */
 /* *Have to use id (#) instead of class (.) for this to work */
