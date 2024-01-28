@@ -644,13 +644,16 @@ def update_user_settings_initiate():
         newDisplayName = ""
         oldPassword = ""
         newPassword = ""
+        newProfilePicFileName = ""
+        newProfilePicBytes = ""
 
         sql_querySELECT = ""
         sql_queryUPDATE = ""
 
         if (updateSection == "profile_pic"):
-            # todo
-            pass
+            newProfilePicFileName = data["new_profile_pic_filename"]
+            newProfilePicBytes = data["new_profile_pic_bytes"]
+            return jsonify({"status":"GOOD" ,"bytesBack": newProfilePicBytes})
         elif (updateSection == "display_name"):
             newDisplayName = data["new_display_name"]
 
@@ -713,7 +716,13 @@ TODO
 - settings page to update user settings
     - display / password -- TEST
     - profile pic -- TODO
-        -- HERE **************
+        -- image in bytes successfully passed FROM JS to PY
+        -- see if filename already exists
+        --  if YES. append +1 to the end of the file name
+        -- save the filename to the user profile pic col
+        -- save image to static/profilepic (either resize or leave original size).
+        --  open filereader .. write to file .. close filereader
+        -- to ensure correct image. sql query get the image again and send back to JS to set the src of img_profile_pic
 
     
 

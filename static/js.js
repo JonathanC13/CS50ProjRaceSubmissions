@@ -1180,6 +1180,8 @@ function update_user_settings_initiate(user_id, dictParams){
             if (dictParams["update_section"] == "profile_pic")
             {
                 user_settings_profile_pic_msg.textContent = response["message"];
+                let img_profile_pic = document.getElementById("img_profile_pic");
+                img_profile_pic.setAttribute('src', response["bytesBack"]);
             }
             else if (dictParams["update_section"] == "display_name")
             {
@@ -1217,10 +1219,40 @@ function update_user_settings(update_section) {
 
     if (update_section == "profile_pic")
     {
-        pass;
-        // open file explorer
+        var input_display_pic = document.getElementById("input_display_pic");
         // once they choose a file. check file format, resize, and attempt to save file into server. DB columns will save the file name, if same file name
         //  exists, rename it with _+1.ext
+        var file = input_display_pic.files[0];
+        var imageType = 'image/*';
+
+        if (file.type.match(imageType)) {
+            var reader = new FileReader();
+            //console.log("file type good!");
+            reader.onload = function(e) {
+                
+                var img = new Image();
+                img.src = reader.result;
+                //console.log("img");
+                //console.log(img);
+                //console.log("img.src");
+                //console.log(img.src);
+                let filepath = input_display_pic.value;
+                var filename = filepath.replace(/^.*?([^\\\/]*)$/, '$1');
+
+                dictParams["new_profile_pic_filename"] = filename;
+                dictParams["new_profile_pic_bytes"] = img.src;
+
+                console.log(dictParams["new_profile_pic_filename"]);
+            }
+            
+            reader.readAsDataURL(file); 
+
+        } else {
+            let user_settings_profile_pic_msg = document.getElementById("user_settings_profile_pic_msg");
+            user_settings_profile_pic_msg.style.color = "red";
+            user_settings_profile_pic_msg.textContent = "File not supported!";
+            return false;
+        }
     }
     else if (update_section == "display_name")
     {
