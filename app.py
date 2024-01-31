@@ -3,6 +3,11 @@ import time
 import decimal
 import json
 
+from PIL import Image  
+import PIL
+
+import io
+
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify, url_for
 from flask_session import Session
@@ -645,50 +650,120 @@ def update_user_settings_initiate():
         oldPassword = ""
         newPassword = ""
         newProfilePicFileName = ""
-        newProfilePicBytes = ""
+        newProfilePicBytesStr = ""
+        profilePicPath = os.getcwd() + "/static/userProfilePics/"
 
         sql_querySELECT = ""
         sql_queryUPDATE = ""
 
         if (updateSection == "profile_pic"):
             newProfilePicFileName = data["new_profile_pic_filename"]
-            newProfilePicBytes = data["new_profile_pic_bytes"]
-            return jsonify({"status":"GOOD" ,"bytesBack": newProfilePicBytes})
+            newProfilePicBytesStr = data["new_profile_pic_bytes"]
+            print (newProfilePicBytesStr)
+            profilePicBytes = bytes(newProfilePicBytesStr, 'utf-8')
+            print('--')
+            print(profilePicBytes)
+
+            sql_querySELECT = "SELECT iUserID, strProfilePicSrc "
+            #return jsonify({"status":"GOOD" ,"bytesBack": newProfilePicBytesStr})
+
+            # find if any other records have a filename that is the same
+            sql_querySELECT = sql_querySELECT + "FROM tblUsers a WHERE iUserID = ? AND UPPER(strProfilePicSrc) = ? "
+
+            rows = db.execute(sql_querySELECT, userID, newProfilePicFileName.upper())
+
+            if len(rows) == 0:
+                # good to add file with name as is
+                # save to dir
+                profilePicPath = profilePicPath + newProfilePicFileName
+                fileExtension = newProfilePicFileName[newProfilePicFileName.rfind("."):]    # look for last occurence of '.' then get the characters that follow.
+
+                imgObj = Image.open(io.BytesIO(profilePicBytes))
+                imgObj.show()
+
+                return jsonify({"status":"GOOD" ,"bytesBack": newProfilePicBytesStr})
+                try:
+                    Image.save(profilePicPath, fileExtension)
+                except Exception as e:
+                    print(str(e))
+                    return jsonify({"status":"ERROR" ,"message": str(e)})
+
+                # attempt to update with the file name
+                sql_querySELECT = "SELECT iUserID FROM tblUsers WHERE iUserID = ? "
+                rows = db.execute(sql_querySELECT, userID)
+
+                if len(rows) == 1:
+                    sql_queryUPDATE = "UPDATE tblUsers SET strProfilePicSrc = ? WHERE iUserID = ? "
+                    numRowsUpdated = db.execute(sql_queryUPDATE, newProfilePicFileName, userID)
+
+                    if numRowsUpdated == 1:
+                        return jsonify({"status":"GOOD" ,"message": "Successfully changed!"})
+                    else:
+                        return jsonify({"status":"ERROR" ,"message": "Unsuccessfully changed!"})
+                else:
+                    return jsonify({"status":"ERROR" ,"message": "QUERY ERROR!"}) 
+            elif len(rows) == 1:
+                # rename new file
+                pass
+            elif len(rows) > 1:
+                # something went wrong previously, update the filenames of the existing records
+                pass
+            else:
+                return jsonify({"status":"ERROR" ,"message": "Unsuccessfully changed!"})
         elif (updateSection == "display_name"):
             newDisplayName = data["new_display_name"]
 
             sql_querySELECT = "SELECT strDisplayName "
             sql_queryUPDATE = "UPDATE tblUsers SET strDisplayName = '" + newDisplayName + "' "
+
+            sql_querySELECT = sql_querySELECT + "FROM tblUsers a WHERE iUserID = ? "
+
+            rows = db.execute(sql_querySELECT, userID)
+
+            if len(rows) == 1:
+                sql_queryUPDATE = sql_queryUPDATE + "WHERE iUserID = ? "         
+                
+                numRowsUpdated = db.execute(sql_queryUPDATE, userID)
+
+                if numRowsUpdated == 1:
+                    return jsonify({"status":"GOOD" ,"message": "Successfully changed!"})
+                else:
+                    return jsonify({"status":"ERROR" ,"message": "Unsuccessfully changed!"})
+
+            else:            
+                return jsonify({"status":"ERROR" ,"message": "QUERY ERROR!"}) 
+            
         elif (updateSection == "password"):
             oldPassword = data["old_password"]
             newPassword = data["new_password"]
 
             sql_querySELECT = "SELECT strHashPW "
             sql_queryUPDATE = "UPDATE tblUsers SET strHashPW = '" + generate_password_hash(newPassword) + "' "
+
+            sql_querySELECT = sql_querySELECT + "FROM tblUsers a WHERE iUserID = ? "
+
+            rows = db.execute(sql_querySELECT, userID)
+
+            if len(rows) == 1:
+                sql_queryUPDATE = sql_queryUPDATE + "WHERE iUserID = ? "
+            
+                # check select if 1 row returned, if 1 then execute update, if not return ERROR
+                if (updateSection == "password" and not check_password_hash(rows[0]["strHashPW"], oldPassword)):
+                    # old password validation                
+                    return jsonify({"status":"ERROR" ,"message": "Old password does not match!"})            
+                
+                numRowsUpdated = db.execute(sql_queryUPDATE, userID)
+
+                if numRowsUpdated == 1:
+                    return jsonify({"status":"GOOD" ,"message": "Successfully changed!"})
+                else:
+                    return jsonify({"status":"ERROR" ,"message": "Unsuccessfully changed!"})
+
+            else:            
+                return jsonify({"status":"ERROR" ,"message": "QUERY ERROR!"}) 
         else:
             return jsonify({"status":"ERROR" ,"message": "No update section identified!"})
-        
-        sql_querySELECT = sql_querySELECT + "FROM tblUsers a WHERE iUserID = ? "
-
-        rows = db.execute(sql_querySELECT, userID)
-        
-        if len(rows) == 1:
-            sql_queryUPDATE = sql_queryUPDATE + "WHERE iUserID = ? "
-        
-            # check select if 1 row returned, if 1 then execute update, if not return ERROR
-            if (updateSection == "password" and not check_password_hash(rows[0]["strHashPW"], oldPassword)):
-                # old password validation                
-                return jsonify({"status":"ERROR" ,"message": "Old password does not match!"})            
-            
-            numRowsUpdated = db.execute(sql_queryUPDATE, userID)
-
-            if numRowsUpdated == 1:
-                return jsonify({"status":"GOOD" ,"message": "Successfully changed!"})
-            else:
-                return jsonify({"status":"ERROR" ,"message": "Unsuccessfully changed!"})
-
-        else:            
-            return jsonify({"status":"ERROR" ,"message": "QUERY ERROR!"})
+    
     else:
         return jsonify({"status":"ERROR" ,"message": "GET!"})
         
@@ -716,10 +791,15 @@ TODO
 - settings page to update user settings
     - display / password -- TEST
     - profile pic -- TODO
-        -- image in bytes successfully passed FROM JS to PY
-        -- see if filename already exists
-        --  if YES. append +1 to the end of the file name
-        -- save the filename to the user profile pic col
+        -- image in bytes successfully passed FROM JS to PY - OK
+        -- see if filename already exists - OK
+        --  if YES. append +1 to the end of the file name -- here
+        -- save the filename to the user profile pic col -- 
+                -- create image obj from string
+                -- save into desired path
+                -- check if in folder
+                -- SELECt again and load the new profile pic
+            -- TODO if exists
         -- save image to static/profilepic (either resize or leave original size).
         --  open filereader .. write to file .. close filereader
         -- to ensure correct image. sql query get the image again and send back to JS to set the src of img_profile_pic

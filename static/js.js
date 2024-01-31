@@ -1181,6 +1181,7 @@ function update_user_settings_initiate(user_id, dictParams){
             {
                 user_settings_profile_pic_msg.textContent = response["message"];
                 let img_profile_pic = document.getElementById("img_profile_pic");
+                console.log(response["bytesBack"]);
                 img_profile_pic.setAttribute('src', response["bytesBack"]);
             }
             else if (dictParams["update_section"] == "display_name")
