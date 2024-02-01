@@ -1142,8 +1142,8 @@ function getUserMostSubmittedX(dictProfileFields) {
 
 function update_user_settings_initiate(user_id, dictParams){
 
-    let user_settings_profile_pic_msg = document.getElementById("user_settings_profile_pic_msg");
-    user_settings_profile_pic_msg.style.color = "red";
+    //let user_settings_profile_pic_msg = document.getElementById("user_settings_profile_pic_msg");
+    //user_settings_profile_pic_msg.style.color = "red";
 
     let user_settings_display_name_msg = document.getElementById("user_settings_display_name_msg");
     user_settings_display_name_msg.style.color = "red";
@@ -1166,7 +1166,7 @@ function update_user_settings_initiate(user_id, dictParams){
 
             if (response["status"] == "GOOD") {
                 
-                user_settings_profile_pic_msg.style.color = "green";
+                //user_settings_profile_pic_msg.style.color = "green";
                 user_settings_display_name_msg.style.color = "green";
                 user_settings_password_msg.style.color = "green";
 
@@ -1176,7 +1176,7 @@ function update_user_settings_initiate(user_id, dictParams){
                 document.getElementById("confirm_new_password").value = "";
                 
             }
-        
+            /*
             if (dictParams["update_section"] == "profile_pic")
             {
                 user_settings_profile_pic_msg.textContent = response["message"];
@@ -1184,7 +1184,9 @@ function update_user_settings_initiate(user_id, dictParams){
                 console.log(response["bytesBack"]);
                 img_profile_pic.setAttribute('src', response["bytesBack"]);
             }
-            else if (dictParams["update_section"] == "display_name")
+            else 
+            */
+            if (dictParams["update_section"] == "display_name")
             {
                 user_settings_display_name_msg.textContent = response["message"];
             }
@@ -1217,7 +1219,7 @@ function update_user_settings(update_section) {
                         "mode":"update_user_settings",
                         "update_section":update_section
                     };
-
+    /*
     if (update_section == "profile_pic")
     {
         var input_display_pic = document.getElementById("input_display_pic");
@@ -1255,7 +1257,9 @@ function update_user_settings(update_section) {
             return false;
         }
     }
-    else if (update_section == "display_name")
+    else 
+    */
+    if (update_section == "display_name")
     {
         dictParams["new_display_name"] = document.getElementById("txt_display_name_change").value.trim();
     }

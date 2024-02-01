@@ -3,10 +3,8 @@ import time
 import decimal
 import json
 
-from PIL import Image  
-import PIL
-
 import io
+import base64
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify, url_for
@@ -85,7 +83,21 @@ def nav_submit_JS():
 @app.route("/user_settings", methods=["GET","POST"])
 @login_required
 def user_settings():
-    return render_template("user_settings.html", page_type="settings")
+    imageFilename = "/static/userProfilePics/"
+
+    if request.method == "POST":
+        if (session.get('user_id') is not None):
+            rows = db.execute("SELECT strProfilePicSrc FROM tblUsers WHERE strUserName = ? ", session["user_id"])
+            
+            if len(rows) == 1:
+                imageFilename = imageFilename + rows[0]["strProfilePicSrc"]
+
+    if imageFilename == "/static/userProfilePics/":
+        imageFilename = imageFilename + "blackSquare.png"
+
+    print(imageFilename)
+
+    return render_template("user_settings.html", page_type="settings", proficPicImg=imageFilename)
 
 
 @app.route("/nav_user_settings_JS", methods=["POST"])
@@ -639,24 +651,30 @@ def getUserProfileDisplayInfo():
         return jsonify({"status":"ERROR" ,"message": "Get profile error!"})
 
 
-@app.route("/update_user_settings_initiate", methods=["POST"])
-def update_user_settings_initiate():
-    if request.method == "POST":
-        
-        data = json.loads(request.form.get("json_data"))
-        updateSection = data["update_section"]
-        userID = data["user_id"]
-        newDisplayName = ""
-        oldPassword = ""
-        newPassword = ""
-        newProfilePicFileName = ""
-        newProfilePicBytesStr = ""
-        profilePicPath = os.getcwd() + "/static/userProfilePics/"
+@app.route("/updateProfilePic", methods=["GET", "POST"])
+def updateProfilePic():
 
-        sql_querySELECT = ""
-        sql_queryUPDATE = ""
+    profilePicPath = os.getcwd() + "/static/userProfilePics/"
+    
+    newProfilePicFileInput = request.files["input_display_pic"]
 
-        if (updateSection == "profile_pic"):
+    fileName = newProfilePicFileInput.filename
+    
+    # save image to directory
+    newProfilePicFileInput.save(os.path.join(profilePicPath, fileName))
+
+    newProfilePicFileInput = "/static/userProfilePics/" + fileName
+    return render_template("user_settings.html", page_type="settings", proficPicImg=newProfilePicFileInput)
+    return user_settings()
+    
+    
+    """
+    newProfilePicFileName = ""
+    newProfilePicBytesStr = ""
+    
+
+
+    if (updateSection == "profile_pic"):
             newProfilePicFileName = data["new_profile_pic_filename"]
             newProfilePicBytesStr = data["new_profile_pic_bytes"]
             print (newProfilePicBytesStr)
@@ -710,7 +728,24 @@ def update_user_settings_initiate():
                 pass
             else:
                 return jsonify({"status":"ERROR" ,"message": "Unsuccessfully changed!"})
-        elif (updateSection == "display_name"):
+    """
+
+
+@app.route("/update_user_settings_initiate", methods=["POST"])
+def update_user_settings_initiate():
+    if request.method == "POST":
+        
+        data = json.loads(request.form.get("json_data"))
+        updateSection = data["update_section"]
+        userID = data["user_id"]
+        newDisplayName = ""
+        oldPassword = ""
+        newPassword = ""
+
+        sql_querySELECT = ""
+        sql_queryUPDATE = ""
+
+        if (updateSection == "display_name"):
             newDisplayName = data["new_display_name"]
 
             sql_querySELECT = "SELECT strDisplayName "
@@ -791,14 +826,13 @@ TODO
 - settings page to update user settings
     - display / password -- TEST
     - profile pic -- TODO
-        -- image in bytes successfully passed FROM JS to PY - OK
-        -- see if filename already exists - OK
-        --  if YES. append +1 to the end of the file name -- here
+        -- see if filename already exists - 
+        --  if YES. append +1 to the end of the file name -- 
         -- save the filename to the user profile pic col -- 
-                -- create image obj from string
-                -- save into desired path
-                -- check if in folder
-                -- SELECt again and load the new profile pic
+                -- Resize the image -- here
+                -- save into desired path -- OK
+                -- check if in folder -- OK
+                -- SELECt again and load the new profile pic -- OK (render the page again)
             -- TODO if exists
         -- save image to static/profilepic (either resize or leave original size).
         --  open filereader .. write to file .. close filereader

@@ -17,18 +17,17 @@
                         <div class="row">
                             <div class="col-sm"></div>
                             <div class="col-sm">
-                                <image id="img_profile_pic" alt="Profile pic" src="/static/blackSquare.png"></image>
+                                <image id="img_profile_pic" alt="Profile pic" src="{{ proficPicImg }}"></image>
                             </div>
                             <div class="col-sm"></div>
                         </div>
                         <div class="row">
                             <div class="col-sm">
-                                <input type="file" accept="image/*" id="input_display_pic" class="form-control"></input>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm">
-                                <button id="display_pic_change" class="btn btn-primary" onclick="return update_user_settings('profile_pic')">Update profile picture</button>
+                                <form action="updateProfilePic" method="post" enctype="multipart/form-data">
+                                    <input type="file" accept="image/x-png, image/jpeg, image/gif" id="input_display_pic" name="input_display_pic" class="form-control" required></input>
+                                    <br>
+                                    <button type="submit" id="display_pic_change" class="btn btn-primary">Update profile picture</button>
+                                </form>
                             </div>
                         </div>
                         <br>
