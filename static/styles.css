@@ -277,6 +277,7 @@ textarea {
 #img_profile_pic {
     height: 80px;
     width: 80px;
+    object-fit: cover;
     border-radius: 50%;
 }
 

@@ -5,6 +5,8 @@ import json
 
 import io
 import base64
+from PIL import Image
+import math
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify, url_for
@@ -23,6 +25,8 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///raceSubmissions.db")
+
+PROFILEPICSIZE = 80, 80
 
 @app.after_request
 def after_request(response):
@@ -89,7 +93,9 @@ def user_settings():
         if (session.get('user_id') is not None):
             rows = db.execute("SELECT strProfilePicSrc FROM tblUsers WHERE strUserName = ? ", session["user_id"])
             
-            if len(rows) == 1:
+            if not rows:
+                pass
+            elif len(rows) == 1:
                 imageFilename = imageFilename + rows[0]["strProfilePicSrc"]
 
     if imageFilename == "/static/userProfilePics/":
@@ -262,8 +268,10 @@ def login_SQL():
         rows = db.execute("SELECT * FROM tblUsers WHERE strUserName = ? ", username)
 
         # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0]["strHashPW"], password):
-            return jsonify({"status": "ERROR", "message": "Invalid username and/or password"})
+        if not rows:
+            return jsonify({"status": "ERROR", "message": "ERR"})
+        elif len(rows) != 1 or not check_password_hash(rows[0]["strHashPW"], password):
+                return jsonify({"status": "ERROR", "message": "Invalid username and/or password"})
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["iUserID"]
@@ -309,12 +317,16 @@ def validate_registration():
 
         rows = db.execute("SELECT * FROM tblUsers WHERE strDisplayName = ? ", display_name)
 
-        if len(rows) > 0:
+        if not rows:
+            return jsonify({"status":"ERROR" ,"message": "ERR"})
+        elif len(rows) > 0:
             return jsonify({"status":"ERROR" ,"message": "Display name already exists!"})
         
         rows = db.execute("SELECT * FROM tblUsers WHERE strUserName = ? ", username)
 
-        if len(rows) > 0:
+        if not rows:
+            return jsonify({"status":"ERROR" ,"message": "ERR"})
+        elif len(rows) > 0:
             return jsonify({"status":"ERROR" ,"message": "Username already exists!"})
         
         if password != password_again:
@@ -391,7 +403,7 @@ def submit_record():
         rows = db.execute("SELECT iGameID FROM tblGames WHERE strGameName = ? ORDER BY iGameID asc LIMIT 1", game)
         iGameID = None
 
-        if len(rows) == 0:
+        if not rows or len(rows) == 0:
             # add
             iGameID = db.execute("""INSERT INTO tblGames(strGameName) 
                                     VALUES (?)""", game)
@@ -407,7 +419,7 @@ def submit_record():
         rows = db.execute("SELECT iPlatformID FROM tblPlatforms WHERE strPlatformName = ? ORDER BY iPlatformID asc LIMIT 1", platform)
         iPlatformID = None
 
-        if len(rows) == 0:
+        if not rows or len(rows) == 0:
             # add
             iPlatformID = db.execute("""INSERT INTO tblPlatforms(strPlatformName) 
                                     VALUES (?)""", platform)
@@ -422,7 +434,7 @@ def submit_record():
         rows = db.execute("SELECT iVehicleID FROM tblVehicles WHERE strVehicleName = ? ORDER BY iVehicleID asc LIMIT 1", vehicle)
         iVehicleID = None
 
-        if len(rows) == 0:
+        if not rows or len(rows) == 0:
             # add
             iVehicleID = db.execute("""INSERT INTO tblVehicles(strVehicleName) 
                                     VALUES (?)""", vehicle)
@@ -437,7 +449,7 @@ def submit_record():
         rows = db.execute("SELECT iTrackID FROM tblTracks WHERE strTrackName = ? ORDER BY iTrackID asc LIMIT 1", track)
         iTrackID = None
 
-        if len(rows) == 0:
+        if not rows or len(rows) == 0:
             # add
             iTrackID = db.execute("""INSERT INTO tblTracks(strTrackName) 
                                     VALUES (?)""", track)
@@ -452,7 +464,7 @@ def submit_record():
         rows = db.execute("SELECT iGameModeID FROM tblGameMode WHERE strGameModeName = ? ORDER BY iGameModeID asc LIMIT 1", gamemode)
         iGameModeID = None
 
-        if len(rows) == 0:
+        if not rows or len(rows) == 0:
             # add
             iGameModeID = db.execute("""INSERT INTO tblGameMode(strGameModeName) 
                                     VALUES (?)""", gamemode)
@@ -493,7 +505,7 @@ def deleteSubmission():
 
         rows = db.execute("SELECT * FROM tblSubmissions WHERE iSubmissionID = ? AND iUserID = ? ", submissionID, userID)
         
-        if len(rows) == 0:
+        if not rows or len(rows) == 0:
             return jsonify({"status":"ERROR" ,"message": "No rows to delete!"})
         elif len(rows) > 1:
             return jsonify({"status":"ERROR" ,"message": "Somehow too may rows!"})
@@ -516,10 +528,10 @@ def getUserNumOfSubmissions():
 
         rows = db.execute(sql_query, session["user_id"])
 
-        if len(rows) == 1:
-            return jsonify({"status":"GOOD" ,"message": rows[0]["numSubCnt"]})
-        else:
+        if not rows:
             return jsonify({"status":"ERROR" ,"message": "sql error"})
+        elif len(rows) == 1:
+            return jsonify({"status":"GOOD" ,"message": rows[0]["numSubCnt"]})
     else:
         return jsonify({"status":"ERROR" ,"message": "???"})
     
@@ -571,10 +583,13 @@ def getUserProfileStats():
         # this error is pissing me off. RuntimeError: fewer placeholders () than values (3). JUST PUT THE PARAM IN THE SQL QUERY
         rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = " + str(userID))
         
-        if len(rows) == 1:
+        if not rows:
+            dictReturn["idNumOfSub"] = "N/A"
+        elif len(rows) == 1:
             dictReturn["idNumOfSub"] = rows[0]["subCnt"]
         else:
             dictReturn["idNumOfSub"] = "error"
+        
         # /get number of user submissions
 
         # get most submitted game, track, vehicle, and game mode
@@ -619,7 +634,9 @@ def getUserProfileStats():
                                 ORDER BY count(a.{idColft}) DESC
                                     LIMIT 1""".format(nameColft = val["dbNameCol"], idColft = val["dbIDCol"], tableft = val["table"], userID = str(userID)))   
 
-            if len(rows) == 1:
+            if not rows:
+                dictReturn[val["profileElemID"]] = "N/A"  
+            elif len(rows) == 1:
                 dictReturn[val["profileElemID"]] = rows[0][val["dbNameCol"]]
             else:
                 dictReturn[val["profileElemID"]] = "error"      
@@ -643,10 +660,12 @@ def getUserProfileDisplayInfo():
 
         rows = db.execute("SELECT strDisplayName, strProfilePicSrc FROM tblUsers WHERE iUserID = " + str(userID))
 
-        if len(rows) == 1:
+        if not rows:
+            return jsonify({"status":"ERROR" ,"message": "N/A"})
+        elif len(rows) == 1:
             return jsonify({"status":"GOOD", "displayName": rows[0]["strDisplayName"], "profilePic": rows[0]["strProfilePicSrc"]})
         else:
-            return jsonify({"status":"ERROR" ,"message": "N/A"})
+            return jsonify({"status":"ERROR" ,"message": "error"})
     else:
         return jsonify({"status":"ERROR" ,"message": "Get profile error!"})
 
@@ -657,15 +676,35 @@ def updateProfilePic():
     profilePicPath = os.getcwd() + "/static/userProfilePics/"
     
     newProfilePicFileInput = request.files["input_display_pic"]
-
     fileName = newProfilePicFileInput.filename
+
+    fileExtension = fileName[fileName.rfind(".") + 1:]    # look for last occurence of '.' then get the characters that follow.
+    if (fileExtension.upper() == 'JPG'):
+        fileExtension = 'JPEG'
+
+    # pillows
+    img = Image.open(newProfilePicFileInput)
+    percentWidth = PROFILEPICSIZE[0] / img.size[0]
+    percentHeight = PROFILEPICSIZE[1] / img.size[1]
+    ratioPercent = None
+    
+    if percentWidth > percentHeight:
+        ratioPercent = percentWidth
+    else:
+        ratioPercent = percentHeight
+
+    #img.thumbnail(PROFILEPICSIZE)
+    newSize = math.ceil(ratioPercent * img.size[0]), math.ceil(ratioPercent * img.size[1])
+    
+    newImg = img.resize(newSize)
+    newImg.save(os.path.join(profilePicPath, fileName))
     
     # save image to directory
-    newProfilePicFileInput.save(os.path.join(profilePicPath, fileName))
+    #newProfilePicFileInput.save(os.path.join(profilePicPath, fileName))
 
     newProfilePicFileInput = "/static/userProfilePics/" + fileName
     return render_template("user_settings.html", page_type="settings", proficPicImg=newProfilePicFileInput)
-    return user_settings()
+    return user_settings() # uncomment when save file into user table row. This function needs to get the filename from db
     
     
     """
@@ -694,7 +733,7 @@ def updateProfilePic():
                 # good to add file with name as is
                 # save to dir
                 profilePicPath = profilePicPath + newProfilePicFileName
-                fileExtension = newProfilePicFileName[newProfilePicFileName.rfind("."):]    # look for last occurence of '.' then get the characters that follow.
+                fileExtension = newProfilePicFileName[newProfilePicFileName.rfind(".")+1:]    # look for last occurence of '.' then get the characters that follow.
 
                 imgObj = Image.open(io.BytesIO(profilePicBytes))
                 imgObj.show()
@@ -755,7 +794,9 @@ def update_user_settings_initiate():
 
             rows = db.execute(sql_querySELECT, userID)
 
-            if len(rows) == 1:
+            if not rows:
+                return jsonify({"status":"ERROR" ,"message": "QUERY ERROR!"}) 
+            elif len(rows) == 1:
                 sql_queryUPDATE = sql_queryUPDATE + "WHERE iUserID = ? "         
                 
                 numRowsUpdated = db.execute(sql_queryUPDATE, userID)
@@ -779,7 +820,9 @@ def update_user_settings_initiate():
 
             rows = db.execute(sql_querySELECT, userID)
 
-            if len(rows) == 1:
+            if not rows:
+                return jsonify({"status":"ERROR" ,"message": "QUERY ERROR!"}) 
+            elif len(rows) == 1:
                 sql_queryUPDATE = sql_queryUPDATE + "WHERE iUserID = ? "
             
                 # check select if 1 row returned, if 1 then execute update, if not return ERROR
@@ -826,10 +869,10 @@ TODO
 - settings page to update user settings
     - display / password -- TEST
     - profile pic -- TODO
-        -- see if filename already exists - 
+        -- see if filename already exists; check user table for same name file name -- HERE
         --  if YES. append +1 to the end of the file name -- 
         -- save the filename to the user profile pic col -- 
-                -- Resize the image -- here
+                -- Resize the image -- OK
                 -- save into desired path -- OK
                 -- check if in folder -- OK
                 -- SELECt again and load the new profile pic -- OK (render the page again)
