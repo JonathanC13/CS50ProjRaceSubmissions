@@ -1056,10 +1056,18 @@ function getUserProfileDisplayInfo_initiate(user_id, dictParams) {
             //console.log(page_type);
             if (page_type == "settings")
             {                
+                if (response["profilePicSrc"] != "")
+                {
+                    img_profile_pic.setAttribute('src', response["profilePicSrc"]);
+                }
                 document.getElementById("txt_display_name_change").value = response["displayName"];
             }
             else if (page_type == "profile")
             {
+                if (response["profilePicSrc"] != "")
+                {
+                    img_profile_pic.setAttribute('src', response["profilePicSrc"]);
+                }
                 document.getElementById("idDisplayName").textContent = response["displayName"];
             }            
         }).fail(function(response) {
@@ -1155,54 +1163,85 @@ function update_user_settings_initiate(user_id, dictParams){
 
     const myJSON = JSON.stringify(dictParams);
     //console.log(myJSON);
-    
-    $.ajax({
-        url: "/update_user_settings_initiate",
-        type: "POST",
-        data: {json_data:myJSON}
-        }).done(function(response) {
-            //console.log(dictParams["update_section"]);
-            //console.log(response);
 
-            if (response["status"] == "GOOD") {
-                
-                //user_settings_profile_pic_msg.style.color = "green";
-                user_settings_display_name_msg.style.color = "green";
-                user_settings_password_msg.style.color = "green";
-
-                // clear password inputs on success
-                document.getElementById("old_password").value = "";
-                document.getElementById("new_password").value = "";
-                document.getElementById("confirm_new_password").value = "";
-                
-            }
-            /*
-            if (dictParams["update_section"] == "profile_pic")
-            {
-                user_settings_profile_pic_msg.textContent = response["message"];
-                let img_profile_pic = document.getElementById("img_profile_pic");
-                console.log(response["bytesBack"]);
-                img_profile_pic.setAttribute('src', response["bytesBack"]);
-            }
-            else 
-            */
-            if (dictParams["update_section"] == "display_name")
-            {
-                user_settings_display_name_msg.textContent = response["message"];
-            }
-            else if (dictParams["update_section"] == "password")
-            {
-                user_settings_password_msg.textContent = response["message"];
-                
-            }
-
-            topFunction();
-
-        }).fail(function(response) {
-            
-            alert('Failure, dev has low IQ.');
+    if (dictParams["update_section"] == "profile_pic")
+    {
+        var form_data = new FormData($('#frmProfilePic')[0]);
         
-    });
+        for (const key of Object.keys(dictParams))
+        {
+            form_data.append(key, dictParams[key]);
+        }
+        
+        $.ajax({
+            type: 'POST',
+            url: '/updateProfilePic',
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false
+            }).done(function(response) {
+                
+                if (response["status"] == "GOOD") {
+                    user_settings_profile_pic_msg.style.color = "green";
+                    
+                    let img_profile_pic = document.getElementById("img_profile_pic");
+                    img_profile_pic.setAttribute('src', response["profilePicSrc"]);
+                }
+                
+                user_settings_profile_pic_msg.textContent = response["message"];
+                
+            }).fail(function(response) {
+                alert('Failure, dev has low IQ.');
+            
+        });
+        
+        /*
+        
+        */
+                
+    }
+    else if (update_section == "display_name" || update_section == "password")
+    {
+    
+        $.ajax({
+            url: "/update_user_settings_initiate",
+            type: "POST",
+            data: {json_data:myJSON}
+            }).done(function(response) {
+                //console.log(dictParams["update_section"]);
+                //console.log(response);
+
+                if (response["status"] == "GOOD") {
+                    
+                    user_settings_display_name_msg.style.color = "green";
+                    user_settings_password_msg.style.color = "green";
+
+                    // clear password inputs on success
+                    document.getElementById("old_password").value = "";
+                    document.getElementById("new_password").value = "";
+                    document.getElementById("confirm_new_password").value = "";
+                    
+                }
+                
+                if (dictParams["update_section"] == "display_name")
+                {
+                    user_settings_display_name_msg.textContent = response["message"];
+                }
+                else if (dictParams["update_section"] == "password")
+                {
+                    user_settings_password_msg.textContent = response["message"];
+                    
+                }
+
+                //topFunction();
+
+            }).fail(function(response) {
+                
+                alert('Failure, dev has low IQ.');
+            
+        });
+    }
 
 }
 
@@ -1215,13 +1254,16 @@ function update_user_settings(update_section) {
     Password updates on button click
     */
 
+
     var dictParams = {"callbackType":"update_user_settings",
                         "mode":"update_user_settings",
                         "update_section":update_section
                     };
-    /*
+    
     if (update_section == "profile_pic")
     {
+
+
         var input_display_pic = document.getElementById("input_display_pic");
         // once they choose a file. check file format, resize, and attempt to save file into server. DB columns will save the file name, if same file name
         //  exists, rename it with _+1.ext
@@ -1233,19 +1275,6 @@ function update_user_settings(update_section) {
             //console.log("file type good!");
             reader.onload = function(e) {
                 
-                var img = new Image();
-                img.src = reader.result;
-                //console.log("img");
-                //console.log(img);
-                //console.log("img.src");
-                //console.log(img.src);
-                let filepath = input_display_pic.value;
-                var filename = filepath.replace(/^.*?([^\\\/]*)$/, '$1');
-
-                dictParams["new_profile_pic_filename"] = filename;
-                dictParams["new_profile_pic_bytes"] = img.src;
-
-                console.log(dictParams["new_profile_pic_filename"]);
             }
             
             reader.readAsDataURL(file); 
@@ -1254,12 +1283,9 @@ function update_user_settings(update_section) {
             let user_settings_profile_pic_msg = document.getElementById("user_settings_profile_pic_msg");
             user_settings_profile_pic_msg.style.color = "red";
             user_settings_profile_pic_msg.textContent = "File not supported!";
-            return false;
         }
     }
-    else 
-    */
-    if (update_section == "display_name")
+    else if (update_section == "display_name")
     {
         dictParams["new_display_name"] = document.getElementById("txt_display_name_change").value.trim();
     }
@@ -1274,11 +1300,12 @@ function update_user_settings(update_section) {
             let user_settings_password_msg = document.getElementById("user_settings_password_msg");
             user_settings_password_msg.style.color = "red";
             user_settings_password_msg.textContent = "Please ensure new password and confirm password match!";
-            return false;
         }
     }
     
     getUserID(dictParams, update_user_settings_initiate);
+
+    return false;
 
 }
 

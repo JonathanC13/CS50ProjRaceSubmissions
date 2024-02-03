@@ -28,6 +28,8 @@ db = SQL("sqlite:///raceSubmissions.db")
 
 PROFILEPICSIZE = 80, 80
 
+PROFILE_PIC_PATH = os.getcwd() + "/static/userProfilePics/"
+
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -101,9 +103,7 @@ def user_settings():
     if imageFilename == "/static/userProfilePics/":
         imageFilename = imageFilename + "blackSquare.png"
 
-    print(imageFilename)
-
-    return render_template("user_settings.html", page_type="settings", proficPicImg=imageFilename)
+    return render_template("user_settings.html", page_type="settings")
 
 
 @app.route("/nav_user_settings_JS", methods=["POST"])
@@ -653,6 +653,8 @@ def getUserProfileStats():
 @app.route("/getUserProfileDisplayInfo", methods=["POST"])
 def getUserProfileDisplayInfo():
     if request.method == "POST":
+        profilePicFullPath = ""
+
         data = json.loads(request.form.get("json_data"))
         userID = data["user_id"]
 
@@ -663,117 +665,163 @@ def getUserProfileDisplayInfo():
         if not rows:
             return jsonify({"status":"ERROR" ,"message": "N/A"})
         elif len(rows) == 1:
-            return jsonify({"status":"GOOD", "displayName": rows[0]["strDisplayName"], "profilePic": rows[0]["strProfilePicSrc"]})
+            if rows[0]["strProfilePicSrc"] != None:
+                profilePicFullPath = PROFILE_PIC_PATH + rows[0]["strProfilePicSrc"]
+
+            return jsonify({"status":"GOOD", "displayName": rows[0]["strDisplayName"], "profilePicSrc": profilePicFullPath})
         else:
             return jsonify({"status":"ERROR" ,"message": "error"})
     else:
         return jsonify({"status":"ERROR" ,"message": "Get profile error!"})
 
 
+"""
+@app.route("/updateProfilePic", methods=["GET", "POST"])
+def updateProfilePic():
+    
+    if request.method == "POST":
+        newProfilePicFileInput = request.files["input_display_pic"]
+        fileName = newProfilePicFileInput.filename
+
+        fileExtension = fileName[fileName.rfind(".") + 1:]    # look for last occurence of '.' then get the characters that follow.
+        if (fileExtension.upper() == 'JPG'):
+            fileExtension = 'JPEG'
+
+        # pillows
+        img = Image.open(newProfilePicFileInput)
+        percentWidth = PROFILEPICSIZE[0] / img.size[0]
+        percentHeight = PROFILEPICSIZE[1] / img.size[1]
+        ratioPercent = None
+        
+        if percentWidth > percentHeight:
+            ratioPercent = percentWidth
+        else:
+            ratioPercent = percentHeight
+
+        #img.thumbnail(PROFILEPICSIZE)
+        newSize = math.ceil(ratioPercent * img.size[0]), math.ceil(ratioPercent * img.size[1])
+        
+        newImg = img.resize(newSize)
+        newImg.save(os.path.join(PROFILE_PIC_PATH, fileName))
+        
+        # save image to directory
+        #newProfilePicFileInput.save(os.path.join(PROFILE_PIC_PATH, fileName))
+
+        newProfilePicFileInput = "/static/userProfilePics/" + fileName
+        return render_template("user_settings.html", page_type="settings", profilePicSrc=newProfilePicFileInput)
+        return user_settings() # uncomment when save file into user table row. This function needs to get the filename from db
+    
+    return jsonify({"status":"ERROR" ,"message": "ERR!"}) 
+    """
+    
+"""
+newProfilePicFileName = ""
+newProfilePicBytesStr = ""
+
+
+
+if (updateSection == "profile_pic"):
+        newProfilePicFileName = data["new_profile_pic_filename"]
+        newProfilePicBytesStr = data["new_profile_pic_bytes"]
+        print (newProfilePicBytesStr)
+        profilePicBytes = bytes(newProfilePicBytesStr, 'utf-8')
+        print('--')
+        print(profilePicBytes)
+
+        sql_querySELECT = "SELECT iUserID, strProfilePicSrc "
+        #return jsonify({"status":"GOOD" ,"bytesBack": newProfilePicBytesStr})
+
+        # find if any other records have a filename that is the same
+        sql_querySELECT = sql_querySELECT + "FROM tblUsers a WHERE iUserID = ? AND UPPER(strProfilePicSrc) = ? "
+
+        rows = db.execute(sql_querySELECT, userID, newProfilePicFileName.upper())
+
+        if len(rows) == 0:
+            # good to add file with name as is
+            # save to dir
+            profilePicPath = profilePicPath + newProfilePicFileName
+            fileExtension = newProfilePicFileName[newProfilePicFileName.rfind(".")+1:]    # look for last occurence of '.' then get the characters that follow.
+
+            imgObj = Image.open(io.BytesIO(profilePicBytes))
+            imgObj.show()
+
+            return jsonify({"status":"GOOD" ,"bytesBack": newProfilePicBytesStr})
+            try:
+                Image.save(profilePicPath, fileExtension)
+            except Exception as e:
+                print(str(e))
+                return jsonify({"status":"ERROR" ,"message": str(e)})
+
+            # attempt to update with the file name
+            sql_querySELECT = "SELECT iUserID FROM tblUsers WHERE iUserID = ? "
+            rows = db.execute(sql_querySELECT, userID)
+
+            if len(rows) == 1:
+                sql_queryUPDATE = "UPDATE tblUsers SET strProfilePicSrc = ? WHERE iUserID = ? "
+                numRowsUpdated = db.execute(sql_queryUPDATE, newProfilePicFileName, userID)
+
+                if numRowsUpdated == 1:
+                    return jsonify({"status":"GOOD" ,"message": "Successfully changed!"})
+                else:
+                    return jsonify({"status":"ERROR" ,"message": "Unsuccessfully changed!"})
+            else:
+                return jsonify({"status":"ERROR" ,"message": "QUERY ERROR!"}) 
+        elif len(rows) == 1:
+            # rename new file
+            pass
+        elif len(rows) > 1:
+            # something went wrong previously, update the filenames of the existing records
+            pass
+        else:
+            return jsonify({"status":"ERROR" ,"message": "Unsuccessfully changed!"})
+"""
+
+
 @app.route("/updateProfilePic", methods=["GET", "POST"])
 def updateProfilePic():
 
-    profilePicPath = os.getcwd() + "/static/userProfilePics/"
-    
-    newProfilePicFileInput = request.files["input_display_pic"]
-    fileName = newProfilePicFileInput.filename
+    if request.method == "POST":
 
-    fileExtension = fileName[fileName.rfind(".") + 1:]    # look for last occurence of '.' then get the characters that follow.
-    if (fileExtension.upper() == 'JPG'):
-        fileExtension = 'JPEG'
+        userID = request.form["user_id"]
+        
+        newProfilePicFileInput = request.files["input_display_pic"]
+        fileName = newProfilePicFileInput.filename
+        
+        fileExtension = fileName[fileName.rfind(".") + 1:]    # look for last occurence of '.' then get the characters that follow.
+        if (fileExtension.upper() == 'JPG'):
+            fileExtension = 'JPEG'
 
-    # pillows
-    img = Image.open(newProfilePicFileInput)
-    percentWidth = PROFILEPICSIZE[0] / img.size[0]
-    percentHeight = PROFILEPICSIZE[1] / img.size[1]
-    ratioPercent = None
-    
-    if percentWidth > percentHeight:
-        ratioPercent = percentWidth
+        # pillows
+        img = Image.open(newProfilePicFileInput)
+        percentWidth = PROFILEPICSIZE[0] / img.size[0]
+        percentHeight = PROFILEPICSIZE[1] / img.size[1]
+        ratioPercent = None
+        
+        if percentWidth > percentHeight:
+            ratioPercent = percentWidth
+        else:
+            ratioPercent = percentHeight
+
+        #img.thumbnail(PROFILEPICSIZE)
+        newSize = math.ceil(ratioPercent * img.size[0]), math.ceil(ratioPercent * img.size[1])
+        
+        newImg = img.resize(newSize)
+        newImg.save(os.path.join(PROFILE_PIC_PATH, fileName))
+        
+        # save image to directory
+        #newProfilePicFileInput.save(os.path.join(PROFILE_PIC_PATH, fileName))
+
+        newProfilePicFileInput = "/static/userProfilePics/" + fileName
+        
+        return jsonify({"status":"GOOD" ,"message": "Successfully changed!", "profilePicSrc": newProfilePicFileInput})
     else:
-        ratioPercent = percentHeight
-
-    #img.thumbnail(PROFILEPICSIZE)
-    newSize = math.ceil(ratioPercent * img.size[0]), math.ceil(ratioPercent * img.size[1])
-    
-    newImg = img.resize(newSize)
-    newImg.save(os.path.join(profilePicPath, fileName))
-    
-    # save image to directory
-    #newProfilePicFileInput.save(os.path.join(profilePicPath, fileName))
-
-    newProfilePicFileInput = "/static/userProfilePics/" + fileName
-    return render_template("user_settings.html", page_type="settings", proficPicImg=newProfilePicFileInput)
-    return user_settings() # uncomment when save file into user table row. This function needs to get the filename from db
-    
-    
-    """
-    newProfilePicFileName = ""
-    newProfilePicBytesStr = ""
-    
-
-
-    if (updateSection == "profile_pic"):
-            newProfilePicFileName = data["new_profile_pic_filename"]
-            newProfilePicBytesStr = data["new_profile_pic_bytes"]
-            print (newProfilePicBytesStr)
-            profilePicBytes = bytes(newProfilePicBytesStr, 'utf-8')
-            print('--')
-            print(profilePicBytes)
-
-            sql_querySELECT = "SELECT iUserID, strProfilePicSrc "
-            #return jsonify({"status":"GOOD" ,"bytesBack": newProfilePicBytesStr})
-
-            # find if any other records have a filename that is the same
-            sql_querySELECT = sql_querySELECT + "FROM tblUsers a WHERE iUserID = ? AND UPPER(strProfilePicSrc) = ? "
-
-            rows = db.execute(sql_querySELECT, userID, newProfilePicFileName.upper())
-
-            if len(rows) == 0:
-                # good to add file with name as is
-                # save to dir
-                profilePicPath = profilePicPath + newProfilePicFileName
-                fileExtension = newProfilePicFileName[newProfilePicFileName.rfind(".")+1:]    # look for last occurence of '.' then get the characters that follow.
-
-                imgObj = Image.open(io.BytesIO(profilePicBytes))
-                imgObj.show()
-
-                return jsonify({"status":"GOOD" ,"bytesBack": newProfilePicBytesStr})
-                try:
-                    Image.save(profilePicPath, fileExtension)
-                except Exception as e:
-                    print(str(e))
-                    return jsonify({"status":"ERROR" ,"message": str(e)})
-
-                # attempt to update with the file name
-                sql_querySELECT = "SELECT iUserID FROM tblUsers WHERE iUserID = ? "
-                rows = db.execute(sql_querySELECT, userID)
-
-                if len(rows) == 1:
-                    sql_queryUPDATE = "UPDATE tblUsers SET strProfilePicSrc = ? WHERE iUserID = ? "
-                    numRowsUpdated = db.execute(sql_queryUPDATE, newProfilePicFileName, userID)
-
-                    if numRowsUpdated == 1:
-                        return jsonify({"status":"GOOD" ,"message": "Successfully changed!"})
-                    else:
-                        return jsonify({"status":"ERROR" ,"message": "Unsuccessfully changed!"})
-                else:
-                    return jsonify({"status":"ERROR" ,"message": "QUERY ERROR!"}) 
-            elif len(rows) == 1:
-                # rename new file
-                pass
-            elif len(rows) > 1:
-                # something went wrong previously, update the filenames of the existing records
-                pass
-            else:
-                return jsonify({"status":"ERROR" ,"message": "Unsuccessfully changed!"})
-    """
+        return jsonify({"status":"ERROR" ,"message": "Unsuccessfully changed!"})
 
 
 @app.route("/update_user_settings_initiate", methods=["POST"])
 def update_user_settings_initiate():
     if request.method == "POST":
-        
+    
         data = json.loads(request.form.get("json_data"))
         updateSection = data["update_section"]
         userID = data["user_id"]

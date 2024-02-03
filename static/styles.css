@@ -196,7 +196,8 @@ textarea {
 
 #reg_display_name, #reg_username, #reg_password, #reg_password_again,
 #username, #password, 
-#search_game, #search_platform, #search_display_name, #search_vehicle, #search_track, #search_game_mode {
+#search_game, #search_platform, #search_display_name, #search_vehicle, #search_track, #search_game_mode, 
+#txt_display_name_change, #old_password, #new_password, #confirm_new_password {
     text-align: center;
 }
 
