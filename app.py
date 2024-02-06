@@ -578,10 +578,10 @@ def getUserProfileStats():
         dictReturn = {}
 
         # get number of user submissions 
-        #sql_query = "SELECT count(iSubmissionID) as 'numSubCnt' FROM tblSubmissions WHERE iUserID = ?"
+        #sql_query = "SELECT count(iSubmissionID) as 'numSubCnt' FROM tblSubmissions = ?"
 
-        # this error is pissing me off. RuntimeError: fewer placeholders () than values (3). JUST PUT THE PARAM IN THE SQL QUERY
-        rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = " + str(userID))
+        # this error is pissing me off. RuntimeError: fewer placeholders () than values (3). 
+        rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = ? ", userID)
         
         if not rows:
             dictReturn["idNumOfSub"] = "N/A"
@@ -660,7 +660,7 @@ def getUserProfileDisplayInfo():
 
         #sql_query = "SELECT strDisplayName, strProfilePicSrc FROM tblUsers WHERE iUserID = ?"
 
-        rows = db.execute("SELECT strDisplayName, strProfilePicSrc FROM tblUsers WHERE iUserID = " + str(userID))
+        rows = db.execute("SELECT strDisplayName, strProfilePicSrc FROM tblUsers WHERE iUserID = ? ", userID)
 
         if not rows:
             return jsonify({"status":"ERROR" ,"message": "N/A"})
@@ -917,21 +917,49 @@ TODO
 - settings page to update user settings
     - display / password -- TEST
     - profile pic -- TODO
-        -- see if filename already exists; check user table for same name file name -- HERE
-        --  if YES. append +1 to the end of the file name -- 
-        -- save the filename to the user profile pic col -- 
-                -- Resize the image -- OK
-                -- save into desired path -- OK
-                -- check if in folder -- OK
-                -- SELECt again and load the new profile pic -- OK (render the page again)
-            -- TODO if exists
-        -- save image to static/profilepic (either resize or leave original size).
-        --  open filereader .. write to file .. close filereader
-        -- to ensure correct image. sql query get the image again and send back to JS to set the src of img_profile_pic
+        // get unique file name
+        loop while (filename exists in /static/profilePic/)
+            if true
+                append + [_#] to the end of the file name
+            else
+                break
+        // /get unique file name
 
-    
+        // get previous profile pic file name
+        rows = sql_execute('select strProfilePicSrc from tblusers where iUserId = ? ', curr_userID)
+        if not rows:
+            ERR
+        elif len(rows) == 1:
+            oldProfilePicSrc = rows[0]['strProfilePicSrc']
+        else:
+            ERR
+        // /get previous profile pic file name
 
+        // save profile pic to file sys
+        newImg.save(os.path.join(PROFILE_PIC_PATH, fileName))
+        # need try catch
+        // /save profile pic to file sys
 
+        // update profile pic src in tblUsers
+        updatedRows = sql_execute('Update tblUsers SET strProfilePic = ? WHERE iUserID = ? ', fileName, curr_userID)
+        if updatedRows != 1:
+            ERR
+        // /update profile pic src in tblUsers
+
+        // check tblusers to see if other users used the same profile pic src somehow, only delete if none left
+        rows = sql_execute(select count(strprofilePics) as 'cnt' from tblusers where strProfilePicSrc = ?, oldProfilePicSrc)
+        if not rows:
+            ERR
+        elif len(rows) == 1:
+            if rows[0]['cnt'] == 0:
+                try catch, delete file from /static/profilePic
+        else:
+            ERR
+        // /check tblusers to see if other users used the same profile pic src somehow, only delete if none left
+
+        // final ret
+        return jsonify({"status":"GOOD" ,"message": "Successfully changed!", "profilePicSrc": newProfilePicFileInput})
+        // /final ret
 
 - Custom Page system. 10 submissions per page
     - filter by full time only
