@@ -653,7 +653,7 @@ def getUserProfileStats():
 @app.route("/getUserProfileDisplayInfo", methods=["POST"])
 def getUserProfileDisplayInfo():
     if request.method == "POST":
-        profilePicFullPath = ""
+        profilePicSrc = "/static/userProfilePics/"
 
         data = json.loads(request.form.get("json_data"))
         userID = data["user_id"]
@@ -666,9 +666,9 @@ def getUserProfileDisplayInfo():
             return jsonify({"status":"ERROR" ,"message": "N/A"})
         elif len(rows) == 1:
             if rows[0]["strProfilePicSrc"] != None:
-                profilePicFullPath = PROFILE_PIC_PATH + rows[0]["strProfilePicSrc"]
+                profilePicSrc = profilePicSrc + rows[0]["strProfilePicSrc"]
 
-            return jsonify({"status":"GOOD", "displayName": rows[0]["strDisplayName"], "profilePicSrc": profilePicFullPath})
+            return jsonify({"status":"GOOD", "displayName": rows[0]["strDisplayName"], "profilePicSrc": profilePicSrc})
         else:
             return jsonify({"status":"ERROR" ,"message": "error"})
     else:
@@ -783,15 +783,39 @@ def updateProfilePic():
     if request.method == "POST":
 
         userID = request.form["user_id"]
-        
         newProfilePicFileInput = request.files["input_display_pic"]
         fileName = newProfilePicFileInput.filename
-        
+        oldProfilePicSrc = ''
+
+        fileNameActual = fileName[:fileName.rfind(".")]
+
         fileExtension = fileName[fileName.rfind(".") + 1:]    # look for last occurence of '.' then get the characters that follow.
         if (fileExtension.upper() == 'JPG'):
             fileExtension = 'JPEG'
 
-        # pillows
+        count = 0
+        # set unique file name if needed
+        while (os.path.isfile(os.path.join(PROFILE_PIC_PATH, fileName))):
+            fileName = fileNameActual + '_' + str(count) + '.' + fileExtension
+            count = count + 1
+        # /set unique file name if needed
+            
+        # get previous strProfilePicSrc
+        sql_query = "SELECT strProfilePicSrc FROM tblUsers WHERE iUserID = ? "
+
+        rows = db.execute(sql_query, userID)
+
+        if not rows:
+            return jsonify({"status":"ERROR" ,"message": "N/A"})
+        elif len(rows) == 1:
+            if rows[0]["strProfilePicSrc"] != None:
+                oldProfilePicSrc = rows[0]["strProfilePicSrc"]
+        else:
+            return jsonify({"status":"ERROR" ,"message": "error"})
+        # /get previous strProfilePicSrc
+
+        # save profile pic to file sys
+        # pillows; https://pillow.readthedocs.io/en/stable/reference/Image.html
         img = Image.open(newProfilePicFileInput)
         percentWidth = PROFILEPICSIZE[0] / img.size[0]
         percentHeight = PROFILEPICSIZE[1] / img.size[1]
@@ -806,12 +830,44 @@ def updateProfilePic():
         newSize = math.ceil(ratioPercent * img.size[0]), math.ceil(ratioPercent * img.size[1])
         
         newImg = img.resize(newSize)
-        newImg.save(os.path.join(PROFILE_PIC_PATH, fileName))
+
+        try:
+            newImg.save(os.path.join(PROFILE_PIC_PATH, fileName))
+        except ValueError:
+            return jsonify({"status":"ERROR" ,"message": "Format error!"})
+        except OSError:
+            return jsonify({"status":"ERROR" ,"message": "Could not save!"})
+        
         
         # save image to directory
         #newProfilePicFileInput.save(os.path.join(PROFILE_PIC_PATH, fileName))
 
         newProfilePicFileInput = "/static/userProfilePics/" + fileName
+        # /save profile pic to file sys
+
+        # update strProfilePicSrc in tblUsers
+        sql_queryUpdate = "UPDATE tblUsers SET strProfilePicSrc = ? WHERE iUserID = ? "
+        updatedRows = db.execute(sql_queryUpdate, fileName, userID)
+
+        if updatedRows != 1:
+            return jsonify({"status":"ERROR" ,"message": "error"})
+        # /update strProfilePicSrc in tblUsers
+
+        #check tblUsers to see if other users use the same strProfilePicSrc somehow, only delete if none left
+        sql_query = "SELECT count(strProfilePicSrc) as 'cnt' FROM tblUsers WHERE strProfilePicSrc = ? "
+        rows = db.execute(sql_query, oldProfilePicSrc)
+
+        if not rows:
+            pass
+        elif len(rows) == 1:
+            if rows[0]["cnt"] == 0 and oldProfilePicSrc != '':
+                if os.path.isfile(os.path.join(PROFILE_PIC_PATH, oldProfilePicSrc)):
+                    try:
+                        os.remove(os.path.join(PROFILE_PIC_PATH, oldProfilePicSrc))
+                    except:
+                        pass
+                
+        # /check tblUsers to see if other users use the same strProfilePicSrc somehow, only delete if none left 
         
         return jsonify({"status":"GOOD" ,"message": "Successfully changed!", "profilePicSrc": newProfilePicFileInput})
     else:
@@ -912,54 +968,12 @@ TODO
 
 - API to get random race track image -- done 
     -- document: https://pixabay.com/api/docs/
-- profile info -- TODO: 
+- profile info -- done: 
     - Get profile pic in getUserProfileDisplayInfo for profile page
 - settings page to update user settings
     - display / password -- TEST
-    - profile pic -- TODO
-        // get unique file name
-        loop while (filename exists in /static/profilePic/)
-            if true
-                append + [_#] to the end of the file name
-            else
-                break
-        // /get unique file name
-
-        // get previous profile pic file name
-        rows = sql_execute('select strProfilePicSrc from tblusers where iUserId = ? ', curr_userID)
-        if not rows:
-            ERR
-        elif len(rows) == 1:
-            oldProfilePicSrc = rows[0]['strProfilePicSrc']
-        else:
-            ERR
-        // /get previous profile pic file name
-
-        // save profile pic to file sys
-        newImg.save(os.path.join(PROFILE_PIC_PATH, fileName))
-        # need try catch
-        // /save profile pic to file sys
-
-        // update profile pic src in tblUsers
-        updatedRows = sql_execute('Update tblUsers SET strProfilePic = ? WHERE iUserID = ? ', fileName, curr_userID)
-        if updatedRows != 1:
-            ERR
-        // /update profile pic src in tblUsers
-
-        // check tblusers to see if other users used the same profile pic src somehow, only delete if none left
-        rows = sql_execute(select count(strprofilePics) as 'cnt' from tblusers where strProfilePicSrc = ?, oldProfilePicSrc)
-        if not rows:
-            ERR
-        elif len(rows) == 1:
-            if rows[0]['cnt'] == 0:
-                try catch, delete file from /static/profilePic
-        else:
-            ERR
-        // /check tblusers to see if other users used the same profile pic src somehow, only delete if none left
-
-        // final ret
-        return jsonify({"status":"GOOD" ,"message": "Successfully changed!", "profilePicSrc": newProfilePicFileInput})
-        // /final ret
+    - profile pic -- Done
+        
 
 - Custom Page system. 10 submissions per page
     - filter by full time only
