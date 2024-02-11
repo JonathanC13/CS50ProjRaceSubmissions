@@ -962,19 +962,12 @@ Pract
     fetch master and rebase branch
     push branch
     create pull request with main
-    
 
-TODO
 
 - API to get random race track image -- done 
     -- document: https://pixabay.com/api/docs/
-- profile info -- done: 
-    - Get profile pic in getUserProfileDisplayInfo for profile page
-- settings page to update user settings
-    - display / password -- TEST
-    - profile pic -- Done
-        
 
+TODO
 - Custom Page system. 10 submissions per page
     - filter by full time only
     - button for first page
