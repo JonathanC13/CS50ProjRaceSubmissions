@@ -969,7 +969,7 @@ Pract
 
 TODO
 - Custom Page system. 10 submissions per page
-    - filter by full time only
+    - filter by full time only // button top right above all the submissions
     - button for first page
     - button for prev page
     - input box for cur page
@@ -977,8 +977,9 @@ TODO
     - button for last page
 
 
-
-
+Damn, I'll never be as smart as someone like this guy.
+https://www.raymondcamden.com/2022/03/14/building-table-sorting-and-pagination-in-javascript
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
 
     
 https://jinja.palletsprojects.com/en/3.0.x/templates/
