@@ -970,6 +970,7 @@ Pract
 TODO
 - Custom Page system. 10 submissions per page
     - sort by full time and submitted @ // button top right above all the submissions -- done
+        - When search submit or page refresh see if return to default order (desc submitted @) -- here
     - button for first page -- here
     - button for prev page
     - input box for cur page
