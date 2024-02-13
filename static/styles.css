@@ -255,6 +255,14 @@ textarea {
     color:black;
 }
 
+.sortByBtnInactive {
+    padding:5px;
+    width:100%;
+    border-radius: 5px;
+    background-color: #5B6065;
+    color:black;
+}
+
 
 .inputField {
     display: block;

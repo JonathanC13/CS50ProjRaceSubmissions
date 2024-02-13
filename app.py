@@ -969,8 +969,8 @@ Pract
 
 TODO
 - Custom Page system. 10 submissions per page
-    - filter by full time only // button top right above all the submissions
-    - button for first page
+    - sort by full time and submitted @ // button top right above all the submissions -- done
+    - button for first page -- here
     - button for prev page
     - input box for cur page
     - button for next page

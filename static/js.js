@@ -1,3 +1,11 @@
+let sort_asc = false;
+let curr_sort_col, submission_data, mode;
+
+let btnSortBySubmittedTimeTextBase = "Submitted @";
+let btnSortByFullTimeTextBase = "Full time"
+let btnSortBySubmittedTimeText = "Submitted @";
+let btnSortByFullTimeText = "Full time";
+
 function test() {
     //window.location.assign("/profile");
     //window.location.replace("/profile");
@@ -344,12 +352,45 @@ function searchInitiate(mode, user_id, optionalDict) {
     }).done(function(response) {
         //console.log(response);
         //window.location.href = response.redirect;
-
-        $('#submissions_section').html(build_submission_section(response, mode, user_id));
+        submission_data = response;
+        mode = mode;
+        //$('#submissions_section').html(build_submission_section(response, mode, user_id));
+        build_submission_section(response, mode, user_id);
     }).fail(function(response) {
         alert('Failure, dev has low IQ.');
     });
     // /submission results
+}
+
+
+function sortBy(btnId, btnText, target_col) {
+
+    // if same col selected, flip the sort order
+    if (curr_sort_col === target_col) {
+        sort_asc = !sort_asc;
+    }
+    curr_sort_col = target_col;
+    
+    if (btnId == "btnSortBySubmittedTime")
+    {
+        btnSortBySubmittedTimeText = btnSortBySubmittedTimeTextBase.concat(" (", (sort_asc)?'asc':'desc', ")");
+        btnSortByFullTimeText = btnSortByFullTimeTextBase;
+    }
+    else if (btnId == "btnSortByFullTime")
+    {
+        btnSortBySubmittedTimeText = btnSortBySubmittedTimeTextBase;
+        btnSortByFullTimeText = btnSortByFullTimeTextBase.concat(" (", (sort_asc)?'asc':'desc', ")");
+    }
+
+    submission_data.sort((a, b) => {
+        if(a[target_col] < b[target_col]) return sort_asc?-1:1;
+        if(a[target_col] > b[target_col]) return sort_asc?1:-1;
+        return 0;
+    });
+
+    var dictParams = {"callbackType":"build_submission_section",
+                        "mode":mode};
+    getUserID(dictParams, build_submission_section);
 }
 
 
@@ -376,6 +417,8 @@ function setStandingPostFix(strStanding) {
 
 function build_submission_section(results, mode, user_id) {
     //console.log(results);
+
+    let submission_section = $("#submissions_section");
     
     var html_section =
     `<div class="row">
@@ -404,6 +447,21 @@ function build_submission_section(results, mode, user_id) {
                 `</span>
                 <span id="submissionListMessage">
                 </span>
+            </div>
+            <br>`;
+
+    html_section +=
+            `<div class="row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-2">
+                    <span id="subtitle_span">Sort by: </span>
+                </div>
+                <div class="col-sm-3">
+                    <button id="btnSortBySubmittedTime" class="` + ((curr_sort_col == 'strSubmittedDate')?`submissionButtons`:`sortByBtnInactive`) + `" type="button" onclick="sortBy('btnSortBySubmittedTime', 'Submitted @', 'strSubmittedDate')">` + btnSortBySubmittedTimeText + `</button>
+                </div>
+                <div class="col-sm-3">
+                    <button id="btnSortByFullTime" class="` + ((curr_sort_col == 'strFullTime')?`submissionButtons`:`sortByBtnInactive`) + `" type="button" onclick="sortBy('btnSortByFullTime', 'Full time', 'strFullTime')">` + btnSortByFullTimeText + `</button>
+                </div>
             </div>
             <br>`;
 
@@ -577,7 +635,8 @@ function build_submission_section(results, mode, user_id) {
         <div class="col-sm-1"></div>
     </div>`;
 
-    return html_section;
+    submission_section.html(html_section)
+    //return html_section;
 }
 
 
@@ -781,8 +840,17 @@ function validate_record_submission() {
                 document.getElementById("txt_submit_platform").value = "";
                 document.getElementById("txt_submit_vehicle").value = "";
                 document.getElementById("txt_YT_URL").value = "";
+
+                document.getElementById("img_game_cover").setAttribute('src', '/static/game_cover_placeholder.png');
+                document.getElementById("image_credit").textContent = ""; 
+                document.getElementById("image_credit").style.display = "none";
+
                 document.getElementById("txt_submit_track").value = "";
                 document.getElementById("txt_submit_gamemode").value = "";
+
+                document.getElementById("img_YT_prev").style.display = ""; 
+                document.getElementById("iframe_YTvid").style.display = "none"; 
+
                 document.getElementById("in_submit_fulltime_HH").value = "";
                 document.getElementById("in_submit_fulltime_MM").value = "";
                 document.getElementById("in_submit_fulltime_SS").value = "";
@@ -1011,6 +1079,10 @@ function getUserID(dictParams, myCallback) {
         else if (dictParams["callbackType"] == "get_user_profile_info")
         {
             myCallback(response["user_id"], dictParams);
+        }
+        else if (dictParams["callbackType"] == "build_submission_section")
+        {
+            myCallback(submission_data, dictParams["mode"], response["user_id"]);
         }
         else
         {
