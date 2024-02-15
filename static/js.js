@@ -1,5 +1,5 @@
 let sort_asc = false;
-let curr_sort_col, submission_data, mode;
+let curr_sort_col, submission_data, mode, curr_page, max_pages;
 
 let btnSortBySubmittedTimeTextBase = "Submitted @";
 let btnSortByFullTimeTextBase = "Full time"
@@ -77,6 +77,26 @@ function register() {
     }
 
     return false;
+}
+
+
+function getPageMode() {
+    var search_section = document.getElementById("search_section");
+    var page = document.getElementById("page_type").value;
+
+    if(search_section && page == "search") {
+        mode = "search";
+    }
+    else if (page == "profile")
+    {
+        mode = "profile";
+    }
+    else
+    {
+        mode = "home";
+    }
+
+    return mode;
 }
 
 
@@ -282,7 +302,11 @@ function login_submit() {
 
 
 function search(mode) {
-    
+
+    curr_sort_col = "";
+    btnSortByFullTimeText = btnSortByFullTimeTextBase;
+    btnSortBySubmittedTimeText = btnSortBySubmittedTimeTextBase;
+
     // get user id if logged in
     // session["user_id"]
     var dictParams = {"callbackType":"search",
@@ -388,6 +412,8 @@ function sortBy(btnId, btnText, target_col) {
         return 0;
     });
 
+    mode = getPageMode();
+
     var dictParams = {"callbackType":"build_submission_section",
                         "mode":mode};
     getUserID(dictParams, build_submission_section);
@@ -435,7 +461,7 @@ function build_submission_section(results, mode, user_id) {
     else if (mode == "profile")
     {
         html_section +=
-                    `Fastest times`;       
+                    `Your submissions`;       
     }
     else
     {
@@ -617,7 +643,35 @@ function build_submission_section(results, mode, user_id) {
                 
             </div>
             <br>`;
-        });                
+        }); 
+        curr_page = 1;
+        max_pages = 3
+        html_section +=
+            `<div class="row">
+                <div class="col-sm-9"></div>
+                <div class="col-sm-1 d-flex justify-content-center">
+                    <button id="btnSortByFullTime" ` + ((curr_page != 1)?``:`disabled`) + ` class="` + ((curr_page != 1)?`pageBtnsActive`:`pageBtnsInactive`) + `" type="button">Prev</button>
+                </div>
+                <div class="col-sm-1 d-flex justify-content-center">
+                    <select id="selPage" name="selPage" class="w-100">`;
+                        for (let i = 1; i <= max_pages; i ++)
+                        {
+                            if (curr_page == i)
+                            {
+                                html_section += `<option value=` + i + ` selected>` + i + `</option>`;
+                            }
+                            else {
+                                html_section += `<option value=` + i + `>` + i + `</option>`;
+                            }
+                        }
+            html_section +=
+                    `</select>
+                </div>
+                <div class="col-sm-1 d-flex justify-content-center">
+                    <button id="btnSortByFullTime" ` + ((curr_page == max_pages)?`disabled`:``) + ` class="` + ((curr_page != 1)?`pageBtnsInactive`:`pageBtnsActive`) + `" type="button">Next</button>
+                </div>
+            </div>
+            <br>`;
     }
     else
     {

@@ -239,6 +239,7 @@ textarea {
     transform: translate(0%, 0%);
 }
 
+
 .textLeftAlign {
     text-align: left;
 }
@@ -258,6 +259,21 @@ textarea {
 .sortByBtnInactive {
     padding:5px;
     width:100%;
+    border-radius: 5px;
+    background-color: #5B6065;
+    color:black;
+}
+
+.pageBtnsActive {
+    margin:0,0,0,0;
+    border-radius: 5px;
+    background-color: #f5b82e;
+    color:black;
+}
+
+
+.pageBtnsInactive {
+    margin:0,0,0,0;
     border-radius: 5px;
     background-color: #5B6065;
     color:black;

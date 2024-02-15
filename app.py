@@ -970,12 +970,17 @@ Pract
 TODO
 - Custom Page system. 10 submissions per page
     - sort by full time and submitted @ // button top right above all the submissions -- done
-        - When search submit or page refresh see if return to default order (desc submitted @) -- here
+        - When search submit or page refresh see if return to default order (desc submitted @) -- done
     - button for first page -- here
     - button for prev page
-    - input box for cur page
-    - button for next page
-    - button for last page
+    - select for page
+        - Todo: 
+            onclick functions
+                - Prev and next will change page, and update curr select value
+            onchange
+                - update page.
+
+    - to fix. field click search on profile page does not populate search fields and initiate search. It does go to the search page though.
 
 
 Damn, I'll never be as smart as someone like this guy.
