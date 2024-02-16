@@ -1,6 +1,9 @@
 let sort_asc = false;
 let curr_sort_col, submission_data, mode, curr_page, max_pages;
 
+curr_page = 1;
+const page_size = 3;
+
 let btnSortBySubmittedTimeTextBase = "Submitted @";
 let btnSortByFullTimeTextBase = "Full time"
 let btnSortBySubmittedTimeText = "Submitted @";
@@ -378,6 +381,10 @@ function searchInitiate(mode, user_id, optionalDict) {
         //window.location.href = response.redirect;
         submission_data = response;
         mode = mode;
+
+        curr_page = 1;
+        max_pages = math.ceil(submission_data.length / page_size);
+
         //$('#submissions_section').html(build_submission_section(response, mode, user_id));
         build_submission_section(response, mode, user_id);
     }).fail(function(response) {
@@ -412,11 +419,7 @@ function sortBy(btnId, btnText, target_col) {
         return 0;
     });
 
-    mode = getPageMode();
-
-    var dictParams = {"callbackType":"build_submission_section",
-                        "mode":mode};
-    getUserID(dictParams, build_submission_section);
+    request_render_submission_data();
 }
 
 
@@ -494,166 +497,172 @@ function build_submission_section(results, mode, user_id) {
     //searchFromSubmission('` + value.strGameName + `', '` + value.strPlatformName + `', '` + value.strDisplayName + `', '` + value.strVehicleName + `', '` + value.strTrackName + `', '` + value.strGameModeName + `')
     if(results != "")
     {
-        $.each(results, function(index, value) {
-            deleteDisplay = (value.iUserID == user_id)?';':'none;';
+        //$.each(results, function(index, value) {
+        submission_data.filter((row, index) => {            
+            let start = (curr_page - 1) * page_size;
+            let end = (curr_page * page_size);
+            if(index >= start && index < end) {
+                return true;
+            }
+        }).forEach(
+            value => {
+                deleteDisplay = (value.iUserID == user_id)?';':'none;';                
 
-            subPlacement = setStandingPostFix(value.strStanding);
+                subPlacement = setStandingPostFix(value.strStanding);
 
-            html_section += 
-            `<div id="submission_col_container" class="container">
-                <div class="row">
-                    <!--row for Date, game, platform, and Search/Delete-->
-                    <div class="col-sm-3 textLeftAlign sinkCol">
-                        <div class="sinkDiv">
-                            <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + value.strDisplayName + `', '` + `` + `', '` + `` + `', '` + `` + `')">
-                                <span class="titleColor">Display name: </span>
-                                <span class="contentColor">` + value.strDisplayName + `</span>
-                                <span id="tooltiptext">Search Display name</span>
-                            </span>
-                            
+                html_section += 
+                `<div id="submission_col_container" class="container">
+                    <div class="row">
+                        <!--row for Date, game, platform, and Search/Delete-->
+                        <div class="col-sm-3 textLeftAlign sinkCol">
+                            <div class="sinkDiv">
+                                <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + value.strDisplayName + `', '` + `` + `', '` + `` + `', '` + `` + `')">
+                                    <span class="titleColor">Display name: </span>
+                                    <span class="contentColor">` + value.strDisplayName + `</span>
+                                    <span id="tooltiptext">Search Display name</span>
+                                </span>
+                                
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 textLeftAlign sinkCol">
-                        <div class="sinkDiv">
-                            <span class="titleColor">Submitted @: </span>
-                            <span class="contentColor">` + value.strSubmittedDateFormatted + ` EST</span>
+                        <div class="col-sm-6 textLeftAlign sinkCol">
+                            <div class="sinkDiv">
+                                <span class="titleColor">Submitted @: </span>
+                                <span class="contentColor">` + value.strSubmittedDateFormatted + ` EST</span>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="col-sm sinkCol">
-                        <button id="tooltip" class="submissionButtons" type="button" style="display:` + deleteDisplay + `" onclick="deleteSubmission('` + mode + `','` + value.iUserID + `','` + value.iSubmissionID + `')">
-                            Delete
-                            <span id="tooltiptext">Delete your submission</span>
-                        </button>
-                    </div>
-                    <div class="col-sm sinkCol">
-                        <button id="tooltip" class="submissionButtons" type="button" onclick="searchFromSubmission('` + value.strGameName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strTrackName + `', '` + value.strGameModeName + `')">
-                            Search
-                            <span id="tooltiptext">Search game + game mode</span>
-                        </button>
-                    </div>
-                    
-                
-                </div>
-                <div class="row">
-                    <div class="col-sm-3 textLeftAlign sinkCol">
-                        <div class="sinkDiv">
-                            <span id="tooltip" onclick="searchFromSubmission('` + value.strGameName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `')">
-                                <span class="titleColor">Game: </span>
-                                <span class="contentColor">` + value.strGameName + `</span>
-                                <span id="tooltiptext">Search Game</span>
-                            </span>
-                            
-                        </div>
-                    </div>
-                    <div class="col-sm-3 textLeftAlign sinkCol">
-                        <div class="sinkDiv">
-                            <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + value.strPlatformName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `')">
-                                <span class="titleColor">Platform: </span>
-                                <span class="contentColor">` + value.strPlatformName + `</span>
-                                <span id="tooltiptext">Search Platform</span>
-                            </span>
                         
+                        <div class="col-sm sinkCol">
+                            <button id="tooltip" class="submissionButtons" type="button" style="display:` + deleteDisplay + `" onclick="deleteSubmission('` + mode + `','` + value.iUserID + `','` + value.iSubmissionID + `')">
+                                Delete
+                                <span id="tooltiptext">Delete your submission</span>
+                            </button>
                         </div>
+                        <div class="col-sm sinkCol">
+                            <button id="tooltip" class="submissionButtons" type="button" onclick="searchFromSubmission('` + value.strGameName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strTrackName + `', '` + value.strGameModeName + `')">
+                                Search
+                                <span id="tooltiptext">Search game + game mode</span>
+                            </button>
+                        </div>
+                        
+                    
                     </div>
-                    <div class="col-sm-3 textLeftAlign sinkCol">
-                        <div class="sinkDiv">
-                            <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + `` + `', '` + value.strVehicleName + `', '` + `` + `', '` + `` + `')">
-                                <span class="titleColor">Vehicle: </span>
-                                <span class="contentColor">` + value.strVehicleName + `</span>
-                                <span id="tooltiptext">Search Vehicle</span>
-                            </span>
+                    <div class="row">
+                        <div class="col-sm-3 textLeftAlign sinkCol">
+                            <div class="sinkDiv">
+                                <span id="tooltip" onclick="searchFromSubmission('` + value.strGameName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `')">
+                                    <span class="titleColor">Game: </span>
+                                    <span class="contentColor">` + value.strGameName + `</span>
+                                    <span id="tooltiptext">Search Game</span>
+                                </span>
+                                
+                            </div>
+                        </div>
+                        <div class="col-sm-3 textLeftAlign sinkCol">
+                            <div class="sinkDiv">
+                                <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + value.strPlatformName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `')">
+                                    <span class="titleColor">Platform: </span>
+                                    <span class="contentColor">` + value.strPlatformName + `</span>
+                                    <span id="tooltiptext">Search Platform</span>
+                                </span>
                             
+                            </div>
+                        </div>
+                        <div class="col-sm-3 textLeftAlign sinkCol">
+                            <div class="sinkDiv">
+                                <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + `` + `', '` + value.strVehicleName + `', '` + `` + `', '` + `` + `')">
+                                    <span class="titleColor">Vehicle: </span>
+                                    <span class="contentColor">` + value.strVehicleName + `</span>
+                                    <span id="tooltiptext">Search Vehicle</span>
+                                </span>
+                                
+                            </div>
+                        </div>
+                        <div class="col-sm-3 textLeftAlign sinkCol">
+                            <div class="sinkDiv">                            
+                                <span class="titleColor">YT URL: </span>
+                                <span class="contentColor">` + value.strProofYTURL + `</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-3 textLeftAlign sinkCol">
-                        <div class="sinkDiv">                            
-                            <span class="titleColor">YT URL: </span>
-                            <span class="contentColor">` + value.strProofYTURL + `</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-3">game image</div>
-                    <div class="col-sm-6">
-                        <div class="row">
-                            <div class="col-sm-6 textLeftAlign sinkCol">
-                                <div class="sinkDiv">
-                                    <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strTrackName + `', '` + `` + `')">
-                                        <span class="titleColor">Track: </span>
-                                        <span class="contentColor">` + value.strTrackName + `</span>
-                                        <span id="tooltiptext">Search Track</span>
-                                    </span>                                    
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <div class="row">
+                                <div class="col-sm-8 textLeftAlign sinkCol">
+                                    <div class="sinkDiv">
+                                        <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strTrackName + `', '` + `` + `')">
+                                            <span class="titleColor">Track: </span>
+                                            <span class="contentColor">` + value.strTrackName + `</span>
+                                            <span id="tooltiptext">Search Track</span>
+                                        </span>                                    
 
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 textLeftAlign sinkCol">
+                                    <div class="sinkDiv">
+                                        <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strGameModeName + `')">
+                                            <span class="titleColor">Game mode: </span>
+                                            <span class="contentColor">` + value.strGameModeName + `</span>
+                                            <span id="tooltiptext">Search Game mode</span>
+                                        </span>
+                                        
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 textLeftAlign sinkCol">
-                                <div class="sinkDiv">
-                                    <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strGameModeName + `')">
-                                        <span class="titleColor">Game mode: </span>
-                                        <span class="contentColor">` + value.strGameModeName + `</span>
-                                        <span id="tooltiptext">Search Game mode</span>
-                                    </span>
-                                    
+                            <div class="row">
+                                <div class="col-sm-8 textLeftAlign sinkCol">
+                                    <div class="sinkDiv">
+                                        <span class="titleColor">Full Time: </span>
+                                        <span class="contentColor">` + value.strFullTime + `</span>
+                                        <br>
+                                        <span class="titleColor">Placement: </span>
+                                        <span class="contentColor">(` + subPlacement + `)</span>
+                                        <br>
+                                        (based on Game, Track, and Game mode)
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 textLeftAlign sinkCol">
+                                    <div class="sinkDiv">
+                                        <span class="titleColor">Best Lap: </span>
+                                        <span class="contentColor">` + value.strBestLap + `</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-6 textLeftAlign sinkCol">
-                                <div class="sinkDiv">
-                                    <span class="titleColor">Full Time: </span>
-                                    <span class="contentColor">` + value.strFullTime + `</span>
-                                    <br>
-                                    <span class="titleColor">Placement: </span>
-                                    <span class="contentColor">(` + subPlacement + `)</span>
-                                    <br>
-                                    (based on Game, Track, and Game mode)
-                                </div>
-                            </div>
-                            <div class="col-sm-6 textLeftAlign sinkCol">
-                                <div class="sinkDiv">
-                                    <span class="titleColor">Best Lap: </span>
-                                    <span class="contentColor">` + value.strBestLap + `</span>
-                                </div>
+                        <div class="col-sm-3">`
+                            if (value.strProofYTURL == "")
+                            {
+                                html_section += `<img id="img_YT_prev" class="img_center" alt="YT prev">`;
+                            }
+                            else
+                            {
+                                url = "https://www.youtube.com/embed/" + getId(value.strProofYTURL);
+                                html_section += `<iframe width="100%" height="100%" title="YouTube video player" frameborder="0" allowfullscreen src="` + url + `"></iframe>`;
+                            }
+                html_section +=
+                        `</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 textLeftAlign sinkCol">
+                            <div class="sinkDiv">
+                                <span class="titleColor">Description:</span>
+                                <br>
+                                <span class="contentColor">` + value.strDesc + `</span>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-3">`
-                        if (value.strProofYTURL == "")
-                        {
-                            html_section += `<img id="img_YT_prev" class="img_center" alt="YT prev">`;
-                        }
-                        else
-                        {
-                            url = "https://www.youtube.com/embed/" + getId(value.strProofYTURL);
-                            html_section += `<iframe width="100%" height="100%" title="YouTube video player" frameborder="0" allowfullscreen src="` + url + `"></iframe>`;
-                        }
-            html_section +=
-                    `</div>
+                    
                 </div>
-                <div class="row">
-                    <div class="col-sm-12 textLeftAlign sinkCol">
-                        <div class="sinkDiv">
-                            <span class="titleColor">Description:</span>
-                            <br>
-                            <span class="contentColor">` + value.strDesc + `</span>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-            <br>`;
+                <br>`;
         }); 
-        curr_page = 1;
-        max_pages = 3
+        
         html_section +=
             `<div class="row">
                 <div class="col-sm-9"></div>
                 <div class="col-sm-1 d-flex justify-content-center">
-                    <button id="btnSortByFullTime" ` + ((curr_page != 1)?``:`disabled`) + ` class="` + ((curr_page != 1)?`pageBtnsActive`:`pageBtnsInactive`) + `" type="button">Prev</button>
+                    <button id="prev_page" ` + ((curr_page != 1)?``:`disabled`) + ` class="` + ((curr_page != 1)?`pageBtnsActive`:`pageBtnsInactive`) + `" type="button" onclick="prev_page()">Prev</button>
                 </div>
                 <div class="col-sm-1 d-flex justify-content-center">
-                    <select id="selPage" name="selPage" class="w-100">`;
+                    <select id="selPage" name="selPage" class="w-100" onchange="set_curr_page()">`;
                         for (let i = 1; i <= max_pages; i ++)
                         {
                             if (curr_page == i)
@@ -668,7 +677,7 @@ function build_submission_section(results, mode, user_id) {
                     `</select>
                 </div>
                 <div class="col-sm-1 d-flex justify-content-center">
-                    <button id="btnSortByFullTime" ` + ((curr_page == max_pages)?`disabled`:``) + ` class="` + ((curr_page != 1)?`pageBtnsInactive`:`pageBtnsActive`) + `" type="button">Next</button>
+                    <button id="next_page" ` + ((curr_page == max_pages)?`disabled`:``) + ` class="` + ((curr_page == max_pages)?`pageBtnsInactive`:`pageBtnsActive`) + `" type="button" onclick="next_page()">Next</button>
                 </div>
             </div>
             <br>`;
@@ -691,6 +700,54 @@ function build_submission_section(results, mode, user_id) {
 
     submission_section.html(html_section)
     //return html_section;
+}
+
+
+function request_render_submission_data() {
+    mode = getPageMode();
+
+    var dictParams = {"callbackType":"build_submission_section",
+                        "mode":mode};
+    getUserID(dictParams, build_submission_section);
+
+    topFunction();
+}
+
+
+function prev_page() {
+
+    if (curr_page > 1)
+    {
+        curr_page --;
+
+        request_render_submission_data();
+
+        topFunction();
+    }
+}
+
+
+function next_page() {
+    if ((curr_page * page_size) < submission_data.length)
+    {
+        curr_page ++;
+
+        request_render_submission_data();
+
+        topFunction();
+    }
+}
+
+
+function set_curr_page() {
+    curr_page = document.getElementById("selPage").value;
+
+    if (curr_page >= 1 && curr_page <= max_pages)
+    {
+        mode = getPageMode();
+
+        request_render_submission_data();
+    }
 }
 
 

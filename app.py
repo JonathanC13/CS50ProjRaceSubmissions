@@ -971,16 +971,16 @@ TODO
 - Custom Page system. 10 submissions per page
     - sort by full time and submitted @ // button top right above all the submissions -- done
         - When search submit or page refresh see if return to default order (desc submitted @) -- done
-    - button for first page -- here
-    - button for prev page
-    - select for page
+    - button for first page -- done
+    - button for prev page -- done
+    - select for page -- done
         - Todo: 
-            onclick functions
+            onclick functions -- done
                 - Prev and next will change page, and update curr select value
-            onchange
+            onchange -- done
                 - update page.
 
-    - to fix. field click search on profile page does not populate search fields and initiate search. It does go to the search page though.
+    - to fix. field click search on profile page does not populate search fields and initiate search. It does go to the search page though. -- HERE
 
 
 Damn, I'll never be as smart as someone like this guy.
