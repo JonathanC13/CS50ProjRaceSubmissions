@@ -42,7 +42,7 @@ def after_request(response):
 @app.route("/")
 def index():
     """Home page: show the latest race submissions"""
-    return render_template("home.html", page_type="home")
+    return render_template("home.html", page_type="home", search_params = "")
 
 @app.route("/blankTest")
 def blankTest():
@@ -56,18 +56,30 @@ def nav_index_JS():
 
 @app.route("/nav_search")
 def nav_search():
-    return render_template("home.html", page_type="search")
+    return render_template("home.html", page_type="search", search_params = session["search_from_profile_dict"])
 
 
 @app.route("/nav_search_JS", methods=["POST"])
 def nav_search_JS():
+    session["search_from_profile_dict"] = ""
+    return jsonify({'redirect': url_for("nav_search")})
+
+
+@app.route("/nav_search_from_profile", methods=["POST"])
+def nav_search_from_profile():
+    if request.method == "POST":
+        #print("we in")
+        data = request.json
+        session["search_from_profile_dict"] = request.json
+        
+    
     return jsonify({'redirect': url_for("nav_search")})
 
 
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
-    return render_template("profile.html", page_type="profile")
+    return render_template("profile.html", page_type="profile", search_params = "")
 
 
 @app.route("/nav_profile_JS", methods=["POST"])
@@ -78,7 +90,7 @@ def nav_profile_JS():
 @app.route("/submit")
 @login_required
 def submit():
-    return render_template("submit.html", page_type="submit")
+    return render_template("submit.html", page_type="submit", search_params = "")
 
 
 @app.route("/nav_submit_JS", methods=["POST"])
@@ -103,7 +115,7 @@ def user_settings():
     if imageFilename == "/static/userProfilePics/":
         imageFilename = imageFilename + "blackSquare.png"
 
-    return render_template("user_settings.html", page_type="settings")
+    return render_template("user_settings.html", page_type="settings", search_params = "")
 
 
 @app.route("/nav_user_settings_JS", methods=["POST"])
@@ -128,22 +140,24 @@ def populate_submissions_search():
     mode = None
     
     if request.method == "POST":
+            
+        params = []
 
         data = json.loads(request.form.get("search_json"))
+        
         mode = data["mode"]
         
-        if (mode == "search" or mode == "search_from_sub"):
+        if (mode == "search" or mode == "search_from_sub" or mode == "search_from_sub_profile"):
 
             searchDict = {}
-
+            
             searchDict["strGameName"] = str(data["strGameName"]).upper()
             searchDict["strPlatformName"] = str(data["strPlatformName"]).upper()
             searchDict["strDisplayName"] = str(data["strDisplayName"]).upper()
             searchDict["strVehicleName"] = str(data["strVehicleName"]).upper()
             searchDict["strTrackName"] = str(data["strTrackName"]).upper()
             searchDict["strGameModeName"] = str(data["strGameModeName"]).upper()
-                
-            params = []
+            
 
             count = 0
 
@@ -175,6 +189,7 @@ def populate_submissions_search():
             
             for key, val in searchDict.items():
                 if (val != ""):
+                    
                     params.append(val)
 
                     if (count == 0):
@@ -183,7 +198,7 @@ def populate_submissions_search():
                     else:
                         sql_query = sql_query + " AND"
 
-                    sql_query = sql_query + " UPPER(" + key + ") = ? "
+                    sql_query = sql_query + " UPPER(" + key + ") = ?"
 
                     count += 1
 
@@ -205,10 +220,11 @@ def populate_submissions_search():
                         WHERE g.iUserID = ? 
                         ORDER BY a.strSubmittedDate DESC;"""
         # else: select top 10 most recent
-            
-    
+ 
     # 
     #print("sql: " + str(sql_query))
+    #for x in params:
+    #    print(x + '\n')
     if (sql_query == None):
         sql_query = """SELECT *, datetime(strSubmittedDate, 'unixepoch', 'localtime') as 'strSubmittedDateFormatted',
                             RANK () OVER ( 
@@ -224,7 +240,7 @@ def populate_submissions_search():
                             INNER JOIN tblUsers g ON g.iUserID = a.iUserID
                         ORDER BY a.strSubmittedDate DESC;"""
 
-    if (mode == "search" or mode == "search_from_sub"):
+    if (mode == "search" or mode == "search_from_sub" or mode == "search_from_sub_profile"):
         rows = db.execute(sql_query, *params)
     elif (mode == "profile"):
         rows = db.execute(sql_query, session["user_id"])
@@ -247,7 +263,7 @@ def populate_submissions_search():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html", page_type="logIn", login_msg='')
+    return render_template("login.html", page_type="logIn", login_msg='', search_params = "")
 
 
 @app.route("/nav_login_JS", methods=["POST"])
@@ -298,7 +314,7 @@ def register():
     """User register"""
 
     __login_msg = ''
-    return render_template("register.html", page_type="register", register_msg='')
+    return render_template("register.html", page_type="register", register_msg='', search_params = "")
 
 
 @app.route("/nav_register_JS", methods=["POST"])
@@ -968,19 +984,9 @@ Pract
     -- document: https://pixabay.com/api/docs/
 
 TODO
-- Custom Page system. 10 submissions per page
-    - sort by full time and submitted @ // button top right above all the submissions -- done
-        - When search submit or page refresh see if return to default order (desc submitted @) -- done
-    - button for first page -- done
-    - button for prev page -- done
-    - select for page -- done
-        - Todo: 
-            onclick functions -- done
-                - Prev and next will change page, and update curr select value
-            onchange -- done
-                - update page.
-
-    - to fix. field click search on profile page does not populate search fields and initiate search. It does go to the search page though. -- HERE
+    - check navbar mouse icon for pages
+    - test
+    - read me and videeo
 
 
 Damn, I'll never be as smart as someone like this guy.

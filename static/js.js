@@ -163,6 +163,7 @@ function nav_home_JS() {
 function nav_search_JS() {
     topFunction();
     var ret = show_search_section("search");
+
     if(ret != 0)
     {
         $.ajax({
@@ -171,6 +172,31 @@ function nav_search_JS() {
             dataType: 'json',
             contentType: 'application/json',
             data: ""
+        }).done(function(response) {
+            window.location.href = response.redirect;
+        }).fail(function(response) {
+            alert('Failure, dev has low IQ.');
+        });
+    }
+    var page_type = document.getElementById("page_type") == null ? '' : document.getElementById("page_type").value;
+    navbar_active(page_type);
+}
+
+
+function nav_search_from_profile(search_params) {
+    topFunction();
+    var ret = show_search_section("search");
+
+    search_params = JSON.stringify(search_params);
+
+    if(ret != 0)
+    {
+        $.ajax({
+            url: "/nav_search_from_profile",
+            type: "POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            data: search_params
         }).done(function(response) {
             window.location.href = response.redirect;
         }).fail(function(response) {
@@ -346,14 +372,12 @@ function searchInitiate(mode, user_id, optionalDict) {
     else if(mode == "search_from_sub")
     {
         search_params = JSON.stringify(optionalDict);
-
         nav_search_JS();
-        document.getElementById("search_game").value = optionalDict["strGameName"];
-        document.getElementById("search_platform").value = optionalDict["strPlatformName"];
-        document.getElementById("search_display_name").value = optionalDict["strDisplayName"];
-        document.getElementById("search_vehicle").value = optionalDict["strVehicleName"];
-        document.getElementById("search_track").value = optionalDict["strTrackName"];
-        document.getElementById("search_game_mode").value = optionalDict["strGameModeName"];
+    }
+    else if(mode == "search_from_sub_profile")
+    {
+        search_params = JSON.stringify(optionalDict);
+        
     }
     else
     {
@@ -372,6 +396,8 @@ function searchInitiate(mode, user_id, optionalDict) {
 
     }
 
+    //console.log(search_params);
+
     $.ajax({
         type:"post",
         url:"/populate_submissions_search",
@@ -384,6 +410,16 @@ function searchInitiate(mode, user_id, optionalDict) {
 
         curr_page = 1;
         max_pages = math.ceil(submission_data.length / page_size);
+
+        if (mode == "search_from_sub" || mode == "search_from_sub_profile")
+        {
+            document.getElementById("search_game").value = optionalDict["strGameName"];
+            document.getElementById("search_platform").value = optionalDict["strPlatformName"];
+            document.getElementById("search_display_name").value = optionalDict["strDisplayName"];
+            document.getElementById("search_vehicle").value = optionalDict["strVehicleName"];
+            document.getElementById("search_track").value = optionalDict["strTrackName"];
+            document.getElementById("search_game_mode").value = optionalDict["strGameModeName"];
+        }
 
         //$('#submissions_section').html(build_submission_section(response, mode, user_id));
         build_submission_section(response, mode, user_id);
@@ -448,6 +484,7 @@ function build_submission_section(results, mode, user_id) {
     //console.log(results);
 
     let submission_section = $("#submissions_section");
+    let curr_page_type = document.getElementById("page_type").value;
     
     var html_section =
     `<div class="row">
@@ -456,7 +493,7 @@ function build_submission_section(results, mode, user_id) {
             <div id="subtitle_div">
                 <span id="subtitle_span">`;
     
-    if (mode == "search" || mode == "search_from_sub")
+    if (mode == "search" || mode == "search_from_sub" || mode == "search_from_sub_profile")
     {
         html_section +=
                     `Search results`;       
@@ -516,7 +553,7 @@ function build_submission_section(results, mode, user_id) {
                         <!--row for Date, game, platform, and Search/Delete-->
                         <div class="col-sm-3 textLeftAlign sinkCol">
                             <div class="sinkDiv">
-                                <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + value.strDisplayName + `', '` + `` + `', '` + `` + `', '` + `` + `')">
+                                <span id="tooltip" onclick="searchFromSubmission('` + curr_page_type + `', '` + `` + `', '` + `` + `', '` + value.strDisplayName + `', '` + `` + `', '` + `` + `', '` + `` + `')">
                                     <span class="titleColor">Display name: </span>
                                     <span class="contentColor">` + value.strDisplayName + `</span>
                                     <span id="tooltiptext">Search Display name</span>
@@ -538,9 +575,9 @@ function build_submission_section(results, mode, user_id) {
                             </button>
                         </div>
                         <div class="col-sm sinkCol">
-                            <button id="tooltip" class="submissionButtons" type="button" onclick="searchFromSubmission('` + value.strGameName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strTrackName + `', '` + value.strGameModeName + `')">
+                            <button id="tooltip" class="submissionButtons" type="button" onclick="searchFromSubmission('` + curr_page_type + `', '` + value.strGameName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strTrackName + `', '` + value.strGameModeName + `')">
                                 Search
-                                <span id="tooltiptext">Search game + game mode</span>
+                                <span id="tooltiptext">Search game<br>+ Track<br>+ game mode</span>
                             </button>
                         </div>
                         
@@ -549,7 +586,7 @@ function build_submission_section(results, mode, user_id) {
                     <div class="row">
                         <div class="col-sm-3 textLeftAlign sinkCol">
                             <div class="sinkDiv">
-                                <span id="tooltip" onclick="searchFromSubmission('` + value.strGameName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `')">
+                                <span id="tooltip" onclick="searchFromSubmission('` + curr_page_type + `', '` + value.strGameName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `')">
                                     <span class="titleColor">Game: </span>
                                     <span class="contentColor">` + value.strGameName + `</span>
                                     <span id="tooltiptext">Search Game</span>
@@ -559,7 +596,7 @@ function build_submission_section(results, mode, user_id) {
                         </div>
                         <div class="col-sm-3 textLeftAlign sinkCol">
                             <div class="sinkDiv">
-                                <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + value.strPlatformName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `')">
+                                <span id="tooltip" onclick="searchFromSubmission('` + curr_page_type + `', '` + `` + `', '` + value.strPlatformName + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `')">
                                     <span class="titleColor">Platform: </span>
                                     <span class="contentColor">` + value.strPlatformName + `</span>
                                     <span id="tooltiptext">Search Platform</span>
@@ -569,7 +606,7 @@ function build_submission_section(results, mode, user_id) {
                         </div>
                         <div class="col-sm-3 textLeftAlign sinkCol">
                             <div class="sinkDiv">
-                                <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + `` + `', '` + value.strVehicleName + `', '` + `` + `', '` + `` + `')">
+                                <span id="tooltip" onclick="searchFromSubmission('` + curr_page_type + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strVehicleName + `', '` + `` + `', '` + `` + `')">
                                     <span class="titleColor">Vehicle: </span>
                                     <span class="contentColor">` + value.strVehicleName + `</span>
                                     <span id="tooltiptext">Search Vehicle</span>
@@ -589,7 +626,7 @@ function build_submission_section(results, mode, user_id) {
                             <div class="row">
                                 <div class="col-sm-8 textLeftAlign sinkCol">
                                     <div class="sinkDiv">
-                                        <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strTrackName + `', '` + `` + `')">
+                                        <span id="tooltip" onclick="searchFromSubmission('` + curr_page_type + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strTrackName + `', '` + `` + `')">
                                             <span class="titleColor">Track: </span>
                                             <span class="contentColor">` + value.strTrackName + `</span>
                                             <span id="tooltiptext">Search Track</span>
@@ -599,7 +636,7 @@ function build_submission_section(results, mode, user_id) {
                                 </div>
                                 <div class="col-sm-4 textLeftAlign sinkCol">
                                     <div class="sinkDiv">
-                                        <span id="tooltip" onclick="searchFromSubmission('` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strGameModeName + `')">
+                                        <span id="tooltip" onclick="searchFromSubmission('` + curr_page_type + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + `` + `', '` + value.strGameModeName + `')">
                                             <span class="titleColor">Game mode: </span>
                                             <span class="contentColor">` + value.strGameModeName + `</span>
                                             <span id="tooltiptext">Search Game mode</span>
@@ -818,7 +855,7 @@ function displayGameImage(evt) {
     let max_images = 100;
 
     if (game_name == "") {
-        document.getElementById("img_game_cover").setAttribute('src', '/static/game_cover_placeholder.png');
+        document.getElementById("img_game_cover").setAttribute('src', '/static/images/game_cover_placeholder.png');
         document.getElementById("image_credit").textContent = ""; 
         document.getElementById("image_credit").style.display = "none";
     }
@@ -952,7 +989,7 @@ function validate_record_submission() {
                 document.getElementById("txt_submit_vehicle").value = "";
                 document.getElementById("txt_YT_URL").value = "";
 
-                document.getElementById("img_game_cover").setAttribute('src', '/static/game_cover_placeholder.png');
+                document.getElementById("img_game_cover").setAttribute('src', '/static/images/game_cover_placeholder.png');
                 document.getElementById("image_credit").textContent = ""; 
                 document.getElementById("image_credit").style.display = "none";
 
@@ -1050,12 +1087,12 @@ async function searchSuggestionsListener(evt) {
 }
 
 
-function searchFromSubmission(gameName, platformName, displayName, vehicleName, trackName, gameModeName) {
+function searchFromSubmission(curr_page_type, gameName, platformName, displayName, vehicleName, trackName, gameModeName) {
 
     // get user id if logged in
     // session["user_id"]
-    var dictParams = {  "callbackType":"search_from_sub",
-                        "mode": "search_from_sub",
+    var dictParams = {  
+                        "curr_page_type": curr_page_type,
                         "strGameName": gameName.trim(),
                         "strPlatformName": platformName.trim(),
                         "strDisplayName": displayName.trim(),
@@ -1063,10 +1100,30 @@ function searchFromSubmission(gameName, platformName, displayName, vehicleName, 
                         "strTrackName": trackName.trim(),
                         "strGameModeName": gameModeName.trim()
                     };
-
-    getUserID(dictParams, searchInitiate);
+    if (curr_page_type == "profile")
+    {
+        dictParams["callbackType"] = "search_from_sub_profile";
+        dictParams["mode"] = "search_from_sub_profile";
+        nav_search_from_profile(dictParams); // render home page      
+    }
+    else
+    {
+        //console.log("abc");
+        //console.log(document.getElementById("search_params").value);
+        document.getElementById("search_params").value = "";
+        //console.log("def");
+        //console.log(document.getElementById("search_params").value);
+    
+        dictParams["callbackType"] = "search_from_sub";
+        dictParams["mode"] = "search_from_sub";
+        getUserID(dictParams, searchInitiate);
+        
+    }
+    
+    
     // /get user id if logged in
 }
+
 
 /*
 function searchFromSubmissionInitiate(user_id, game, track, game_mode) {
@@ -1172,6 +1229,10 @@ function getUserID(dictParams, myCallback) {
             myCallback(dictParams["mode"], response["user_id"], "");
         }
         else if (dictParams["callbackType"] == "search_from_sub")
+        {
+            myCallback(dictParams["callbackType"], response["user_id"], dictParams);
+        }
+        else if (dictParams["callbackType"] == "search_from_sub_profile")
         {
             myCallback(dictParams["callbackType"], response["user_id"], dictParams);
         }
@@ -1496,6 +1557,7 @@ function update_user_settings(update_section) {
 $( document ).ready(function() {
 
     //console.log( "ready!" );
+    
     var page_type = document.getElementById("page_type") == null ? '' : document.getElementById("page_type").value;
     //console.log(page_type);
     // show if page type = "search"
@@ -1700,68 +1762,86 @@ $( document ).ready(function() {
     // load default submissions
     var submissions_section = document.getElementById("submissions_section");
     
-    if(submissions_section && page_type == "profile") {
-        getUserProfileDisplayInfo(page_type);
+    if(submissions_section) {
 
-        getUserProfileStats();
-
-        // get the user's statistics
-        /*
-        getUserNumOfSubmissions();
-
-        var dictProfileFields = {
-            "game":
-                {
-                    "table":"tblGames",
-                    "dbIDCol":"iGameID",
-                    "dbNameCol":"strGameName",
-                    "profileElemID":"idMostSubGame"
-                },
-            "track":
-                {  
-                    "table":"tblTracks",
-                    "dbIDCol":"iTrackID",
-                    "dbNameCol":"strTrackName",
-                    "profileElemID":"idMostSubTrack"
-                },
-            "vehicle":
-                {  
-                    "table":"tblVehicles",
-                    "dbIDCol":"iVehicleID",
-                    "dbNameCol":"strVehicleName",
-                    "profileElemID":"idMostSubVehicle"
-                },
-            "gameMode":
-                {  
-                    "table":"tblGameMode",
-                    "dbIDCol":"iGameModeID",
-                    "dbNameCol":"strGameModeName",
-                    "profileElemID":"idMostSubGameMode"
-                }
-        }
-        
-        // I think looping and having so many calls causes this error sometimes:
-        // Need to fix > RuntimeError: fewer placeholder () than values (3) for app.py function getUserMostSubmittedX that happens sometimes due to timeout(?)
-        // I will perform the loop within the app.py function and see if the timeout does not occur for the above error
-        //      app.py: 
-        //          ERROR > RuntimeError: fewer placeholder () than values (3)
-        //          ERROR LINE > rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = ?", userID)
-        //          WOW SOLUTION > WHERE iUserID = ? AND iUserID = ?", userID, userID) // IF CANT EVEN RECOGNIZE 1 placeholder, FORCE 2
-        //      NEVER MIND, IT STILL BREACKS SOMETIMES> I'M GOING CRAZY
-        for (const key of Object.keys(dictProfileFields))
+        if (page_type == "profile")
         {
-            getUserMostSubmittedX(dictProfileFields[key]);            
+            getUserProfileDisplayInfo(page_type);
+
+            getUserProfileStats();
+
+            // get the user's statistics
+            /*
+            getUserNumOfSubmissions();
+
+            var dictProfileFields = {
+                "game":
+                    {
+                        "table":"tblGames",
+                        "dbIDCol":"iGameID",
+                        "dbNameCol":"strGameName",
+                        "profileElemID":"idMostSubGame"
+                    },
+                "track":
+                    {  
+                        "table":"tblTracks",
+                        "dbIDCol":"iTrackID",
+                        "dbNameCol":"strTrackName",
+                        "profileElemID":"idMostSubTrack"
+                    },
+                "vehicle":
+                    {  
+                        "table":"tblVehicles",
+                        "dbIDCol":"iVehicleID",
+                        "dbNameCol":"strVehicleName",
+                        "profileElemID":"idMostSubVehicle"
+                    },
+                "gameMode":
+                    {  
+                        "table":"tblGameMode",
+                        "dbIDCol":"iGameModeID",
+                        "dbNameCol":"strGameModeName",
+                        "profileElemID":"idMostSubGameMode"
+                    }
+            }
+            
+            // I think looping and having so many calls causes this error sometimes:
+            // Need to fix > RuntimeError: fewer placeholder () than values (3) for app.py function getUserMostSubmittedX that happens sometimes due to timeout(?)
+            // I will perform the loop within the app.py function and see if the timeout does not occur for the above error
+            //      app.py: 
+            //          ERROR > RuntimeError: fewer placeholder () than values (3)
+            //          ERROR LINE > rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = ?", userID)
+            //          WOW SOLUTION > WHERE iUserID = ? AND iUserID = ?", userID, userID) // IF CANT EVEN RECOGNIZE 1 placeholder, FORCE 2
+            //      NEVER MIND, IT STILL BREACKS SOMETIMES> I'M GOING CRAZY
+            for (const key of Object.keys(dictProfileFields))
+            {
+                getUserMostSubmittedX(dictProfileFields[key]);            
+            }
+            */
+
+
+            // get submissions by the current user
+            search("profile");
         }
-        */
-
-
-        // get submissions by the current user
-        search("profile");
+        else if (document.getElementById("search_params").value != "")
+        {
+            // coming from profile
+            
+            let dictParams = document.getElementById("search_params").value;
+            dictParams = dictParams.replace(/'/g, '"');
+            
+            dictParams = JSON.parse(dictParams);
+            dictParams["callbackType"] = "search_from_sub_profile";
+            dictParams["mode"] = "search_from_sub_profile";
+            
+            getUserID(dictParams, searchInitiate);
+        }
+        else
+        {
+            search("default");
+        }
     }
-    else if (submissions_section)
-    {
-        search("default");
-    }
+    document.getElementById("search_params").value = "";
     // /load default submissions
 
     // load comment section
