@@ -263,7 +263,7 @@ def populate_submissions_search():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html", page_type="logIn", login_msg='', search_params = "")
+    return render_template("login.html", page_type="log in", login_msg='', search_params = "")
 
 
 @app.route("/nav_login_JS", methods=["POST"])

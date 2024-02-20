@@ -1,0 +1,70 @@
+-- Page: Home
+
+> Ensure that Submissions section are properly displayed with [Latest submissions].
+    > Pass
+
+> Ensure that pagination correctly pages all the submissions with "prev" and "next" buttons.
+    > Pass
+
+> Ensure that pagination correctly pages all the submissions with the select dropdown.
+    > Pass
+
+> Ensure that sort by "Submitted @" desc properly sorts by "Submitted @".
+    > Pass
+
+> Ensure that sort by "Submitted @" asc properly sorts by "Submitted @".
+    > Pass
+
+> Ensure that sort by "Full time" desc properly sorts by "time".
+    > Pass
+
+> Ensure that sort by "Full time" asc properly sorts by "time".
+    > Pass
+
+> Ensure "Search" button on a submission opens the search parameter fields container, populates the "Game" + "Track" + "Game mode", and then displays the [Search results].
+    > Pass
+
+> After clicking "Search" button on a submission, click on the "home" logo and it closes the search parameter container and displays the [Latest submissions].
+    > Pass
+
+> In a submission, clicking the "Display name" field will open the search parameter container, populates the "Display name", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Game" field will open the search parameter container, populates the "Game", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Platform" field will open the search parameter container, populates the "Platform", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Vehicle" field will open the search parameter container, populates the "Vehicle", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Track" field will open the search parameter container, populates the "Track", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Game mode" field will open the search parameter container, populates the "Game mode", and then displays the [Search results].
+    > Pass
+
+> Clicking "Search" in the navbar opens the search parameter container.
+    > Pass
+
+> While NOT logged in, clicking "Profile" in the navbar will redirect you to the "Log In" page.
+    > Pass
+
+> While NOT logged in, clicking "Submit" in the navbar will redirect you to the "Log In" page.
+    > Pass
+
+> While NOT logged in, clicking "Register" in the navbar will redirect you to the "Register" page.
+    > Pass
+
+> While NOT logged in, clicking "Log In" in the navbar will redirect you to the "Log In" page.
+    > Pass
+
+-- /Page: Home
+
+
+-- Page: Search
+
+
+
+-- /Page: Search

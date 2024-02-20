@@ -280,6 +280,11 @@ textarea {
 }
 
 
+.pointer {
+    cursor: pointer;
+}
+
+
 .inputField {
     display: block;
     width: 100%;
