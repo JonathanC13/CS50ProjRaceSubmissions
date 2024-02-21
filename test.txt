@@ -1,3 +1,59 @@
+-- Page: Register
+
+> While NOT logged in, click "Register" in the top right section of the navbar. It will redirect to the register page.
+    > Pass
+
+> Without a value in "Display name" click the "Register" button, it will display the message "Please enter a display name!" under the button.
+    > Pass
+
+> With a value in the "Display name" and without a value in "Username" click the "Register" button, it will display the message "Please enter a username!" under the button.
+    > Pass
+
+> With a value in the "Display name" and "Username" and without a value in "Password" click the "Register" button, it will display the message "Please enter a password!" under the button.
+    > Pass
+
+> Test the registration password confirmation by entering the desired "Display name", "Username", "Password", and NON-matching "Password (again)." Upon clicking the "Register" button, it will display message "Passwords do not match!" below the button. 
+    > Pass
+
+> Test successful registration by entering the desired "Display name", "Username", "Password", and matching "Password (again)." Upon clicking the "Register" button, it will notify success through alert and then redirect to the "Log In" page.
+    > Pass
+
+> Test display name already exists by entering all the same information as the previous test case to ensure the current "Display name" matches the previously successful registration. Upon clicking the "Register" button, it will display message "Display name already exists!" below the button.
+    > Pass
+
+> Test user name already exists by entering all the same information as the previous test case, but modify the "Display name" to something else. Upon clicking the "Register" button, it will display message "Username already exists!" below the button.
+    > Pass
+
+-- /Page: Register
+
+
+-- Page: Log In
+
+> Without any values in the "Username" and "Password" fields, click the "Log In" button. It will display the message "Must provide a username!" under the button.
+    > Pass
+
+> Enter an incorrect username in the "Username" and without a value in the "Password" field, then click the "Log In" button. It will display the message "Must provide a password!" under the button.
+    > Pass
+
+> Enter an incorrect username in the "Username" and any password in the "Password" field, then click the "Log In" button. It will display the message "Invalid username and/or password!" under the button.
+    > Pass
+
+> Enter a correct username in the "Username" and an incorrect password in the "Password" field, then click the "Log In" button. It will display the message "Invalid username and/or password!"
+    > Pass
+
+> Enter a correct username and password, then click the "Log In" button. It will redirect to the "Profile" page.
+    > Pass
+
+-- /Page: Log In
+
+
+-- Page: Profile
+
+
+
+-- /Page: Profile
+
+
 -- Page: Home
 
 > Ensure that Submissions section are properly displayed with [Latest submissions].
@@ -60,11 +116,90 @@
 > While NOT logged in, clicking "Log In" in the navbar will redirect you to the "Log In" page.
     > Pass
 
+> While logged in, the account's submissions will have a "Delete" button beside the "Search" button. Click the "Delete" button and it will delete the submission from the list.
+    > Pass
+
 -- /Page: Home
 
 
 -- Page: Search
 
+> In the search parameter container enter a value in the "Game" field and on click "Search" button. Ensure the "Search results" return submissions where the "Game" is LIKE what was entered. %Dirt%.
+    > Pass
 
+> In the search parameter container enter a value in the "Platform" field and on click "Search" button. Ensure the "Search results" return submissions where the "Platform" is LIKE what was entered. %Xbox%.
+    > Pass
+
+> In the search parameter container enter a value in the "Display name" field and on click "Search" button. Ensure the "Search results" return submissions where the "Display name" is LIKE what was entered. %test%.
+    > Pass
+
+> In the search parameter container enter a value in the "Vehicle" field and on click "Search" button. Ensure the "Search results" return submissions where the "Vehicle" is LIKE what was entered. %mazda%.
+    > Pass
+
+> In the search parameter container enter a value in the "Track" field and on click "Search" button. Ensure the "Search results" return submissions where the "Track" is LIKE what was entered. %Hungary%.
+    > Pass
+
+> In the search parameter container enter a value in the "Gane mode" field and on click "Search" button. Ensure the "Search results" return submissions where the "game mode" is LIKE what was entered. %rally%.
+    > Pass
+
+> Ensure that pagination correctly pages all the submissions with "prev" and "next" buttons.
+    > Pass
+
+> Ensure that pagination correctly pages all the submissions with the select dropdown.
+    > Pass
+
+> Ensure that sort by "Submitted @" desc properly sorts by "Submitted @".
+    > Pass
+
+> Ensure that sort by "Submitted @" asc properly sorts by "Submitted @".
+    > Pass
+
+> Ensure that sort by "Full time" desc properly sorts by "time".
+    > Pass
+
+> Ensure that sort by "Full time" asc properly sorts by "time".
+    > Pass
+
+> Ensure "Search" button on a submission opens the search parameter fields container, populates the "Game" + "Track" + "Game mode", and then displays the [Search results].
+    > Pass
+
+> After clicking "Search" button on a submission, click on the "home" logo and it closes the search parameter container and displays the [Latest submissions].
+    > Pass
+
+> In a submission, clicking the "Display name" field will open the search parameter container, populates the "Display name", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Game" field will open the search parameter container, populates the "Game", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Platform" field will open the search parameter container, populates the "Platform", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Vehicle" field will open the search parameter container, populates the "Vehicle", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Track" field will open the search parameter container, populates the "Track", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Game mode" field will open the search parameter container, populates the "Game mode", and then displays the [Search results].
+    > Pass
+
+> Clicking "Home" in the navbar closes the search parameter container.
+    > Pass
+
+> While NOT logged in, clicking "Profile" in the navbar will redirect you to the "Log In" page.
+    > Pass
+
+> While NOT logged in, clicking "Submit" in the navbar will redirect you to the "Log In" page.
+    > Pass
+
+> While NOT logged in, clicking "Register" in the navbar will redirect you to the "Register" page.
+    > Pass
+
+> While NOT logged in, clicking "Log In" in the navbar will redirect you to the "Log In" page.
+    > Pass
+
+> While logged in, the account's submissions will have a "Delete" button beside the "Search" button. Click the "Delete" button and it will delete the submission from the list.
+    > Pass
 
 -- /Page: Search

@@ -190,7 +190,7 @@ def populate_submissions_search():
             for key, val in searchDict.items():
                 if (val != ""):
                     
-                    params.append(val)
+                    params.append("%" + val + "%")
 
                     if (count == 0):
                         # first query condition
@@ -198,7 +198,7 @@ def populate_submissions_search():
                     else:
                         sql_query = sql_query + " AND"
 
-                    sql_query = sql_query + " UPPER(" + key + ") = ?"
+                    sql_query = sql_query + " UPPER(" + key + ") LIKE ?"
 
                     count += 1
 
@@ -285,9 +285,9 @@ def login_SQL():
 
         # Ensure username exists and password is correct
         if not rows:
-            return jsonify({"status": "ERROR", "message": "ERR"})
+            return jsonify({"status": "ERROR", "message": "Invalid username and/or password!"})
         elif len(rows) != 1 or not check_password_hash(rows[0]["strHashPW"], password):
-                return jsonify({"status": "ERROR", "message": "Invalid username and/or password"})
+                return jsonify({"status": "ERROR", "message": "Invalid username and/or password!"})
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["iUserID"]
@@ -333,16 +333,12 @@ def validate_registration():
 
         rows = db.execute("SELECT * FROM tblUsers WHERE strDisplayName = ? ", display_name)
 
-        if not rows:
-            return jsonify({"status":"ERROR" ,"message": "ERR"})
-        elif len(rows) > 0:
+        if len(rows) > 0:
             return jsonify({"status":"ERROR" ,"message": "Display name already exists!"})
         
         rows = db.execute("SELECT * FROM tblUsers WHERE strUserName = ? ", username)
 
-        if not rows:
-            return jsonify({"status":"ERROR" ,"message": "ERR"})
-        elif len(rows) > 0:
+        if len(rows) > 0:
             return jsonify({"status":"ERROR" ,"message": "Username already exists!"})
         
         if password != password_again:
@@ -351,9 +347,9 @@ def validate_registration():
         timestamp = time.time() # in sec since epoch
         # data["timestamp"] = timestamp   #select time(time) from test order by time(time) desc;
 
-        primKeyID = db.execute("""INSERT INTO tblUsers(strJoinDateEST, strUserName, strHashPW, strDisplayName) 
-                                VALUES (?, ?, ?, ?)"""
-                               ,timestamp, username, generate_password_hash(password), display_name)
+        primKeyID = db.execute("""INSERT INTO tblUsers(strJoinDateEST, strUserName, strHashPW, strDisplayName, strProfilePicSrc) 
+                                VALUES (?, ?, ?, ?, ?)"""
+                               ,timestamp, username, generate_password_hash(password), display_name, "blackSquare.png")
 
         return jsonify({"status":"GOOD" ,"redirect": url_for("login")})
     else:

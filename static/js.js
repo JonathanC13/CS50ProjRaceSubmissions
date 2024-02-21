@@ -68,6 +68,7 @@ function register() {
             data: myJSON
         }).done(function(response) {
             if(response["status"] == "GOOD") {
+                alert("Registration successful!")
                 window.location.href = response.redirect;
             }
             else
