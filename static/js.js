@@ -1045,7 +1045,7 @@ async function searchGameListener(evt) {
 */
 
 
-async function searchSuggestionsListener(evt) {
+async function inputSuggestionsListener(evt) {
     //console.log(evt.currentTarget.value); // input value in the field
     //currSearchField
     //
@@ -1054,14 +1054,16 @@ async function searchSuggestionsListener(evt) {
     let searchField = evt.currentTarget.currSearchField;
     let dbTable = evt.currentTarget.currDbTable;
     let dbColName = evt.currentTarget.currDBColName;
+    let dbRelCol = evt.currentTarget.currDbRelCol;
+    let suggestionType = evt.currentTarget.currSuggestionType;
     let userSearchTerm = evt.currentTarget.value
     
-    const obj = {table: dbTable, column: dbColName, userSearch: userSearchTerm};
+    const obj = {table: dbTable, column: dbColName, relCol: dbRelCol, userSearch: userSearchTerm, suggestionType: suggestionType};
     const myJSON = JSON.stringify(obj);
     //console.log(myJSON);
 
     $.ajax({
-        url: "/searchSuggestions",
+        url: "/inputSuggestions",
         type: "POST",
         dataType: 'json',
         contentType: 'application/json',
@@ -1657,73 +1659,99 @@ $( document ).ready(function() {
 
         // /submissiontime min and max
         
+    }
+
+    //console.log(page_type);
+    if (page_type == "home" || page_type == "search" || page_type == "submit") {
         // for search field AND submit field suggestions
         var dictSearchFields = {
             "game":
                 {
                     "table":"tblGames",
                     "dbColName":"strGameName",
-                    "inputId":"search_game"
+                    "dbRelCol":"iGameID",
+                    "inputId":"search_game",
+                    "type":"search"
                 },
             "platform":
                 {
                     "table":"tblPlatforms",
                     "dbColName":"strPlatformName",
-                    "inputId":"search_platform"
+                    "dbRelCol":"iPlatformID",
+                    "inputId":"search_platform",
+                    "type":"search"
                 },
             "display_name":
                 {
                     "table":"tblUsers",
                     "dbColName":"strDisplayName",
-                    "inputId":"search_display_name"
+                    "dbRelCol":"iUserID",
+                    "inputId":"search_display_name",
+                    "type":"search"
                 },
             "vehicle":
                 {
                     "table":"tblVehicles",
                     "dbColName":"strVehicleName",
-                    "inputId":"search_vehicle"
+                    "dbRelCol":"iVehicleID",
+                    "inputId":"search_vehicle",
+                    "type":"search"
                 },
             "track":
                 {
                     "table":"tblTracks",
                     "dbColName":"strTrackName",
-                    "inputId":"search_track"
+                    "dbRelCol":"iTrackID",
+                    "inputId":"search_track",
+                    "type":"search"
                 },
             "game_mode":
                 {
                     "table":"tblGameMode",
                     "dbColName":"strGameModeName",
-                    "inputId":"search_game_mode"
+                    "dbRelCol":"iGameModeID",
+                    "inputId":"search_game_mode",
+                    "type":"search"
                 },
             "submitGame":
                 {
                     "table":"tblGames",
                     "dbColName":"strGameName",
-                    "inputId":"txt_submit_game"
+                    "dbRelCol":"",
+                    "inputId":"txt_submit_game",
+                    "type":"submit"
                 },
             "submitPlatform":
                 {
                     "table":"tblPlatforms",
                     "dbColName":"strPlatformName",
-                    "inputId":"txt_submit_platform"
+                    "dbRelCol":"",
+                    "inputId":"txt_submit_platform",
+                    "type":"submit"
                 },
             "submitVehicle":
                 {
                     "table":"tblVehicles",
                     "dbColName":"strVehicleName",
-                    "inputId":"txt_submit_vehicle"
+                    "dbRelCol":"",
+                    "inputId":"txt_submit_vehicle",
+                    "type":"submit"
                 },
             "submitTrack":
                 {
                     "table":"tblTracks",
                     "dbColName":"strTrackName",
-                    "inputId":"txt_submit_track"
+                    "dbRelCol":"",
+                    "inputId":"txt_submit_track",
+                    "type":"submit"
                 },
             "submitGameMode":
                 {
                     "table":"tblGameMode",
                     "dbColName":"strGameModeName",
-                    "inputId":"txt_submit_gamemode"
+                    "dbRelCol":"",
+                    "inputId":"txt_submit_gamemode",
+                    "type":"submit"
                 }
         };
 
@@ -1741,7 +1769,7 @@ $( document ).ready(function() {
             */
             /*
             const inputSearchField = document.getElementById('search_game');
-            inputSearchField.addEventListener('input', searchSuggestionsListener);
+            inputSearchField.addEventListener('input', inputSuggestionsListener);
             inputSearchField.currSearchField = 'key';
             inputSearchField.currDBColName = dictSearchFields[key]["dbColName"];
             */
@@ -1751,11 +1779,13 @@ $( document ).ready(function() {
                 continue;
             }
 
-            arrSearchVars[i].addEventListener('input', searchSuggestionsListener);
-            arrSearchVars[i].addEventListener('focus', searchSuggestionsListener);
+            arrSearchVars[i].addEventListener('input', inputSuggestionsListener);
+            arrSearchVars[i].addEventListener('focus', inputSuggestionsListener);
             arrSearchVars[i].currSearchField = key;
             arrSearchVars[i].currDbTable = dictSearchFields[key]["table"];
             arrSearchVars[i].currDBColName = dictSearchFields[key]["dbColName"];
+            arrSearchVars[i].currDbRelCol = dictSearchFields[key]["dbRelCol"];
+            arrSearchVars[i].currSuggestionType = dictSearchFields[key]["type"];
 
             i ++;
         }

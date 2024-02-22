@@ -7,6 +7,7 @@ import io
 import base64
 from PIL import Image
 import math
+#import logging
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify, url_for
@@ -29,6 +30,8 @@ db = SQL("sqlite:///raceSubmissions.db")
 PROFILEPICSIZE = 80, 80
 
 PROFILE_PIC_PATH = os.getcwd() + "/static/userProfilePics/"
+
+#logging.getLogger("cs50").disabled = False
 
 @app.after_request
 def after_request(response):
@@ -367,18 +370,28 @@ def searchGameSuggestions():
     return jsonify(gameSuggestions)
 """
 
-@app.route("/searchSuggestions", methods=["POST"])    # route name for JS
-def searchSuggestions():
+@app.route("/inputSuggestions", methods=["POST"])    # route name for JS
+def inputSuggestions():
     if request.method == "POST":
         data = request.json
         table = data["table"]
+        relCol = data["relCol"]
         column = data["column"]
         userSearch = data["userSearch"]
+        suggestionType = data["suggestionType"]
 
-        sqlQuery = "SELECT * FROM " + table + " WHERE " + column + " LIKE ?"
+        if (suggestionType == "search"):
+            sqlQuery = "SELECT " + column + " FROM :table a INNER JOIN tblSubmissions b ON b.:relCol = a.:relCol GROUP BY b.:relCol;"
+            rows = db.execute(sqlQuery,table = table, relCol = relCol)
 
-        rows = db.execute(sqlQuery, "%" + userSearch + "%")
+        elif (suggestionType == "submit"):
+            sqlQuery = "SELECT * FROM " + table + " WHERE " + column + " LIKE ?"
 
+            rows = db.execute(sqlQuery, "%" + userSearch + "%")
+        else:
+            return "{}"
+        print(suggestionType)
+        print(rows)
         return jsonify(rows)
 
     return
