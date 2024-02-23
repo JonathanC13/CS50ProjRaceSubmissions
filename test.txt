@@ -24,6 +24,18 @@
 > Test user name already exists by entering all the same information as the previous test case, but modify the "Display name" to something else. Upon clicking the "Register" button, it will display message "Username already exists!" below the button.
     > Pass
 
+> Starting on the "Register" page, click on "Home" on the navbar and it will redirect to the "Home" page.
+    > Pass
+
+> Starting on the "Register" page, click on "Search" on the navbar and it will redirect to the "Home" page with the search parameters container visible.
+    > Pass
+
+> Starting on the "Register" page, click on "Profile" on the navbar and it will redirect to the "Log In" page.
+    > Pass
+
+> Starting on the "Register" page, click on "Submit" on the navbar and it will redirect to the "Log In" page.
+    > Pass
+
 -- /Page: Register
 
 
@@ -47,9 +59,87 @@
 -- /Page: Log In
 
 
--- Page: Profile
+-- Page: Submit
 
 HERE
+
+-- /Page: Submit
+
+
+-- Page: Profile
+
+> While logged in, click on the "Profile" in the navbar and it will redirect to the "Profile" page.
+    > Pass
+
+> Within the top container, ensure the profile's picture is correct.
+    > Pass
+
+> Within the top container, ensure the profile's display name is correct.
+    > Pass
+
+> If there are currently no submissions, proceed to the "Submit" page tests and then return here for the following tests.
+> Within the top container, ensure the profile's "stats are correct by manually comparing to the submissions within the "Your submissions" section.
+    > Pass
+
+> Ensure that Submissions section are properly displayed with [Your submissions].
+    > Pass
+
+> Ensure that pagination correctly pages all the submissions with "prev" and "next" buttons.
+    > Pass
+
+> Ensure that pagination correctly pages all the submissions with the select dropdown.
+    > Pass
+
+> Ensure that sort by "Submitted @" desc properly sorts by "Submitted @".
+    > Pass
+
+> Ensure that sort by "Submitted @" asc properly sorts by "Submitted @".
+    > Pass
+
+> Ensure that sort by "Full time" desc properly sorts by "time".
+    > Pass
+
+> Ensure that sort by "Full time" asc properly sorts by "time".
+    > Pass
+
+> Ensure "Search" button on a submission redirects to the "Search" page, displays the search parameter fields container, populates the "Game" + "Track" + "Game mode", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Display name" field redirects to the "Search" page, displays the search parameter container, populates the "Display name", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Game" field redirects to the "Search" page, displays the search parameter container, populates the "Game", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Platform" field redirects to the "Search" page, displays the search parameter container, populates the "Platform", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Vehicle" field redirects to the "Search" page, displays the search parameter container, populates the "Vehicle", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Track" field redirects to the "Search" page, displays the search parameter container, populates the "Track", and then displays the [Search results].
+    > Pass
+
+> In a submission, clicking the "Game mode" field redirects to the "Search" page, displays the search parameter container, populates the "Game mode", and then displays the [Search results].
+    > Pass
+
+> While logged in, the account's submissions will have a "Delete" button beside the "Search" button. Click the "Delete" button and it will delete the submission from the list.
+    > Pass
+
+> Starting on the "Profile" page, click on "Home" on the navbar and it will redirect to the "Home" page.
+    > Pass
+
+> Starting on the "Profile" page, click on "Search" on the navbar and it will redirect to the "Home" page with the search parameters container visible.
+    > Pass
+
+> Starting on the "Profile" page, click on "Submit" on the navbar and it will redirect to the "Submit" page.
+    > Pass
+
+> Starting on the "Profile" page, click on "Setting" on the navbar and it will redirect to the "Settings" page.
+    > Pass
+
+> Starting on the "Profile" page, click on "Log Out" on the navbar and it will redirect to the "Log In" page.
+    > Pass
 
 -- /Page: Profile
 

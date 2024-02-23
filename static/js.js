@@ -748,7 +748,7 @@ function request_render_submission_data() {
                         "mode":mode};
     getUserID(dictParams, build_submission_section);
 
-    topFunction();
+    //topFunction();
 }
 
 
@@ -786,6 +786,8 @@ function set_curr_page() {
 
         request_render_submission_data();
     }
+
+    topFunction();
 }
 
 
