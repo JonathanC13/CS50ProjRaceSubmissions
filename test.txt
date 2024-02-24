@@ -1,6 +1,9 @@
 -- Page: Register
 
-> While NOT logged in, click "Register" in the top right section of the navbar. It will redirect to the register page.
+> Enter the base URL (e.g. http://127.0.0.1:5000/) and it will start on the "Home" page.
+    > Pass
+
+> While NOT logged in, click "Register" in the top right section of the navbar. It will redirect to the "Register" page.
     > Pass
 
 > Without a value in "Display name" click the "Register" button, it will display the message "Please enter a display name!" under the button.
@@ -24,22 +27,73 @@
 > Test user name already exists by entering all the same information as the previous test case, but modify the "Display name" to something else. Upon clicking the "Register" button, it will display message "Username already exists!" below the button.
     > Pass
 
+> Refresh the page and it should refresh the "Register" page without error.
+    > Pass
+
 > Starting on the "Register" page, click on "Home" on the navbar and it will redirect to the "Home" page.
     > Pass
 
-> Starting on the "Register" page, click on "Search" on the navbar and it will redirect to the "Home" page with the search parameters container visible.
+> Return to the "Register" page.
+    > Pass
+
+> Starting on the "Register" page, click on "Search" on the navbar and it will redirect to the "Search" page with the search parameters container visible.
+    > Pass
+
+> Return to the "Register" page.
     > Pass
 
 > Starting on the "Register" page, click on "Profile" on the navbar and it will redirect to the "Log In" page.
     > Pass
 
+> Return to the "Register" page.
+    > Pass
+
 > Starting on the "Register" page, click on "Submit" on the navbar and it will redirect to the "Log In" page.
+    > Pass
+
+> Return to the "Register" page.
     > Pass
 
 -- /Page: Register
 
 
 -- Page: Log In
+
+> Click the "Log In" in the navbar and it will redirect to the "Log In" page.
+    > Pass
+
+> Starting on the "Log In" page, click on "Home" on the navbar and it will redirect to the "Home" page.
+    > Pass
+
+> Return to the "Log In" page.
+    > Pass
+
+> Starting on the "Log In" page, click on "Search" on the navbar and it will redirect to the "Search" page with the search parameters container visible.
+    > Pass
+
+> Return to the "Log In" page.
+    > Pass
+
+> Starting on the "Log In" page, click on "Profile" on the navbar and it will redirect to the "Log In" page.
+    > Pass
+
+> Return to the "Log In" page.
+    > Pass
+
+> Starting on the "Log In" page, click on "Submit" on the navbar and it will redirect to the "Log In" page.
+    > Pass
+
+> Return to the "Log In" page.
+    > Pass
+
+> Starting on the "Log In" page, click on "Register" on the navbar and it will redirect to the "Register" page.
+    > Pass
+
+> Return to the "Log In" page.
+    > Pass
+
+> Refresh the page and it should refresh the "Log In" page without error.
+    > Pass
 
 > Without any values in the "Username" and "Password" fields, click the "Log In" button. It will display the message "Must provide a username!" under the button.
     > Pass
@@ -68,8 +122,13 @@ HERE
 
 -- Page: Profile
 
-> While logged in, click on the "Profile" in the navbar and it will redirect to the "Profile" page.
+> While logged in, if not already on the "Profile" page, click on the "Profile" in the navbar and it will redirect to the "Profile" page.
     > Pass
+
+> Refresh the page and it should refresh the "Profile" Page without error.
+    > MOST of the time pass.
+        > Sometimes RuntimeError: fewer placeholders () than values (3)
+            > I've tried different placeholder methods; ?, :value, and string.format(). All eventually throws the fewer placeholder error.
 
 > Within the top container, ensure the profile's picture is correct.
     > Pass
@@ -129,19 +188,41 @@ HERE
 > Starting on the "Profile" page, click on "Home" on the navbar and it will redirect to the "Home" page.
     > Pass
 
-> Starting on the "Profile" page, click on "Search" on the navbar and it will redirect to the "Home" page with the search parameters container visible.
+> Return to the "Profile" page.
+    > Pass
+
+> Starting on the "Profile" page, click on "Search" on the navbar and it will redirect to the "Search" page with the search parameters container visible.
+    > Pass
+
+> Return to the "Profile" page.
     > Pass
 
 > Starting on the "Profile" page, click on "Submit" on the navbar and it will redirect to the "Submit" page.
     > Pass
 
+> Return to the "Profile" page.
+    > Pass
+
 > Starting on the "Profile" page, click on "Setting" on the navbar and it will redirect to the "Settings" page.
+    > Pass
+
+> Return to the "Profile" page.
     > Pass
 
 > Starting on the "Profile" page, click on "Log Out" on the navbar and it will redirect to the "Log In" page.
     > Pass
 
+> Return to the "Profile" page, it will redirect to the "Log In" page.
+    > Pass
+
 -- /Page: Profile
+
+
+-- Page: Settings
+
+HERE
+
+-- /Page: Settings
 
 
 -- Page: Home
@@ -170,7 +251,7 @@ HERE
 > Ensure "Search" button on a submission opens the search parameter fields container, populates the "Game" + "Track" + "Game mode", and then displays the [Search results].
     > Pass
 
-> After clicking "Search" button on a submission, click on the "home" logo and it closes the search parameter container and displays the [Latest submissions].
+> After clicking "Search" button on a submission, click on the "Home" logo and it closes the search parameter container and displays the [Latest submissions].
     > Pass
 
 > In a submission, clicking the "Display name" field will open the search parameter container, populates the "Display name", and then displays the [Search results].
@@ -191,28 +272,61 @@ HERE
 > In a submission, clicking the "Game mode" field will open the search parameter container, populates the "Game mode", and then displays the [Search results].
     > Pass
 
+> Enter the base URL (e.g. http://127.0.0.1:5000/) and then refresh the page. It should refresh the "Home" Page without error and with no search parameter container displayed.
+    > Pass
+
 > Clicking "Search" in the navbar opens the search parameter container.
     > Pass
 
-> While NOT logged in, clicking "Profile" in the navbar will redirect you to the "Log In" page.
+> Return to the "Home" page.
     > Pass
 
-> While NOT logged in, clicking "Submit" in the navbar will redirect you to the "Log In" page.
+> While NOT logged in, clicking "Profile" in the navbar will redirect to the "Log In" page.
     > Pass
 
-> While NOT logged in, clicking "Register" in the navbar will redirect you to the "Register" page.
+> Return to the "Home" page.
     > Pass
 
-> While NOT logged in, clicking "Log In" in the navbar will redirect you to the "Log In" page.
+> While NOT logged in, clicking "Submit" in the navbar will redirect to the "Log In" page.
+    > Pass
+
+> Return to the "Home" page.
+    > Pass
+
+> While NOT logged in, clicking "Register" in the navbar will redirect to the "Register" page.
+    > Pass
+
+> Return to the "Home" page.
+    > Pass
+
+> While NOT logged in, clicking "Log In" in the navbar will redirect to the "Log In" page.
+    > Pass
+
+> Return to the "Home" page.
     > Pass
 
 > While logged in, the account's submissions will have a "Delete" button beside the "Search" button. Click the "Delete" button and it will delete the submission from the list.
+    > Pass
+
+> Return to the "Home" page.
     > Pass
 
 -- /Page: Home
 
 
 -- Page: Search
+
+> Enter the base URL (e.g. http://127.0.0.1:5000/) then click on "Search" in the navbar, it should open the search parameters container.
+    > Pass
+
+> Enter the base URL (e.g. http://127.0.0.1:5000/) then click on "Search" in the navbar, it should open the search parameters container. Refresh the page and it not NOT the search parameter container.
+    > Pass
+
+> Enter the base URL (e.g. http://127.0.0.1:5000/) then click on "Profile" in the navbar. Click on "Search" in the navbar and it should redirect to the URL /submissions (e.g. http://127.0.0.1:5000/submissions).
+    > Pass
+
+> When the URL is http://127.0.0.1:5000/submissions, refresh the page and it will refresh the page and the search paramters container should be displayed.
+    > Pass
 
 > In the search parameter container enter a value in the "Game" field and on click "Search" button. Ensure the "Search results" return submissions where the "Game" is LIKE what was entered. %Dirt%.
     > Pass
@@ -253,7 +367,7 @@ HERE
 > Ensure "Search" button on a submission opens the search parameter fields container, populates the "Game" + "Track" + "Game mode", and then displays the [Search results].
     > Pass
 
-> After clicking "Search" button on a submission, click on the "home" logo and it closes the search parameter container and displays the [Latest submissions].
+> After clicking "Search" button on a submission, click on "home" logo and it closes the search parameter container and displays the [Latest submissions].
     > Pass
 
 > In a submission, clicking the "Display name" field will open the search parameter container, populates the "Display name", and then displays the [Search results].
@@ -277,16 +391,31 @@ HERE
 > Clicking "Home" in the navbar closes the search parameter container.
     > Pass
 
-> While NOT logged in, clicking "Profile" in the navbar will redirect you to the "Log In" page.
+> Return to the "Search" page.
     > Pass
 
-> While NOT logged in, clicking "Submit" in the navbar will redirect you to the "Log In" page.
+> While NOT logged in, clicking "Profile" in the navbar will redirect to the "Log In" page.
     > Pass
 
-> While NOT logged in, clicking "Register" in the navbar will redirect you to the "Register" page.
+> Return to the "Search" page.
     > Pass
 
-> While NOT logged in, clicking "Log In" in the navbar will redirect you to the "Log In" page.
+> While NOT logged in, clicking "Submit" in the navbar will redirect to the "Log In" page.
+    > Pass
+
+> Return to the "Search" page.
+    > Pass
+
+> While NOT logged in, clicking "Register" in the navbar will redirect to the "Register" page.
+    > Pass
+
+> Return to the "Search" page.
+    > Pass
+
+> While NOT logged in, clicking "Log In" in the navbar will redirect to the "Log In" page.
+    > Pass
+
+> Return to the "Search" page.
     > Pass
 
 > While logged in, the account's submissions will have a "Delete" button beside the "Search" button. Click the "Delete" button and it will delete the submission from the list.

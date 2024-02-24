@@ -57,15 +57,15 @@ def nav_index_JS():
     return jsonify({'redirect': url_for("index")})
 
 
-@app.route("/nav_search")
-def nav_search():
+@app.route("/submissions")
+def submissions():
     return render_template("home.html", page_type="search", search_params = session["search_from_profile_dict"])
 
 
 @app.route("/nav_search_JS", methods=["POST"])
 def nav_search_JS():
     session["search_from_profile_dict"] = ""
-    return jsonify({'redirect': url_for("nav_search")})
+    return jsonify({'redirect': url_for("submissions")})
 
 
 @app.route("/nav_search_from_profile", methods=["POST"])
@@ -76,7 +76,7 @@ def nav_search_from_profile():
         session["search_from_profile_dict"] = request.json
         
     
-    return jsonify({'redirect': url_for("nav_search")})
+    return jsonify({'redirect': url_for("submissions")})
 
 
 @app.route("/profile", methods=["GET", "POST"])
@@ -571,18 +571,28 @@ def getUserMostSubmittedX():
         nameCol = data["dbNameCol"]
 
         
-        sql_query = """SELECT b.{nameColft}, count(a.{idColft}) 
+        #sql_query = """SELECT b.{nameColft}, count(a.{idColft}) 
+         #               FROM tblSubmissions a 
+         #                   INNER JOIN {tableft} b ON b.{idColft} = a.{idColft} 
+         #               WHERE a.iUserID = ?
+         #               GROUP BY a.{idColft}
+         #               ORDER BY count(a.{idColft}) DESC
+         #                   LIMIT 1""".format(nameColft = nameCol, idColft = idCol, tableft = table)
+        
+        sql_query = """SELECT b.:nameColft, count(a.:idColft) 
                         FROM tblSubmissions a 
-                            INNER JOIN {tableft} b ON b.{idColft} = a.{idColft} 
-                        WHERE a.iUserID = ?
-                        GROUP BY a.{idColft}
-                        ORDER BY count(a.{idColft}) DESC
-                            LIMIT 1""".format(nameColft = nameCol, idColft = idCol, tableft = table)
+                            INNER JOIN :tableft b ON b.:idColft = a.:idColft 
+                        WHERE a.iUserID = :userID
+                        GROUP BY a.:idColft
+                        ORDER BY count(a.:idColft) DESC
+                            LIMIT 1"""
+        
+        # both above methods error sometimes
         # Need to fix > RuntimeError: fewer placeholder () than values (3) for app.py function getUserMostSubmittedX that happens sometimes due to timeout(?)
 
         
         
-        rows = db.execute(sql_query, session["user_id"])
+        rows = db.execute(sql_query, nameColft=nameCol, idColft=idCol, tableft=table, userID=session["user_id"])
 
         #print(rows)
 
@@ -651,13 +661,24 @@ def getUserProfileStats():
 
         # I HATE the fewer placeholders than values WHEN I HAVE THE RIGHT NUMBER OF PLACEHOLDERS
         for key, val in dictProfileFields.items():
-            rows = db.execute("""SELECT b.{nameColft}, count(a.{idColft}) 
+            #rows = db.execute("""SELECT b.{nameColft}, count(a.{idColft}) 
+            #                    FROM tblSubmissions a 
+            #                        INNER JOIN {tableft} b ON b.{idColft} = a.{idColft} 
+            #                    WHERE a.iUserID = {userID} 
+            #                    GROUP BY a.{idColft}
+            #                    ORDER BY count(a.{idColft}) DESC
+            #                        LIMIT 1""".format(nameColft = val["dbNameCol"], idColft = val["dbIDCol"], tableft = val["table"], userID = str(userID)))   
+
+            rows = db.execute("""SELECT b.:nameColft, count(a.:idColft) 
                                 FROM tblSubmissions a 
-                                    INNER JOIN {tableft} b ON b.{idColft} = a.{idColft} 
-                                WHERE a.iUserID = {userID} 
-                                GROUP BY a.{idColft}
-                                ORDER BY count(a.{idColft}) DESC
-                                    LIMIT 1""".format(nameColft = val["dbNameCol"], idColft = val["dbIDCol"], tableft = val["table"], userID = str(userID)))   
+                                    INNER JOIN :tableft b ON b.:idColft = a.:idColft
+                                WHERE a.iUserID = :userID 
+                                GROUP BY a.:idColft
+                                ORDER BY count(a.:idColft) DESC
+                                    LIMIT 1""", nameColft = val["dbNameCol"], idColft = val["dbIDCol"], tableft = val["table"], userID = str(userID)) 
+
+            # both above methods error sometimes
+
 
             if not rows:
                 dictReturn[val["profileElemID"]] = "N/A"  
