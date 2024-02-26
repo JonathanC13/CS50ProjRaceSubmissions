@@ -115,7 +115,80 @@
 
 -- Page: Submit
 
-HERE
+> While logged in, if not already on the "Submit" page, click on the "Submit" in the navbar and it will redirect to the "Submit" page.
+    > Pass
+
+> Without any entered values, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a game!"
+    > Pass
+
+> Click on the "* Game" input field once, a dropdown icon will appear with the input field on the right. Click the input field again, it will display all suggestions based on default values and previous submissions.
+    > Pass
+
+> Referencing a game suggesstion from the previous test case, begin entering the value and the suggestions will adjust. E.g. "F1" suggests "F1 22"
+    > Pass
+
+> After entering a value in the "* Game" field and then changing focus to another field, i.e. click on the "* Platform" field, a random image will populate under the "* Game" field.
+    > Pass
+
+> Remove the value in the "* Game" field to empty and then click onto another field. The image below the "* Game" field will revert the the default of an empty PS4 game cover.
+    > Pass
+
+> With a value within the "* Game" input field and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a platform!"
+    > Pass
+
+> Click on the "* Platform" input field once, a dropdown icon will appear with the input field on the right. Click the input field again, it will display all suggestions based on default values and previous submissions.
+    > Pass
+
+> Referencing a platform suggesstion from the previous test case, begin entering the value and the suggestions will adjust. E.g. "Pla" suggests "Playstation 3", "Playstation 4", and "Playstation 5". 
+    > Pass
+
+> With a value within the "* Game" and "* Platform" input fields and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a vehicle!"
+    > Pass
+
+> Click on the "* Vehicle" input field once, a dropdown icon will appear with the input field on the right. Click the input field again, it will display all suggestions based on default values and previous submissions.
+    > Pass
+
+> Referencing a vehicle suggesstion from the previous test case, begin entering the value and the suggestions will adjust. E.g. "Mc" suggests "McLaren - MCL60". 
+    > Pass
+
+> With a value within the "* Game", "* Platform" and "* Vehicle" input fields and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a track!"
+    > Pass
+
+> Click on the "* Track" input field once, a dropdown icon will appear with the input field on the right. Click the input field again, it will display all suggestions based on default values and previous submissions.
+    > Pass
+
+> Referencing a track suggesstion from the previous test case, begin entering the value and the suggestions will adjust. E.g. "Baku" suggests "Baku City Circuit (Azerbaijan)". 
+    > Pass
+
+> With a value within the "* Game", "* Platform", "* Vehicle", and "* Track" input fields and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a gamemode!"
+    > Pass
+
+> Click on the "* Game mode" input field once, a dropdown icon will appear with the input field on the right. Click the input field again, it will display all suggestions based on default values and previous submissions.
+    > Pass
+
+> Referencing a game mode suggesstion from the previous test case, begin entering the value and the suggestions will adjust. E.g. "Ran" suggests "Ranked multiplayer". 
+    > Pass
+
+> With a value within the "* Game", "* Platform", "* Vehicle", "* Track", and "* Game mode" input fields and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a full time: (HH) or 0!"
+    > Pass
+
+(- ininity, 0), [0], (0, 8760), [8760], (8760, infinity)
+> Under the "Full time" section, enter -1 in the "* HH" field, but it will revert to 0.
+    > Pass
+
+> Under the "Full time" section, enter 0 in the "* HH" field. Click the down icon within the field on the right in an attempt to decrement the value, but it will remain at 0.
+    > Pass
+
+> Under the "Full time" section, enter a value between 0 and 8760 and it will remain that value.
+    > Pass
+
+> Under the "Full time" section, enter 8760 and it will remain that value, then click on the up icon within the field on the right in an attempt to increment the value, but it will remain 8760.
+    > Pass
+
+> Under the "Full time" section, enter 8761 in the "* HH" field, but it will revert to 8760.
+    > Pass
+
+HERE doing full time MM now.
 
 -- /Page: Submit
 
@@ -182,7 +255,7 @@ HERE
 > In a submission, clicking the "Game mode" field redirects to the "Search" page, displays the search parameter container, populates the "Game mode", and then displays the [Search results].
     > Pass
 
-> While logged in, the account's submissions will have a "Delete" button beside the "Search" button. Click the "Delete" button and it will delete the submission from the list.
+> The account's submissions will have a "Delete" button beside the "Search" button. Click the "Delete" button and it will delete the submission from the list.
     > Pass
 
 > Starting on the "Profile" page, click on "Home" on the navbar and it will redirect to the "Home" page.
@@ -328,19 +401,55 @@ HERE
 > When the URL is http://127.0.0.1:5000/submissions, refresh the page and it will refresh the page and the search paramters container should be displayed.
     > Pass
 
+> In the search parameter container, click on the "Game" field once so that the drop down icon appears on the right in the input field. Click the field once more and it will load "Game" suggestions, which are all the games currently submitted.
+    > Pass
+
+> Referencing a game suggestion from the previous test case, in the search parameter container begin to enter the value in the "Game" field and the suggestions will adjust to the current value. E.g. "Shi" or "ift" will display the suggestion "Shift 2".
+    > Pass
+
 > In the search parameter container enter a value in the "Game" field and on click "Search" button. Ensure the "Search results" return submissions where the "Game" is LIKE what was entered. %Dirt%.
+    > Pass
+
+> In the search parameter container, click on the "Platform" field once so that the drop down icon appears on the right in the input field. Click the field once more and it will load "Platform" suggestions, which are all the platforms currently submitted.
+    > Pass
+
+> Referencing a platform suggestion from the previous test case, in the search parameter container begin to enter the value in the "Platform" field and the suggestions will adjust to the current value. E.g. "Xb" will display the suggestion "Xbox Series X".
     > Pass
 
 > In the search parameter container enter a value in the "Platform" field and on click "Search" button. Ensure the "Search results" return submissions where the "Platform" is LIKE what was entered. %Xbox%.
     > Pass
 
+> In the search parameter container, click on the "Display name" field once so that the drop down icon appears on the right in the input field. Click the field once more and it will load "Display name" suggestions, which are all the display names currently submitted.
+    > Pass
+
+> Referencing a display name suggestion from the previous test case, in the search parameter container begin to enter the value in the "Platform" field and the suggestions will adjust to the current value. E.g. "te" will display the suggestions "test", "test1".
+    > Pass
+
 > In the search parameter container enter a value in the "Display name" field and on click "Search" button. Ensure the "Search results" return submissions where the "Display name" is LIKE what was entered. %test%.
+    > Pass
+
+> In the search parameter container, click on the "Vehicle" field once so that the drop down icon appears on the right in the input field. Click the field once more and it will load "Vehicle" suggestions, which are all the vehicles currently submitted.
+    > Pass
+
+> Referencing a vehicle suggestion from the previous test case, in the search parameter container begin to enter the value in the "Vehicle" field and the suggestions will adjust to the current value. E.g. "toy" will display the suggestions "1992 Toyota Celica GT-Four WRC".
     > Pass
 
 > In the search parameter container enter a value in the "Vehicle" field and on click "Search" button. Ensure the "Search results" return submissions where the "Vehicle" is LIKE what was entered. %mazda%.
     > Pass
 
+> In the search parameter container, click on the "Track" field once so that the drop down icon appears on the right in the input field. Click the field once more and it will load "Track" suggestions, which are all the tracks currently submitted.
+    > Pass
+
+> Referencing a track suggestion from the previous test case, in the search parameter container begin to enter the value in the "Track" field and the suggestions will adjust to the current value. E.g. "hun" will display the suggestions "Hungaroring (Hungary)".
+    > Pass
+
 > In the search parameter container enter a value in the "Track" field and on click "Search" button. Ensure the "Search results" return submissions where the "Track" is LIKE what was entered. %Hungary%.
+    > Pass
+
+> In the search parameter container, click on the "Game mode" field once so that the drop down icon appears on the right in the input field. Click the field once more and it will load "Game mode" suggestions, which are all the game modes currently submitted.
+    > Pass
+
+> Referencing a game mode suggestion from the previous test case, in the search parameter container begin to enter the value in the "Game mode" field and the suggestions will adjust to the current value. E.g. "ral" will display the suggestions "Rallycross".
     > Pass
 
 > In the search parameter container enter a value in the "Gane mode" field and on click "Search" button. Ensure the "Search results" return submissions where the "game mode" is LIKE what was entered. %rally%.

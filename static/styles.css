@@ -311,6 +311,11 @@ textarea {
     border-radius: 50%;
 }
 
+
+.reqColour::-webkit-input-placeholder {
+    color: red
+}
+
   
 /* Tooltip container */
 /* *Have to use id (#) instead of class (.) for this to work */

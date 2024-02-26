@@ -905,6 +905,8 @@ function displayYTPrev(evt) {
 
 function validate_record_submission() {
 
+    topFunction();
+
     document.getElementById("submission_msg").style.color = "red";
 
     var sub_game = document.getElementById("txt_submit_game").value.trim();
@@ -952,22 +954,22 @@ function validate_record_submission() {
     }
     else if(sub_fullHH == '')
     {
-        msg_sumbit.textContent = "Please enter a full time (HH) or 0!";
+        msg_sumbit.textContent = "Please enter a full time: (HH) or 0!";
         document.getElementById("in_submit_fulltime_HH").focus;
     }
     else if(sub_fullMM == '')
     {
-        msg_sumbit.textContent = "Please enter a full time (MM) or 0!";
+        msg_sumbit.textContent = "Please enter a full time: (MM) or 0!";
         document.getElementById("in_submit_fulltime_MM").focus;
     }
     else if(sub_fullSS == '')
     {
-        msg_sumbit.textContent = "Please enter a full time (SS) or 0!";
+        msg_sumbit.textContent = "Please enter a full time: (SS) or 0!";
         document.getElementById("in_submit_fulltime_SS").focus;
     }
     else if(sub_fullsss == '')
     {
-        msg_sumbit.textContent = "Please enter a full time (sss) or 0!";
+        msg_sumbit.textContent = "Please enter a full time: (sss) or 0!";
         document.getElementById("in_submit_fulltime_sss").focus;
     }
     else {
@@ -1018,8 +1020,6 @@ function validate_record_submission() {
             }
              
             msg_sumbit.textContent = response["message"];
-
-            topFunction();
 
         }).fail(function(response) {
             msg_sumbit.textContent = 'Failure, dev has low IQ.';
@@ -1588,6 +1588,7 @@ $( document ).ready(function() {
         }
 
         // submission time min and max
+        max_HH = 8760;
 
         min_HH_MM_SS_sss = 0;
         max_MM_SS = 59;
@@ -1599,7 +1600,7 @@ $( document ).ready(function() {
         if (in_submit_fulltime_HH != null) {
             in_submit_fulltime_HH.addEventListener('input', enforce_min_max); //inputHandler);
             in_submit_fulltime_HH.min_limit = min_HH_MM_SS_sss;
-            in_submit_fulltime_HH.max_limit = -1;
+            in_submit_fulltime_HH.max_limit = max_HH;
             //document.getElementById("in_submit_fulltime_HH").addEventListener("input", enforce_min_max(in_submit_fulltime_HH, min_HH_MM_SS_sss, -1));
         }
 
@@ -1781,8 +1782,8 @@ $( document ).ready(function() {
                 continue;
             }
 
-            arrSearchVars[i].addEventListener('input', inputSuggestionsListener);
             arrSearchVars[i].addEventListener('focus', inputSuggestionsListener);
+            arrSearchVars[i].addEventListener('input', inputSuggestionsListener);
             arrSearchVars[i].currSearchField = key;
             arrSearchVars[i].currDbTable = dictSearchFields[key]["table"];
             arrSearchVars[i].currDBColName = dictSearchFields[key]["dbColName"];

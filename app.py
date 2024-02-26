@@ -390,8 +390,8 @@ def inputSuggestions():
             rows = db.execute(sqlQuery, "%" + userSearch + "%")
         else:
             return "{}"
-        print(suggestionType)
-        print(rows)
+        #print(suggestionType)
+        #print(rows)
         return jsonify(rows)
 
     return
