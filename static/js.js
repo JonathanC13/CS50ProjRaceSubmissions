@@ -954,22 +954,22 @@ function validate_record_submission() {
     }
     else if(sub_fullHH == '')
     {
-        msg_sumbit.textContent = "Please enter a full time: (HH) or 0!";
+        msg_sumbit.textContent = "Please enter a numeric full time: (HH) or 0!";
         document.getElementById("in_submit_fulltime_HH").focus;
     }
     else if(sub_fullMM == '')
     {
-        msg_sumbit.textContent = "Please enter a full time: (MM) or 0!";
+        msg_sumbit.textContent = "Please enter a numeric full time: (MM) or 0!";
         document.getElementById("in_submit_fulltime_MM").focus;
     }
     else if(sub_fullSS == '')
     {
-        msg_sumbit.textContent = "Please enter a full time: (SS) or 0!";
+        msg_sumbit.textContent = "Please enter a numeric full time: (SS) or 0!";
         document.getElementById("in_submit_fulltime_SS").focus;
     }
     else if(sub_fullsss == '')
     {
-        msg_sumbit.textContent = "Please enter a full time: (sss) or 0!";
+        msg_sumbit.textContent = "Please enter a numeric full time: (sss) or 0!";
         document.getElementById("in_submit_fulltime_sss").focus;
     }
     else {
@@ -1633,7 +1633,7 @@ $( document ).ready(function() {
         if (in_submit_bestlaptime_HH != null) {
             in_submit_bestlaptime_HH.addEventListener('input', enforce_min_max); //inputHandler);
             in_submit_bestlaptime_HH.min_limit = min_HH_MM_SS_sss;
-            in_submit_bestlaptime_HH.max_limit = -1;
+            in_submit_bestlaptime_HH.max_limit = max_HH;
             //document.getElementById("in_submit_fulltime_HH").addEventListener("input", enforce_min_max(in_submit_fulltime_HH, min_HH_MM_SS_sss, -1));
         }
 

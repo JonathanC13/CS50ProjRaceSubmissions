@@ -169,7 +169,7 @@
 > Referencing a game mode suggesstion from the previous test case, begin entering the value and the suggestions will adjust. E.g. "Ran" suggests "Ranked multiplayer". 
     > Pass
 
-> With a value within the "* Game", "* Platform", "* Vehicle", "* Track", and "* Game mode" input fields and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a full time: (HH) or 0!"
+> With a value within the "* Game", "* Platform", "* Vehicle", "* Track", and "* Game mode" input fields and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a numeric full time: (HH) or 0!"
     > Pass
 
 (- ininity, 0), [0], (0, 8760), [8760], (8760, infinity)
@@ -179,16 +179,156 @@
 > Under the "Full time" section, enter 0 in the "* HH" field. Click the down icon within the field on the right in an attempt to decrement the value, but it will remain at 0.
     > Pass
 
-> Under the "Full time" section, enter a value between 0 and 8760 and it will remain that value.
+> Under the "Full time" section, enter a value between 0 and 8760 in the "* HH" field and it will remain that value.
     > Pass
 
-> Under the "Full time" section, enter 8760 and it will remain that value, then click on the up icon within the field on the right in an attempt to increment the value, but it will remain 8760.
+> Under the "Full time" section, enter 8760 in the "* HH" field and it will remain that value, then click on the up icon within the field on the right in an attempt to increment the value, but it will remain 8760.
     > Pass
 
 > Under the "Full time" section, enter 8761 in the "* HH" field, but it will revert to 8760.
     > Pass
 
-HERE doing full time MM now.
+> With a value within the "* Game", "* Platform", "* Vehicle", "* Track", "* Game mode", and full time "* HH" input fields and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a numeric full time: (MM) or 0!"
+
+(- ininity, 0), [0], (0, 59), [59], (59, infinity)
+> Under the "Full time" section, enter -1 in the "* MM" field, but it will revert to 0.
+    > Pass
+
+> Under the "Full time" section, enter 0 in the "* MM" field. Click the down icon within the field on the right in an attempt to decrement the value, but it will remain at 0.
+    > Pass
+
+> Under the "Full time" section, enter a value between 0 and 59 in the "* MM" field and it will remain that value.
+    > Pass
+
+> Under the "Full time" section, enter 59 in the "* MM" field and it will remain that value, then click on the up icon within the field on the right in an attempt to increment the value, but it will remain 59.
+    > Pass
+
+> Under the "Full time" section, enter 60 in the "* MM" field, but it will revert to 59.
+    > Pass
+
+> With a value within the "* Game", "* Platform", "* Vehicle", "* Track", "* Game mode", full time "* HH", and full time "* MM" input fields and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a numeric full time: (SS) or 0!"
+
+(- ininity, 0), [0], (0, 59), [59], (59, infinity)
+> Under the "Full time" section, enter -1 in the "* SS" field, but it will revert to 0.
+    > Pass
+
+> Under the "Full time" section, enter 0 in the "* SS" field. Click the down icon within the field on the right in an attempt to decrement the value, but it will remain at 0.
+    > Pass
+
+> Under the "Full time" section, enter a value between 0 and 59 in the "* SS" field and it will remain that value.
+    > Pass
+
+> Under the "Full time" section, enter 59 in the "* SS" field and it will remain that value, then click on the up icon within the field on the right in an attempt to increment the value, but it will remain 59.
+    > Pass
+
+> Under the "Full time" section, enter 60 in the "* SS" field, but it will revert to 59.
+    > Pass
+
+> With a value within the "* Game", "* Platform", "* Vehicle", "* Track", "* Game mode", full time "* HH", full time "* MM", and full time "* SS" input fields and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a numeric full time: (sss) or 0!"
+
+(- ininity, 0), [0], (0, 999), [999], (999, infinity)
+> Under the "Full time" section, enter -1 in the "* sss" field, but it will revert to 0.
+    > Pass
+
+> Under the "Full time" section, enter 0 in the "* sss" field. Click the down icon within the field on the right in an attempt to decrement the value, but it will remain at 0.
+    > Pass
+
+> Under the "Full time" section, enter a value between 0 and 999 in the "* sss" field and it will remain that value.
+    > Pass
+
+> Under the "Full time" section, enter 999 in the "* sss" field and it will remain that value, then click on the up icon within the field on the right in an attempt to increment the value, but it will remain 999.
+    > Pass
+
+> Under the "Full time" section, enter 1000 in the "* sss" field, but it will revert to 999.
+    > Pass
+
+> With a value within the "* Game", "* Platform", "* Vehicle", "* Track", "* Game mode", full time "* HH", full time "* MM", full time "* SS", and "* sss" input fields and without any other values in the other fields, at the bottom of the submission form click submit. It will submit and at the top the message "Record successfully added!" will be displayed. All input fields will be cleared.
+    > Pass
+
+> Click on "Home" on the navbar and it will naviage to the "Home" page with the submission that was just added will be at the top of the submission list.
+    > Pass
+
+> Click on "Home" on the navbar and it will navigate to the "Profile" page with the submission that was just added will be at the top of the submission list.
+    > Pass
+
+> Return to the "Submit" page, fill values for the "* Game", "* Platform", "* Vehicle", "* Track", "* Game mode", full time "* HH", full time "* MM", full time "* SS", and "* sss" input fields. For the "YT Embedded URL" input field, enter a YouTube URL (i.e. https://www.youtube.com/watch?v=XKHEtdqhLK8&ab_channel=BroCode) and then remove focus from the field by clicking onto another field. It will load the embedded video OR displays "Video unavailable, Watch on YouTube." 
+    > If the embedded video appears, click on the thumbnail and the video will play.
+        > Pass
+    > If the thumbnail displays "Video unavailable, Watch on YouTube", click "Watch on YouTube" and it will open the video on YouTube on another tab.
+        > Pass
+
+(- ininity, 0), [0], (0, 8760), [8760], (8760, infinity)
+> Under the "Best lap time" section, enter -1 in the "* HH" field, but it will revert to 0.
+    > Pass
+
+> Under the "Best lap time" section, enter 0 in the "* HH" field. Click the down icon within the field on the right in an attempt to decrement the value, but it will remain at 0.
+    > Pass
+
+> Under the "Best lap time" section, enter a value between 0 and 8760 in the "* HH" field and it will remain that value.
+    > Pass
+
+> Under the "Best lap time" section, enter 8760 in the "* HH" field and it will remain that value, then click on the up icon within the field on the right in an attempt to increment the value, but it will remain 8760.
+    > Pass
+
+> Under the "Best lap time" section, enter 8761 in the "* HH" field, but it will revert to 8760.
+    > Pass
+
+(- ininity, 0), [0], (0, 59), [59], (59, infinity)
+> Under the "Best lap time" section, enter -1 in the "* MM" field, but it will revert to 0.
+    > Pass
+
+> Under the "Best lap time" section, enter 0 in the "* MM" field. Click the down icon within the field on the right in an attempt to decrement the value, but it will remain at 0.
+    > Pass
+
+> Under the "Best lap time" section, enter a value between 0 and 59 in the "* MM" field and it will remain that value.
+    > Pass
+
+> Under the "Best lap time" section, enter 59 in the "* MM" field and it will remain that value, then click on the up icon within the field on the right in an attempt to increment the value, but it will remain 59.
+    > Pass
+
+> Under the "Best lap time" section, enter 60 in the "* MM" field, but it will revert to 59.
+    > Pass
+
+(- ininity, 0), [0], (0, 59), [59], (59, infinity)
+> Under the "Best lap time" section, enter -1 in the "* SS" field, but it will revert to 0.
+    > Pass
+
+> Under the "Best lap time" section, enter 0 in the "* SS" field. Click the down icon within the field on the right in an attempt to decrement the value, but it will remain at 0.
+    > Pass
+
+> Under the "Best lap time" section, enter a value between 0 and 59 in the "* SS" field and it will remain that value.
+    > Pass
+
+> Under the "Full time" section, enter 59 in the "* SS" field and it will remain that value, then click on the up icon within the field on the right in an attempt to increment the value, but it will remain 59.
+    > Pass
+
+> Under the "Best lap time" section, enter 60 in the "* SS" field, but it will revert to 59.
+    > Pass
+
+(- ininity, 0), [0], (0, 999), [999], (999, infinity)
+> Under the "Best lap time" section, enter -1 in the "* sss" field, but it will revert to 0.
+    > Pass
+
+> Under the "Best lap time" section, enter 0 in the "* sss" field. Click the down icon within the field on the right in an attempt to decrement the value, but it will remain at 0.
+    > Pass
+
+> Under the "Best lap time" section, enter a value between 0 and 999 in the "* sss" field and it will remain that value.
+    > Pass
+
+> Under the "Best lap time" section, enter 999 in the "* sss" field and it will remain that value, then click on the up icon within the field on the right in an attempt to increment the value, but it will remain 999.
+    > Pass
+
+> Under the "Best lap time" section, enter 1000 in the "* sss" field, but it will revert to 999.
+    > Pass
+
+> Enter description in the "Description" text area. Finally, click submit and it will submit with a message "Record successfully added!" displayed at the top of the page. All input fields will be cleared.
+    > Pass
+
+> Click on "Home" on the navbar and it will naviage to the "Home" page with the submission that was just added will be at the top of the submission list.
+    > Pass
+
+> Click on "Home" on the navbar and it will navigate to the "Profile" page with the submission that was just added will be at the top of the submission list.
+    > Pass
 
 -- /Page: Submit
 
@@ -236,6 +376,8 @@ HERE doing full time MM now.
 
 > Ensure "Search" button on a submission redirects to the "Search" page, displays the search parameter fields container, populates the "Game" + "Track" + "Game mode", and then displays the [Search results].
     > Pass
+
+HERE : Placement test, add a record with same game, track, and game mode if the focus submission does not have any "Competing" submissions. 
 
 > In a submission, clicking the "Display name" field redirects to the "Search" page, displays the search parameter container, populates the "Display name", and then displays the [Search results].
     > Pass
