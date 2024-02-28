@@ -377,7 +377,7 @@
 > Ensure "Search" button on a submission redirects to the "Search" page, displays the search parameter fields container, populates the "Game" + "Track" + "Game mode", and then displays the [Search results].
     > Pass
 
-HERE : Placement test, add a record with same game, track, and game mode if the focus submission does not have any "Competing" submissions. 
+> Go to the "Sumbit" page and add another submission with the same "Game", "Track", and "Game mode" as the submission chosen in the previous test case. Return to the "Profile" page and the first submission in the list will be one just added. Click the "Search" button on the submission and it will redirect to the "Search" page, displays the search parameter fields container, populates the "Game" + "Track" + "Game mode", and then displays the [Search results]. Verify the section that contains the "Full time" and "Placement" has the correct value after the "Placement" (i.e. 1st, 2nd, and etc).
 
 > In a submission, clicking the "Display name" field redirects to the "Search" page, displays the search parameter container, populates the "Display name", and then displays the [Search results].
     > Pass
@@ -435,7 +435,30 @@ HERE : Placement test, add a record with same game, track, and game mode if the 
 
 -- Page: Settings
 
-HERE
+> Log in if not already and then click on "Settings" in the navbar. It will redirect to the "User settings" page.
+    > Pass
+
+> Verify that the profile picture is correct.
+    > Pass
+
+> Prepare an image file with extension png, jpg, or jpeg. Click on the "Choose file" field and a file explorer will open. Choose the prepared image and click open. The file name will populate the field with the "Choose file" button.
+    > Pass
+
+> With the image loaded, click the button "Update profile picture" and the profile picture will update with the message "Successfully changed!" underneath the "Update profile picture" button.
+    > Pass
+
+> Prepare an image file with extension gif. Click on the "Choose file" field and a file explorer will open. Choose the prepared image and click open. The file name will populate the field with the "Choose file" button.
+    > Pass
+
+> With the image loaded, click the button "Update profile picture" and the profile picture will update with the message "Successfully changed!" underneath the "Update profile picture" button. Since it is a gif, the profile picture will only display the first frame as the profile picture.
+    > Pass
+
+> Verify the "Display name" is correct.
+    > Pass
+
+> Modfify the "Display name" and then click the button "Change" underneath. The "Display name" should remain unchanged with the message "Successfully changed!" underneath the "Change" button.
+
+HERE password
 
 -- /Page: Settings
 

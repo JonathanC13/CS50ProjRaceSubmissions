@@ -1451,7 +1451,7 @@ function update_user_settings_initiate(user_id, dictParams){
         */
                 
     }
-    else if (update_section == "display_name" || update_section == "password")
+    else if (dictParams["update_section"] == "display_name" || dictParams["update_section"] == "password")
     {
     
         $.ajax({
