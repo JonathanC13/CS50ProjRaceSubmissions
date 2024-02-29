@@ -453,12 +453,47 @@
 > With the image loaded, click the button "Update profile picture" and the profile picture will update with the message "Successfully changed!" underneath the "Update profile picture" button. Since it is a gif, the profile picture will only display the first frame as the profile picture.
     > Pass
 
+> Without selecting a file in the "Choose file" field, click the "Update profile picture" button and it will display the message "Must select a file first!" under the "Update profile picture" button.
+    > Pass
+
 > Verify the "Display name" is correct.
     > Pass
 
-> Modfify the "Display name" and then click the button "Change" underneath. The "Display name" should remain unchanged with the message "Successfully changed!" underneath the "Change" button.
+> Modfify the "Display name" and then click the button "Update display name" underneath. The "Display name" should remain unchanged with the message "Successfully changed!" underneath the "Update display name" button.
+    > Pass
 
-HERE password
+> Remove the display name to blank and then click the "Update display name" button. It will display the message "Display name cannot be blank!" under the "Update display name" button.
+    > Pass
+
+> In the "Password" section, without any values click on the "Update password" button. It will not update the password and display the message "Please fill all fields in the password section first!" under the "Update password" button.
+    > Pass
+
+> In the "Password" section, enter a value in the "Current Password" field and without the other fields then click on the "Update password" button. It will not update the password and display the message "Please fill all fields in the password section first!" under the "Update password" button.
+    > Pass
+
+> In the "Password" section, enter a value in the "New Password" field and without the other fields then click on the "Update password" button. It will not update the password and display the message "Please fill all fields in the password section first!" under the "Update password" button.
+    > Pass
+
+> In the "Password" section, enter a value in the "Confirm new Password" field and without the other fields then click on the "Update password" button. It will not update the password and display the message "Please fill all fields in the password section first!" under the "Update password" button.
+    > Pass
+
+> In the "Password" section, enter an incorrect current password in the "Current password" input field, a value in the "New Password" field, the same value as "New Password" in the "Confirm new Password" field, and then click the "Update password" button. It will not update the password and display the message "Current password does not match!" under the "Update password" button.
+    > Pass
+
+> In the "Password" section, enter any value in the "Current password" input field, a value in the "New Password" field, a different value than "New Password" in the "Confirm new Password" field, and then click the "Update password" button. It will not update the password and display the message "Please ensure new password and confirm password match!" under the "Update password" button.
+    > Pass
+
+> In the "Password" section, enter the correct password in the "Current password" input field, a value in the "New Password" field, the same value as "New Password" in the "Confirm new Password" field, and then click the "Update password" button. It will update the password, clear the password section fields to empty, and display the message "Successfully changed!" under the "Update password" button.
+    > Pass
+
+> Ensure the profile picture and display name is updated, click on "Profile" on the navbar to verify the information.
+    > Pass
+
+> Ensure the password has been updated by clicking "Log Out" in the navbar. It will log out the user and redirect to the "Log In" page. Enter the account's username and the old password and it will not successfully log in.
+    > Pass
+
+> While on the "Log In" page, enter the account's username and the new password and it will successfully log in.
+    > Pass
 
 -- /Page: Settings
 

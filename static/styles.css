@@ -207,6 +207,10 @@ textarea {
     color:red;
 }
 
+#user_settings_password_msg {
+    word-wrap: normal;
+}
+
 #ta_submit {
     width:100%;
     text-align: left;

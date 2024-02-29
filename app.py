@@ -978,7 +978,7 @@ def update_user_settings_initiate():
                 # check select if 1 row returned, if 1 then execute update, if not return ERROR
                 if (updateSection == "password" and not check_password_hash(rows[0]["strHashPW"], oldPassword)):
                     # old password validation                
-                    return jsonify({"status":"ERROR" ,"message": "Old password does not match!"})            
+                    return jsonify({"status":"ERROR" ,"message": "Current password does not match!"})            
                 
                 numRowsUpdated = db.execute(sql_queryUPDATE, userID)
 
@@ -1014,8 +1014,7 @@ Pract
     -- document: https://pixabay.com/api/docs/
 
 TODO
-    - check navbar mouse icon for pages
-    - test
+    - tab titles
     - read me and videeo
 
 

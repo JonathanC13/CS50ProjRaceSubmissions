@@ -1400,11 +1400,9 @@ function getUserMostSubmittedX(dictProfileFields) {
 
 function update_user_settings_initiate(user_id, dictParams){
 
-    //let user_settings_profile_pic_msg = document.getElementById("user_settings_profile_pic_msg");
-    //user_settings_profile_pic_msg.style.color = "red";
+    let user_settings_profile_pic_msg = document.getElementById("user_settings_profile_pic_msg");
 
     let user_settings_display_name_msg = document.getElementById("user_settings_display_name_msg");
-    user_settings_display_name_msg.style.color = "red";
 
     let user_settings_password_msg = document.getElementById("user_settings_password_msg");
     user_settings_password_msg.style.color = "red";
@@ -1438,6 +1436,9 @@ function update_user_settings_initiate(user_id, dictParams){
                     let img_profile_pic = document.getElementById("img_profile_pic");
                     img_profile_pic.setAttribute('src', response["profilePicSrc"]);
                 }
+                else {
+                    user_settings_profile_pic_msg.style.color = "red";
+                }
                 
                 user_settings_profile_pic_msg.textContent = response["message"];
                 
@@ -1453,7 +1454,6 @@ function update_user_settings_initiate(user_id, dictParams){
     }
     else if (dictParams["update_section"] == "display_name" || dictParams["update_section"] == "password")
     {
-    
         $.ajax({
             url: "/update_user_settings_initiate",
             type: "POST",
@@ -1462,26 +1462,32 @@ function update_user_settings_initiate(user_id, dictParams){
                 //console.log(dictParams["update_section"]);
                 //console.log(response);
 
-                if (response["status"] == "GOOD") {
-                    
-                    user_settings_display_name_msg.style.color = "green";
-                    user_settings_password_msg.style.color = "green";
+                if (dictParams["update_section"] == "display_name") {
+                    if (response["status"] == "GOOD") {
+                        user_settings_display_name_msg.style.color = "green";
+                    }
+                    else {
+                        user_settings_display_name_msg.style.color = "red";
+                    }
 
-                    // clear password inputs on success
-                    document.getElementById("old_password").value = "";
-                    document.getElementById("new_password").value = "";
-                    document.getElementById("confirm_new_password").value = "";
-                    
-                }
-                
-                if (dictParams["update_section"] == "display_name")
-                {
                     user_settings_display_name_msg.textContent = response["message"];
                 }
-                else if (dictParams["update_section"] == "password")
-                {
-                    user_settings_password_msg.textContent = response["message"];
+                else if (dictParams["update_section"] == "password") {
+                    if (response["status"] == "GOOD") {                    
                     
+                        user_settings_password_msg.style.color = "green";
+    
+                        // clear password inputs on success
+                        document.getElementById("old_password").value = "";
+                        document.getElementById("new_password").value = "";
+                        document.getElementById("confirm_new_password").value = "";
+                        
+                    }
+                    else {
+                        user_settings_password_msg.style.color = "red";
+                    }
+
+                    user_settings_password_msg.textContent = response["message"];
                 }
 
                 //topFunction();
@@ -1513,11 +1519,20 @@ function update_user_settings(update_section) {
     if (update_section == "profile_pic")
     {
 
-
         var input_display_pic = document.getElementById("input_display_pic");
+        let user_settings_profile_pic_msg = document.getElementById("user_settings_profile_pic_msg");
+
         // once they choose a file. check file format, resize, and attempt to save file into server. DB columns will save the file name, if same file name
         //  exists, rename it with _+1.ext
         var file = input_display_pic.files[0];
+        
+        if (file == undefined) {
+            user_settings_profile_pic_msg.style.color = "red";
+            user_settings_profile_pic_msg.textContent = "Must select a file first!";
+
+            return false;
+        }
+
         var imageType = 'image/*';
 
         if (file.type.match(imageType)) {
@@ -1533,23 +1548,41 @@ function update_user_settings(update_section) {
             let user_settings_profile_pic_msg = document.getElementById("user_settings_profile_pic_msg");
             user_settings_profile_pic_msg.style.color = "red";
             user_settings_profile_pic_msg.textContent = "File not supported!";
+
+            return false;
         }
+        
     }
     else if (update_section == "display_name")
     {
         dictParams["new_display_name"] = document.getElementById("txt_display_name_change").value.trim();
+
+        if (dictParams["new_display_name"] == "") {
+            
+            let user_settings_profile_pic_msg = document.getElementById("user_settings_display_name_msg");
+            user_settings_profile_pic_msg.style.color = "red";
+            user_settings_profile_pic_msg.textContent = "Display name cannot be blank!";
+            return false;
+        }
     }
     else if (update_section == "password")
     {
+        let user_settings_password_msg = document.getElementById("user_settings_password_msg");
+
         dictParams["old_password"] = document.getElementById("old_password").value.trim();
         dictParams["new_password"] = document.getElementById("new_password").value.trim();
         dictParams["confirm_new_password"] = document.getElementById("confirm_new_password").value.trim();
 
-        if (dictParams["new_password"] != dictParams["confirm_new_password"]) 
+        if (dictParams["old_password"] == "" || dictParams["new_password"] == "" || dictParams["confirm_new_password"] == "") {
+            user_settings_password_msg.style.color = "red";
+            user_settings_password_msg.textContent = "Please fill all fields in the password section first!";
+            return false;
+        }
+        else if (dictParams["new_password"] != dictParams["confirm_new_password"]) 
         {
-            let user_settings_password_msg = document.getElementById("user_settings_password_msg");
             user_settings_password_msg.style.color = "red";
             user_settings_password_msg.textContent = "Please ensure new password and confirm password match!";
+            return false;
         }
     }
     
