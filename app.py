@@ -27,11 +27,14 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///raceSubmissions.db")
 
+# Size to set all profile images to. L x W.
 PROFILEPICSIZE = 80, 80
 
+# Directory for profile pictures.
 PROFILE_PIC_PATH = os.getcwd() + "/static/userProfilePics/"
 
 #logging.getLogger("cs50").disabled = False
+
 
 @app.after_request
 def after_request(response):
@@ -42,32 +45,52 @@ def after_request(response):
     return response
 
 
+"""
+Render inital page, the Home page.
+"""
 @app.route("/")
 def index():
     """Home page: show the latest race submissions"""
     return render_template("home.html", page_type="home", search_params = "")
 
+
+"""
+For testing elements
 @app.route("/blankTest")
 def blankTest():
     return render_template("blankTest.html")
+"""
 
 
+"""
+AJAX to call to redirect to index ("Home") page with the URL from function index().
+"""
 @app.route("/nav_index_JS", methods=["POST"])
 def nav_index_JS():
     return jsonify({'redirect': url_for("index")})
 
 
+"""
+Render Home page with the search parameters container visible while passing search parameter values from another page that has been saved in session["search_from_profile_dict"].
+"""
 @app.route("/submissions")
 def submissions():
     return render_template("home.html", page_type="search", search_params = session["search_from_profile_dict"])
 
 
+"""
+AJAX to call to redirect to the Home page with the URL from function submissions().
+"""
 @app.route("/nav_search_JS", methods=["POST"])
 def nav_search_JS():
     session["search_from_profile_dict"] = ""
     return jsonify({'redirect': url_for("submissions")})
 
 
+"""
+AJAX to call to redirect to the Home page with the URL from function submissions().
+Search parameter values sent by POST and saved into session["search_from_profile_dict"].
+"""
 @app.route("/nav_search_from_profile", methods=["POST"])
 def nav_search_from_profile():
     if request.method == "POST":
@@ -79,31 +102,47 @@ def nav_search_from_profile():
     return jsonify({'redirect': url_for("submissions")})
 
 
+"""
+Redner Profile page.
+"""
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
     return render_template("profile.html", page_type="profile", search_params = "")
 
 
+"""
+AJAX to call to redirect to the Profile page with the URL from function profile().
+"""
 @app.route("/nav_profile_JS", methods=["POST"])
 def nav_profile_JS():
     return jsonify({'redirect': url_for("profile")})
 
 
+"""
+Render Submit page.
+"""
 @app.route("/submit")
 @login_required
 def submit():
     return render_template("submit.html", page_type="submit", search_params = "")
 
 
+"""
+AJAX to call to redirect to the Submit page with the URL from function submit().
+"""
 @app.route("/nav_submit_JS", methods=["POST"])
 def nav_submit_JS():
     return jsonify({'redirect': url_for("submit")})
 
 
+"""
+Render User settings page.
+"""
 @app.route("/user_settings", methods=["GET","POST"])
 @login_required
 def user_settings():
+    """
     imageFilename = "/static/userProfilePics/"
 
     if request.method == "POST":
@@ -117,15 +156,21 @@ def user_settings():
 
     if imageFilename == "/static/userProfilePics/":
         imageFilename = imageFilename + "blackSquare.png"
-
+    """
     return render_template("user_settings.html", page_type="settings", search_params = "")
 
 
+"""
+AJAX to call to redirect to the User settings page with the URL from function user_settings().
+"""
 @app.route("/nav_user_settings_JS", methods=["POST"])
 def nav_user_settings_JS():
     return jsonify({'redirect': url_for("user_settings")})
 
 
+"""
+Get session user id.
+"""
 @app.route("/getSessionUserId", methods=["POST"])
 def getSessionUserId():
     if request.method == "POST":
@@ -135,7 +180,9 @@ def getSessionUserId():
     return jsonify({"user_id":""})
     
 
-
+"""
+Get the information for the submissions that match the search parameters and the search "mode".
+"""
 @app.route("/populate_submissions_search", methods=["GET", "POST"])
 def populate_submissions_search():
 
@@ -264,16 +311,25 @@ def populate_submissions_search():
     return jsonify(rows)
 
 
+"""
+Render the Log In page.
+"""
 @app.route("/login", methods=["GET", "POST"])
 def login():
     return render_template("login.html", page_type="log in", login_msg='', search_params = "")
 
 
+"""
+AJAX to call to redirect to the Log In page with the URL from the function login().
+"""
 @app.route("/nav_login_JS", methods=["POST"])
 def nav_login_JS():
     return jsonify({'redirect': url_for("login")})
 
 
+"""
+Process Login operation.
+"""
 @app.route("/login_SQL", methods=["POST"])
 def login_SQL():
 
@@ -301,6 +357,9 @@ def login_SQL():
         return jsonify({"status": "ERROR", "message": "GET"})
 
 
+"""
+Process Logout operation.
+"""
 @app.route("/logout")
 def logout():
     """Log user out"""
@@ -312,6 +371,9 @@ def logout():
     return redirect("/login")
 
 
+"""
+Render Register page.
+"""
 @app.route("/register", methods=["GET","POST"])
 def register():
     """User register"""
@@ -320,11 +382,17 @@ def register():
     return render_template("register.html", page_type="register", register_msg='', search_params = "")
 
 
+"""
+AJAX to call to redirect to the Register page with the URL with function register().
+"""
 @app.route("/nav_register_JS", methods=["POST"])
 def nav_register_JS():
     return jsonify({'redirect': url_for("register")})
 
 
+"""
+Process registration operation.
+"""
 @app.route("/validate_registration", methods=["POST"])
 def validate_registration():
     if request.method == "POST":
@@ -353,11 +421,15 @@ def validate_registration():
         primKeyID = db.execute("""INSERT INTO tblUsers(strJoinDateEST, strUserName, strHashPW, strDisplayName, strProfilePicSrc) 
                                 VALUES (?, ?, ?, ?, ?)"""
                                ,timestamp, username, generate_password_hash(password), display_name, "blackSquare.png")
+        
+        if (primKeyID is None):
+            return jsonify({"status":"ERROR" ,"message": "DB ERR"})
 
         return jsonify({"status":"GOOD" ,"redirect": url_for("login")})
     else:
         return jsonify({"status":"ERROR" ,"message": "GET"})
     
+
 """
 @app.route("/searchSuggestions")    # route name for JS
 def searchGameSuggestions():
@@ -370,6 +442,12 @@ def searchGameSuggestions():
     return jsonify(gameSuggestions)
 """
 
+
+"""
+Get input suggestions. 
+When in the context of "search," it will only suggest values that exist in the other submissions.
+When in the context of "submit," it will suggest all values present in the corresponding table. i.e. strGameName in the tblGames.
+"""
 @app.route("/inputSuggestions", methods=["POST"])    # route name for JS
 def inputSuggestions():
     if request.method == "POST":
@@ -397,6 +475,9 @@ def inputSuggestions():
     return
     
 
+"""
+Process submission submit operation.
+"""
 @app.route("/submit_record", methods=["POST"])
 def submit_record():
     if request.method == "POST":
@@ -519,6 +600,8 @@ def submit_record():
         return jsonify({"status":"ERROR" ,"message": "ERROR"})
     
 
+"""
+"""
 @app.route("/deleteSubmission", methods=["POST"])
 def deleteSubmission():
     
@@ -1014,7 +1097,6 @@ Pract
     -- document: https://pixabay.com/api/docs/
 
 TODO
-    - tab titles
     - read me and videeo
 
 
