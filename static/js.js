@@ -1,3 +1,4 @@
+// Variables for submission sorting.
 let sort_asc = false;
 let curr_sort_col, submission_data, mode, curr_page, max_pages;
 
@@ -9,6 +10,8 @@ let btnSortByFullTimeTextBase = "Full time"
 let btnSortBySubmittedTimeText = "Submitted @";
 let btnSortByFullTimeText = "Full time";
 
+
+/*
 function test() {
     //window.location.assign("/profile");
     //window.location.replace("/profile");
@@ -25,7 +28,16 @@ function test() {
         alert('Failure, dev has low IQ.');
     });
 }
+*/
 
+
+/*
+Process Register operation.
+Params: 
+    > N/A
+Return: 
+    > boolean false: So button does refresh the page.
+*/
 function register() {
     var data_display_name = document.getElementById("reg_display_name").value.trim();
     var data_username = document.getElementById("reg_username").value.trim();
@@ -52,6 +64,11 @@ function register() {
     else if(data_password_again == "")
     {
         msg_register.textContent = "Please confirm the password!";
+        document.getElementById("reg_password_again").focus;
+    }
+    else if(data_password == data_password_again)
+    {
+        msg_register.textContent = "Passwords do not match!";
         document.getElementById("reg_password_again").focus;
     }
     else
@@ -84,6 +101,13 @@ function register() {
 }
 
 
+/*
+Get the current 'mode' which specifies the Page and also sets the global variable 'mode' with the Page.
+Params: 
+    > N/A
+Return: 
+    > String mode: Page mode
+*/
 function getPageMode() {
     var search_section = document.getElementById("search_section");
     var page = document.getElementById("page_type").value;
@@ -104,6 +128,15 @@ function getPageMode() {
 }
 
 
+/*
+Show or hide the search parameter container.
+Params: 
+    > String page: Destination page.
+Return:
+    > int 0: Search section is toggled to display.
+    > int 1: Search section is toggled to not display.
+    > int -1: No display changed.
+*/
 function show_search_section(page) {
     var search_section = document.getElementById("search_section");
 
@@ -127,6 +160,9 @@ function show_search_section(page) {
 }
 
 
+/*
+Navbar redirect to the Home page.
+*/
 function nav_home_JS() {
     var page_type = document.getElementById("page_type") == null ? '' : document.getElementById("page_type").value;
 
@@ -161,6 +197,9 @@ function nav_home_JS() {
 }
 
 
+/*
+Navbar redirect to the Search page.
+*/
 function nav_search_JS() {
     topFunction();
     var ret = show_search_section("search");
@@ -184,6 +223,13 @@ function nav_search_JS() {
 }
 
 
+/*
+Receive the search parameters from the Profile page and then redirect to the Search page.
+Params:
+    > Dictionary search_params: Search parameter values from the Profile page.
+Return:
+    > N/A
+*/
 function nav_search_from_profile(search_params) {
     topFunction();
     var ret = show_search_section("search");
@@ -209,6 +255,9 @@ function nav_search_from_profile(search_params) {
 }
 
 
+/*
+here
+*/
 function nav_profile_JS() {
     $.ajax({
         url: "/nav_profile_JS",

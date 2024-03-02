@@ -601,12 +601,13 @@ def submit_record():
     
 
 """
+Process Delete submission operation.
 """
 @app.route("/deleteSubmission", methods=["POST"])
 def deleteSubmission():
     
     if request.method == "POST":
-        print("there")
+        
         data = json.loads(request.form.get("delete_json"))
         userID = data["user_id"]
         submissionID = data["submission_id"]
@@ -628,6 +629,8 @@ def deleteSubmission():
             return jsonify({"status":"ERROR" ,"message": "???"})
         
 
+"""
+Get the number of submissions the user has.
 @app.route('/getUserNumOfSubmissions', methods=["POST"])
 def getUserNumOfSubmissions():
     if request.method == "POST":
@@ -642,8 +645,9 @@ def getUserNumOfSubmissions():
             return jsonify({"status":"GOOD" ,"message": rows[0]["numSubCnt"]})
     else:
         return jsonify({"status":"ERROR" ,"message": "???"})
-    
+"""
 
+"""
 @app.route('/getUserMostSubmittedX', methods=["POST"])
 def getUserMostSubmittedX():
     if request.method == "POST":
@@ -652,7 +656,7 @@ def getUserMostSubmittedX():
         table = data["table"]
         idCol = data["dbIDCol"]
         nameCol = data["dbNameCol"]
-
+"""
         
         #sql_query = """SELECT b.{nameColft}, count(a.{idColft}) 
          #               FROM tblSubmissions a 
@@ -662,19 +666,19 @@ def getUserMostSubmittedX():
          #               ORDER BY count(a.{idColft}) DESC
          #                   LIMIT 1""".format(nameColft = nameCol, idColft = idCol, tableft = table)
         
-        sql_query = """SELECT b.:nameColft, count(a.:idColft) 
-                        FROM tblSubmissions a 
-                            INNER JOIN :tableft b ON b.:idColft = a.:idColft 
-                        WHERE a.iUserID = :userID
-                        GROUP BY a.:idColft
-                        ORDER BY count(a.:idColft) DESC
-                            LIMIT 1"""
+        #sql_query = """SELECT b.:nameColft, count(a.:idColft) 
+        #                FROM tblSubmissions a 
+        #                    INNER JOIN :tableft b ON b.:idColft = a.:idColft 
+        #                WHERE a.iUserID = :userID
+        #                GROUP BY a.:idColft
+        #                ORDER BY count(a.:idColft) DESC
+        #                    LIMIT 1"""
         
         # both above methods error sometimes
         # Need to fix > RuntimeError: fewer placeholder () than values (3) for app.py function getUserMostSubmittedX that happens sometimes due to timeout(?)
 
         
-        
+"""
         rows = db.execute(sql_query, nameColft=nameCol, idColft=idCol, tableft=table, userID=session["user_id"])
 
         #print(rows)
@@ -685,8 +689,13 @@ def getUserMostSubmittedX():
             return jsonify({"status":"ERROR" ,"message": "N/A"})
     else:
         return jsonify({"status":"ERROR" ,"message": "???"})
+"""
     
 
+"""
+Get the profile's statistics.
+Number of submissions and most submitted in each category [Game, Track, Vehicle, Game mode]
+"""
 @app.route("/getUserProfileStats", methods=["POST"])
 def getUserProfileStats():
     if request.method == "POST":
@@ -698,7 +707,8 @@ def getUserProfileStats():
         # get number of user submissions 
         #sql_query = "SELECT count(iSubmissionID) as 'numSubCnt' FROM tblSubmissions = ?"
 
-        # this error is pissing me off. RuntimeError: fewer placeholders () than values (3). 
+        # Somethimes.
+        # Need to fix > RuntimeError: fewer placeholder () than values (3) for app.py function getUserMostSubmittedX that happens sometimes due to timeout(?) 
         rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = ? ", userID)
         
         if not rows:
@@ -779,6 +789,9 @@ def getUserProfileStats():
         return jsonify({"status":"ERROR" ,"message": "Get profile stats error!"})
     
 
+"""
+Get the profile's display name and profile picture.
+"""
 @app.route("/getUserProfileDisplayInfo", methods=["POST"])
 def getUserProfileDisplayInfo():
     if request.method == "POST":
@@ -906,6 +919,9 @@ if (updateSection == "profile_pic"):
 """
 
 
+"""
+Process update Profile picture operation.
+"""
 @app.route("/updateProfilePic", methods=["GET", "POST"])
 def updateProfilePic():
 
@@ -971,7 +987,7 @@ def updateProfilePic():
         # save image to directory
         #newProfilePicFileInput.save(os.path.join(PROFILE_PIC_PATH, fileName))
 
-        newProfilePicFileInput = "/static/userProfilePics/" + fileName
+        newProfilePicFileInputDir = "/static/userProfilePics/" + fileName
         # /save profile pic to file sys
 
         # update strProfilePicSrc in tblUsers
@@ -998,11 +1014,14 @@ def updateProfilePic():
                 
         # /check tblUsers to see if other users use the same strProfilePicSrc somehow, only delete if none left 
         
-        return jsonify({"status":"GOOD" ,"message": "Successfully changed!", "profilePicSrc": newProfilePicFileInput})
+        return jsonify({"status":"GOOD" ,"message": "Successfully changed!", "profilePicSrc": newProfilePicFileInputDir})
     else:
         return jsonify({"status":"ERROR" ,"message": "Unsuccessfully changed!"})
 
 
+"""
+Process update Profile's display name and password.
+"""
 @app.route("/update_user_settings_initiate", methods=["POST"])
 def update_user_settings_initiate():
     if request.method == "POST":
