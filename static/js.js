@@ -161,7 +161,7 @@ function show_search_section(page) {
 
 
 /*
-Navbar redirect to the Home page.
+Navbar redirect to the "Home" page.
 */
 function nav_home_JS() {
     var page_type = document.getElementById("page_type") == null ? '' : document.getElementById("page_type").value;
@@ -198,7 +198,7 @@ function nav_home_JS() {
 
 
 /*
-Navbar redirect to the Search page.
+Navbar redirect to the "Search" page.
 */
 function nav_search_JS() {
     topFunction();
@@ -224,9 +224,9 @@ function nav_search_JS() {
 
 
 /*
-Receive the search parameters from the Profile page and then redirect to the Search page.
+Receive the search parameters from the "Profile" page and then redirect to the "Search" page.
 Params:
-    > Dictionary search_params: Search parameter values from the Profile page.
+    > Dictionary search_params: Search parameter values from the "Profile" page.
 Return:
     > N/A
 */
@@ -256,7 +256,7 @@ function nav_search_from_profile(search_params) {
 
 
 /*
-here
+Navbar redirect to the "Profile" page.
 */
 function nav_profile_JS() {
     $.ajax({
@@ -273,6 +273,9 @@ function nav_profile_JS() {
 }
 
 
+/*
+Navbar redirect to the "Submit" page.
+*/
 function nav_submit_JS() {
     $.ajax({
         url: "/nav_submit_JS",
@@ -288,6 +291,9 @@ function nav_submit_JS() {
 }
 
 
+/*
+Navbar redirect to the "User settings" page.
+*/
 function nav_user_settings_JS() {
     $.ajax({
         url: "/nav_user_settings_JS",
@@ -303,6 +309,9 @@ function nav_user_settings_JS() {
 }
 
 
+/*
+Navbar redirect to the "Register" page.
+*/
 function nav_register_JS() {
     $.ajax({
         url: "/nav_register_JS",
@@ -318,6 +327,9 @@ function nav_register_JS() {
 }
 
 
+/*
+Navbar redirect to the "Log In" page.
+*/
 function nav_login_JS() {
     $.ajax({
         url: "/nav_login_JS",
@@ -333,6 +345,9 @@ function nav_login_JS() {
 }
 
 
+/*
+Process Log In operation.
+*/
 function login_submit() {
 
     var data_user = document.getElementById("username").value.trim();
@@ -380,6 +395,13 @@ function login_submit() {
 }
 
 
+/*
+Starting function for processing Search operation. Calls a function to get the current user ID and then calls the callback function searchInitiate().
+Params:
+    > mode: Specifies the "mode" (i.e "default, profile") to determine the search query to populate the submission section.
+Return:
+    > N/A
+*/
 function search(mode) {
 
     curr_sort_col = "";
@@ -395,6 +417,15 @@ function search(mode) {
 }
 
 
+/*
+Populate the JSON with search parameters and related information, retrieve the search results, and then call function build_submission_section(...) to populate the submission container.
+Params:
+    > mode: Specifies the "mode" (i.e "default, profile") to determine the search query to populate the submission section.
+    > user_id: If logged in, get the user ID.
+    > optionalDict: If the search parameter values are from a different source other than the search parameter container fields.
+Return:
+    > N/A
+*/
 function searchInitiate(mode, user_id, optionalDict) {
     // submission results
     var submissions_section = document.getElementById("submissions_section");
@@ -456,6 +487,8 @@ function searchInitiate(mode, user_id, optionalDict) {
         //console.log(response);
         //window.location.href = response.redirect;
         submission_data = response;
+        //console.log(typeof(submission_data));
+        //console.log(submission_data);
         mode = mode;
 
         curr_page = 1;
@@ -480,7 +513,15 @@ function searchInitiate(mode, user_id, optionalDict) {
 }
 
 
-function sortBy(btnId, btnText, target_col) {
+/*
+Sort the array of dictionaries by the desired filter.
+Params:
+    > String btnId: The html id of the filter's button.
+    > String target_col: Target key of each of the dictionaries in the array to sort by.
+Return:
+    > N/A
+*/
+function sortBy(btnId, target_col) {
 
     // if same col selected, flip the sort order
     if (curr_sort_col === target_col) {
@@ -509,27 +550,43 @@ function sortBy(btnId, btnText, target_col) {
 }
 
 
-function setStandingPostFix(strStanding) {
-
+/*
+Append the post-fix to create ordinal numbers.
+Params:
+    > number iStanding: Raw number
+Return:
+    > String for the complete ordinal number (i.e. '1st')
+*/
+function setStandingPostFix(iStanding) {
+    //console.log(typeof(iStanding));
     let ord = 'th';
 
-    if (strStanding % 10 == 1 && strStanding % 100 != 11)
+    if (iStanding % 10 == 1 && iStanding % 100 != 11)
     {
         ord = 'st';
     }
-    else if (strStanding % 10 == 2 && strStanding % 100 != 12)
+    else if (iStanding % 10 == 2 && iStanding % 100 != 12)
     {
         ord = 'nd';
     }
-    else if (strStanding % 10 == 3 && strStanding % 100 != 13)
+    else if (iStanding % 10 == 3 && iStanding % 100 != 13)
     {
         ord = 'rd';
     }
 
-    return strStanding + ord;
+    return iStanding.toString() + ord;
 }
 
 
+/*
+Populate the html contents of the submission section.
+Params:
+    > Arr results: The array of dictionaries that contains the submission results.
+    > String mode: Specifies the "mode" (i.e "default, profile") to determine the search query to populate the submission section.
+    > user_id: If logged in, get the current user ID.
+Return:
+    > N/A
+*/
 function build_submission_section(results, mode, user_id) {
     //console.log(results);
 
@@ -573,10 +630,10 @@ function build_submission_section(results, mode, user_id) {
                     <span id="subtitle_span">Sort by: </span>
                 </div>
                 <div class="col-sm-3">
-                    <button id="btnSortBySubmittedTime" class="` + ((curr_sort_col == 'strSubmittedDate')?`submissionButtons`:`sortByBtnInactive`) + `" type="button" onclick="sortBy('btnSortBySubmittedTime', 'Submitted @', 'strSubmittedDate')">` + btnSortBySubmittedTimeText + `</button>
+                    <button id="btnSortBySubmittedTime" class="` + ((curr_sort_col == 'strSubmittedDate')?`submissionButtons`:`sortByBtnInactive`) + `" type="button" onclick="sortBy('btnSortBySubmittedTime', 'strSubmittedDate')">` + btnSortBySubmittedTimeText + `</button>
                 </div>
                 <div class="col-sm-3">
-                    <button id="btnSortByFullTime" class="` + ((curr_sort_col == 'strFullTime')?`submissionButtons`:`sortByBtnInactive`) + `" type="button" onclick="sortBy('btnSortByFullTime', 'Full time', 'strFullTime')">` + btnSortByFullTimeText + `</button>
+                    <button id="btnSortByFullTime" class="` + ((curr_sort_col == 'strFullTime')?`submissionButtons`:`sortByBtnInactive`) + `" type="button" onclick="sortBy('btnSortByFullTime', 'strFullTime')">` + btnSortByFullTimeText + `</button>
                 </div>
             </div>
             <br>`;
@@ -595,7 +652,7 @@ function build_submission_section(results, mode, user_id) {
             value => {
                 deleteDisplay = (value.iUserID == user_id)?';':'none;';                
 
-                subPlacement = setStandingPostFix(value.strStanding);
+                subPlacement = setStandingPostFix(value.iStanding);
 
                 html_section += 
                 `<div id="submission_col_container" class="container">
@@ -790,6 +847,13 @@ function build_submission_section(results, mode, user_id) {
 }
 
 
+/*
+Starting point to request to rebuild the submission section after applying a filter to the current submission data without re-querying the db.
+Params:
+    > N/A
+Return:
+    > N/A
+*/
 function request_render_submission_data() {
     mode = getPageMode();
 
@@ -801,6 +865,13 @@ function request_render_submission_data() {
 }
 
 
+/*
+Set the current page after the "Prev" button has been clicked.
+Params:
+    > N/A
+Return:
+    > N/A
+*/
 function prev_page() {
 
     if (curr_page > 1)
@@ -814,6 +885,13 @@ function prev_page() {
 }
 
 
+/*
+Set the current page after the "Next" button has been clicked.
+Params:
+    > N/A
+Return:
+    > N/A
+*/
 function next_page() {
     if ((curr_page * page_size) < submission_data.length)
     {
@@ -826,6 +904,13 @@ function next_page() {
 }
 
 
+/*
+Set the current page after a value was chosen in the page dropdown.
+Params:
+    > N/A
+Return:
+    > N/A
+*/
 function set_curr_page() {
     curr_page = document.getElementById("selPage").value;
 
@@ -840,6 +925,7 @@ function set_curr_page() {
 }
 
 
+/*
 function build_comments() {
 
     var comment_rows = document.getElementById("comment_rows");
@@ -854,8 +940,16 @@ function build_comments() {
     $("#comment_rows").html(html_comments);   // jQuery
 
 }
+*/
 
 
+/*
+Add the "active" class to the navbar item that was clicked.
+Params:
+    > String page_type: The target page.
+Return:
+    > N/A
+*/
 function navbar_active(page_type) {
     page_type = page_type.toUpperCase();
     $( ".nav-item" ).each( function() {  
@@ -870,6 +964,13 @@ function navbar_active(page_type) {
 }
 
 
+/*
+Ensures the value within the input field is within the minimum and maximum limits given.
+Params:
+    > event object evt: Contains the values; number value (the current value in the input), number min_limit (lower limit for the number), and nuber max_limit (higher limit for the number)
+Return:
+    > N/A
+*/
 function enforce_min_max(evt) {
     
     var value = Number(evt.currentTarget.value);
@@ -886,12 +987,22 @@ function enforce_min_max(evt) {
     }
 }
 
+/*
+Just a debug event listener function.
+*/
 const inputHandler = function(e) {
     
     console.log(e.target.value);
 }
 
 
+/*
+Given a YouTube URL, convert it to an embedded string.
+Params:
+    > url: Raw YouTube URL
+Return:
+    > N/A
+*/
 function getId(url) {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
@@ -902,6 +1013,13 @@ function getId(url) {
 }
 
 
+/*
+Call a pixabay.com API to get a random image.
+Params: 
+    > event object evt: Contains the string entered in the "* Game" input on the "Submit" page.
+Return:
+    > N/A
+*/
 function displayGameImage(evt) {
     let game_name = evt.currentTarget.value;
 
@@ -934,6 +1052,13 @@ function displayGameImage(evt) {
 }
 
 
+/*
+Set the iframe src to the embedded YouTube URL so that the preview is displayed.
+Params:
+    > event object evt: Raw YouTube url.
+Return:
+    > N/A
+*/
 function displayYTPrev(evt) {
     url = evt.currentTarget.value;
     if (url == "") {
@@ -952,6 +1077,9 @@ function displayYTPrev(evt) {
 }
 
 
+/*
+here
+*/
 function validate_record_submission() {
 
     topFunction();
@@ -1962,10 +2090,12 @@ $( document ).ready(function() {
     // /load default submissions
 
     // load comment section
+    /*
     var comment_rows = document.getElementById("comment_rows");
     if (comment_rows) {
         build_comments();
     }
+    */
     // /load comment section
 
     // navbar active

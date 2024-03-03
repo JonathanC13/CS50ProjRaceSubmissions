@@ -46,7 +46,7 @@ def after_request(response):
 
 
 """
-Render inital page, the Home page.
+Render inital page, the "Home" page.
 """
 @app.route("/")
 def index():
@@ -71,7 +71,7 @@ def nav_index_JS():
 
 
 """
-Render Home page with the search parameters container visible while passing search parameter values from another page that has been saved in session["search_from_profile_dict"].
+Render "Home" page with the search parameters container visible while passing search parameter values from another page that has been saved in session["search_from_profile_dict"].
 """
 @app.route("/submissions")
 def submissions():
@@ -79,7 +79,7 @@ def submissions():
 
 
 """
-AJAX to call to redirect to the Home page with the URL from function submissions().
+AJAX to call to redirect to the "Home" page with the URL from function submissions().
 """
 @app.route("/nav_search_JS", methods=["POST"])
 def nav_search_JS():
@@ -88,7 +88,7 @@ def nav_search_JS():
 
 
 """
-AJAX to call to redirect to the Home page with the URL from function submissions().
+AJAX to call to redirect to the "Home" page with the URL from function submissions().
 Search parameter values sent by POST and saved into session["search_from_profile_dict"].
 """
 @app.route("/nav_search_from_profile", methods=["POST"])
@@ -103,7 +103,7 @@ def nav_search_from_profile():
 
 
 """
-Redner Profile page.
+Redner "Profile" page.
 """
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
@@ -112,7 +112,7 @@ def profile():
 
 
 """
-AJAX to call to redirect to the Profile page with the URL from function profile().
+AJAX to call to redirect to the "Profile" page with the URL from function profile().
 """
 @app.route("/nav_profile_JS", methods=["POST"])
 def nav_profile_JS():
@@ -120,7 +120,7 @@ def nav_profile_JS():
 
 
 """
-Render Submit page.
+Render "Submit" page.
 """
 @app.route("/submit")
 @login_required
@@ -129,7 +129,7 @@ def submit():
 
 
 """
-AJAX to call to redirect to the Submit page with the URL from function submit().
+AJAX to call to redirect to the "Submit" page with the URL from function submit().
 """
 @app.route("/nav_submit_JS", methods=["POST"])
 def nav_submit_JS():
@@ -137,7 +137,7 @@ def nav_submit_JS():
 
 
 """
-Render User settings page.
+Render "User settings" page.
 """
 @app.route("/user_settings", methods=["GET","POST"])
 @login_required
@@ -228,7 +228,7 @@ def populate_submissions_search():
                             RANK () OVER ( 
                                 PARTITION BY a.iGameID, a.iTrackID, a.iGameModeID
                                 ORDER BY strFullTime ASC
-                            ) strStanding
+                            ) iStanding
                         FROM tblSubmissions a
                             INNER JOIN tblGames b ON b.iGameID = a.iGameID
                             INNER JOIN tblPlatforms c ON c.iPlatformID = a.iPlatformID
@@ -259,7 +259,7 @@ def populate_submissions_search():
                             RANK () OVER ( 
                                 PARTITION BY a.iGameID, a.iTrackID, a.iGameModeID
                                 ORDER BY strFullTime ASC
-                            ) strStanding
+                            ) iStanding
                         FROM tblSubmissions a
                             INNER JOIN tblGames b ON b.iGameID = a.iGameID
                             INNER JOIN tblPlatforms c ON c.iPlatformID = a.iPlatformID
@@ -280,7 +280,7 @@ def populate_submissions_search():
                             RANK () OVER ( 
                                 PARTITION BY a.iGameID, a.iTrackID, a.iGameModeID
                                 ORDER BY strFullTime ASC
-                            ) strStanding
+                            ) iStanding
                         FROM tblSubmissions a
                             INNER JOIN tblGames b ON b.iGameID = a.iGameID
                             INNER JOIN tblPlatforms c ON c.iPlatformID = a.iPlatformID
@@ -312,7 +312,7 @@ def populate_submissions_search():
 
 
 """
-Render the Log In page.
+Render the "Log In" page.
 """
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -320,7 +320,7 @@ def login():
 
 
 """
-AJAX to call to redirect to the Log In page with the URL from the function login().
+AJAX to call to redirect to the "Log In" page with the URL from the function login().
 """
 @app.route("/nav_login_JS", methods=["POST"])
 def nav_login_JS():
@@ -372,7 +372,7 @@ def logout():
 
 
 """
-Render Register page.
+Render "Register" page.
 """
 @app.route("/register", methods=["GET","POST"])
 def register():

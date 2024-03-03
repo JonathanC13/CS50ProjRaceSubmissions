@@ -356,7 +356,16 @@
 > Ensure that Submissions section are properly displayed with [Your submissions].
     > Pass
 
-> Ensure that pagination correctly pages all the submissions with "prev" and "next" buttons.
+> Ensure that pagination correctly pages all the submissions with "Next" and when on the last page the "Next" button is greyed out and unable to be clicked.
+    > Pass
+
+> Ensure that pagination correctly pages all the submissions with "Prev" and when on the first page the "Prev" button is greyed out and unable to be clicked.
+    > Pass
+
+> Ensure that pagination correctly pages the submissions on the last page with the select dropdown. This will also disable the "Next" button.
+    > Pass
+
+> Ensure that pagination correctly pages the submissions on the first page with the select dropdown. This will also disable the "Prev" button.
     > Pass
 
 > Ensure that pagination correctly pages all the submissions with the select dropdown.
@@ -503,7 +512,16 @@
 > Ensure that Submissions section are properly displayed with [Latest submissions].
     > Pass
 
-> Ensure that pagination correctly pages all the submissions with "prev" and "next" buttons.
+> Ensure that pagination correctly pages all the submissions with "Next" and when on the last page the "Next" button is greyed out and unable to be clicked.
+    > Pass
+
+> Ensure that pagination correctly pages all the submissions with "Prev" and when on the first page the "Prev" button is greyed out and unable to be clicked.
+    > Pass
+
+> Ensure that pagination correctly pages the submissions on the last page with the select dropdown. This will also disable the "Next" button.
+    > Pass
+
+> Ensure that pagination correctly pages the submissions on the first page with the select dropdown. This will also disable the "Prev" button.
     > Pass
 
 > Ensure that pagination correctly pages all the submissions with the select dropdown.
@@ -655,7 +673,16 @@
 > In the search parameter container enter a value in the "Gane mode" field and on click "Search" button. Ensure the "Search results" return submissions where the "game mode" is LIKE what was entered. %rally%.
     > Pass
 
-> Ensure that pagination correctly pages all the submissions with "prev" and "next" buttons.
+> Ensure that pagination correctly pages all the submissions with "Next" and when on the last page the "Next" button is greyed out and unable to be clicked.
+    > Pass
+
+> Ensure that pagination correctly pages all the submissions with "Prev" and when on the first page the "Prev" button is greyed out and unable to be clicked.
+    > Pass
+
+> Ensure that pagination correctly pages the submissions on the last page with the select dropdown. This will also disable the "Next" button.
+    > Pass
+
+> Ensure that pagination correctly pages the submissions on the first page with the select dropdown. This will also disable the "Prev" button.
     > Pass
 
 > Ensure that pagination correctly pages all the submissions with the select dropdown.
