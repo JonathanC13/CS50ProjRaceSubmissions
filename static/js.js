@@ -32,7 +32,7 @@ function test() {
 
 
 /*
-Process Register operation.
+Process the Register operation to register a new user.
 Params: 
     > N/A
 Return: 
@@ -346,7 +346,7 @@ function nav_login_JS() {
 
 
 /*
-Process Log In operation.
+Process the Log In operation to attempt to log in the user.
 */
 function login_submit() {
 
@@ -412,6 +412,8 @@ function search(mode) {
     // session["user_id"]
     var dictParams = {"callbackType":"search",
                         "mode":mode};
+
+    // Using callbacks to ensure order of AJAX calls. Need to verify the current user id then proceed to building submission section. For this context, to know which submissions belong to the current logged in user.
     getUserID(dictParams, searchInitiate);
     // /get user id if logged in
 }
@@ -1078,7 +1080,11 @@ function displayYTPrev(evt) {
 
 
 /*
-here
+Process the submit submission operation. Check the required fields have values and if all populated attempt to commit to db.
+Params:
+    > N/A
+Return:
+    > bool false: So that the button click does not refresh the page.
 */
 function validate_record_submission() {
 
@@ -1206,6 +1212,7 @@ function validate_record_submission() {
     return false;
 }
 
+
 /*
 async function searchGameListener(evt) {
     //console.log(evt.currentTarget.value);
@@ -1224,6 +1231,13 @@ async function searchGameListener(evt) {
 */
 
 
+/*
+On focus and input on the input field, adjust the suggestions in the drop down select.
+Params:
+    > event object evt: Contains values to determine the method what suggestions to populate. i.e. Which field is active, the db table to search, column name that contains the suggestion string, relCol for the relational column, suggestion type for if "Submit" or "Search" suggestions, and current value in the input field.
+Return:
+    > N/A
+*/
 async function inputSuggestionsListener(evt) {
     //console.log(evt.currentTarget.value); // input value in the field
     //currSearchField
@@ -1270,9 +1284,21 @@ async function inputSuggestionsListener(evt) {
 }
 
 
+/*
+Starting point to search by a the value of a clicked section of a submission. i.e. Clicked a game "F1 22" and it will populate the submission section with all submissions with game "F1 22".
+Params:
+    > String curr_page_type: The current page that the submission section is on.
+    > String gameName: The value of the "Game" clicked.
+    > String platformName: The value of the "Platform" clicked.
+    > String displayName: The value of the "Display name" clicked.
+    > String vehicleName: The value of the "Vehicle" clicked.
+    > String trackName: The value of the "Track" clicked.
+    > String gameModeName: The value of the "Game mode" clicked.
+Return:
+    > N/A
+*/
 function searchFromSubmission(curr_page_type, gameName, platformName, displayName, vehicleName, trackName, gameModeName) {
 
-    // get user id if logged in
     // session["user_id"]
     var dictParams = {  
                         "curr_page_type": curr_page_type,
@@ -1302,9 +1328,6 @@ function searchFromSubmission(curr_page_type, gameName, platformName, displayNam
         getUserID(dictParams, searchInitiate);
         
     }
-    
-    
-    // /get user id if logged in
 }
 
 
@@ -1352,6 +1375,15 @@ function searchFromSubmissionInitiate(user_id, game, track, game_mode) {
 */
 
 
+/*
+Starting point to process the delete submission operation.
+Params:
+    > String mode: The current mode the submission section is in. i.e. home, profile, search, search_from_sub, and search_from_sub_profile.
+    > String owner: The submission's owner user id.
+    > String submission_id: The target submission to be deleted.
+Return:
+    > N/A
+*/
 function deleteSubmission(mode, owner, submission_id) {
     // get user id if logged in
     // session["user_id"]
@@ -1366,6 +1398,15 @@ function deleteSubmission(mode, owner, submission_id) {
 }
 
 
+/*
+Process the delete submission operation to remove a submission from the db.
+Params:
+    > String mode: The current mode the submission section is in. i.e. home, profile, search, search_from_sub, and search_from_sub_profile.
+    > String owner: The submission's owner user id.
+    > String submission_id: The target submission to be deleted.
+Return:
+    > N/A
+*/
 function deleteSubmissionInitiate(mode, user_id, owner, submission_id) {
     if (owner != user_id)
     {
@@ -1400,6 +1441,14 @@ function deleteSubmissionInitiate(mode, user_id, owner, submission_id) {
 }
 
 
+/*
+Get the user id of the logged in user for their session, then proceed to the next operation in the form of a callback passed as a parameter.
+Params:
+    > Dictionary dictParams: Contains values required for the callback function.
+    > function object myCallback: function to be called after AJAX done.
+Return:
+    > N/A
+*/
 function getUserID(dictParams, myCallback) {
     
     $.ajax({
@@ -1451,12 +1500,26 @@ function getUserID(dictParams, myCallback) {
 }
 
 
+/*
+Scroll to the top of the page.
+Params:
+    > N/A
+Return:
+    > N/A
+*/
 function topFunction() {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
 
 
+/*
+Starting point to get the logged in user's profile display information. i.e. Profile picture source and display name.
+Params:
+    > String page_type: The page that will display the profile's display information.
+Return:
+    > N/A
+*/
 function getUserProfileDisplayInfo(page_type) {
 
     var dictParams = {  "callbackType": "get_user_display_info",
@@ -1467,6 +1530,14 @@ function getUserProfileDisplayInfo(page_type) {
 }
 
 
+/*
+Process the get user profile's display information operation to display the profile picture and display name.
+Params:
+    > number user_id: The logged in user id.
+    > Dictionary dictParmas: Contains the "page_type" of the page that will display the information.
+Return:
+    > N/A
+*/
 function getUserProfileDisplayInfo_initiate(user_id, dictParams) {
     page_type = dictParams["page_type"];
 
@@ -1510,6 +1581,13 @@ function getUserProfileDisplayInfo_initiate(user_id, dictParams) {
 }
 
 
+/*
+Starting point to get the user's profile statistics of their submissions.
+Params:
+    > String page_type: Target page.
+Return:
+    > N/A
+*/
 function getUserProfileStats(page_type) {
     var dictParams = {  "callbackType": "get_user_profile_info",
                         "page_type": page_type
@@ -1519,6 +1597,14 @@ function getUserProfileStats(page_type) {
 }
 
 
+/*
+Process the get user's profile statistics of their submissions.
+Params:
+    > number user_id: The logged in user id.
+    > Dictionary dictParams: Contains the page_type.
+Return:
+    > N/A
+*/
 function getUserProfileStats_initiate(user_id, dictParams) {
     // get number of submissions, most submitted game, most submitted track, most submitted vehicle, and most submitted game mode
 
@@ -1541,6 +1627,7 @@ function getUserProfileStats_initiate(user_id, dictParams) {
             alert('Failure, dev has low IQ.');
     });
 }
+
 
 /*
 function getUserNumOfSubmissions() {
@@ -1575,6 +1662,14 @@ function getUserMostSubmittedX(dictProfileFields) {
 */
 
 
+/*
+Process the update user settings operations. i.e. Profile picture, display name, and password.
+Params:
+    > number user_id: The logged in user id.
+    > Dictionary dictParams: Contains the "update_section" the specify which section is to be updated.
+Return:
+    > bool false: So that the page does not refresh.
+*/
 function update_user_settings_initiate(user_id, dictParams){
 
     let user_settings_profile_pic_msg = document.getElementById("user_settings_profile_pic_msg");
@@ -1679,6 +1774,13 @@ function update_user_settings_initiate(user_id, dictParams){
 }
 
 
+/*
+Starting point to process the update user settings operations. i.e. Update the profile picture, display name, and password.
+Params:
+    > String update_section: Target section that is to be updated.
+Return:
+    > bool false: So that the page does not refresh.
+*/
 function update_user_settings(update_section) {
 
     /*
@@ -1770,28 +1872,89 @@ function update_user_settings(update_section) {
 }
 
 
+/*
+Executes when document is loaded and ready.
+*/
 $( document ).ready(function() {
 
     //console.log( "ready!" );
     
+    // Get the current page.
     var page_type = document.getElementById("page_type") == null ? '' : document.getElementById("page_type").value;
-    //console.log(page_type);
+    
     // show if page type = "search"
     show_search_section(page_type);
-
     // /show if page type = "search"
 
-    if (page_type == "settings")
+    if (page_type == "profile")
+    {
+        getUserProfileDisplayInfo(page_type);
+
+        getUserProfileStats();
+
+        // get the user's statistics. REPLACES with above function getUserProfileStats().
+        /*
+        getUserNumOfSubmissions();
+
+        var dictProfileFields = {
+            "game":
+                {
+                    "table":"tblGames",
+                    "dbIDCol":"iGameID",
+                    "dbNameCol":"strGameName",
+                    "profileElemID":"idMostSubGame"
+                },
+            "track":
+                {  
+                    "table":"tblTracks",
+                    "dbIDCol":"iTrackID",
+                    "dbNameCol":"strTrackName",
+                    "profileElemID":"idMostSubTrack"
+                },
+            "vehicle":
+                {  
+                    "table":"tblVehicles",
+                    "dbIDCol":"iVehicleID",
+                    "dbNameCol":"strVehicleName",
+                    "profileElemID":"idMostSubVehicle"
+                },
+            "gameMode":
+                {  
+                    "table":"tblGameMode",
+                    "dbIDCol":"iGameModeID",
+                    "dbNameCol":"strGameModeName",
+                    "profileElemID":"idMostSubGameMode"
+                }
+        }
+        
+        // I think looping and having so many calls causes this error sometimes:
+        // Need to fix > RuntimeError: fewer placeholder () than values (3) for app.py function getUserMostSubmittedX that happens sometimes due to timeout(?)
+        // I will perform the loop within the app.py function and see if the timeout does not occur for the above error
+        //      app.py: 
+        //          ERROR > RuntimeError: fewer placeholder () than values (3)
+        //          ERROR LINE > rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = ?", userID)
+        //          WOW SOLUTION > WHERE iUserID = ? AND iUserID = ?", userID, userID) // IF CANT EVEN RECOGNIZE 1 placeholder, FORCE 2
+        //      NEVER MIND, IT STILL BREACKS SOMETIMES> I'M GOING CRAZY
+        for (const key of Object.keys(dictProfileFields))
+        {
+            getUserMostSubmittedX(dictProfileFields[key]);            
+        }
+        */
+    }
+    else if (page_type == "settings")
     {        
+        // Get the user's display information, i.e. profile picture and display name, to display on the page.
         getUserProfileDisplayInfo(page_type);
     }
     else if (page_type == "submit")
     {
+        // Event handler for change in the "* Game" input field.
         const txt_submit_game = document.getElementById("txt_submit_game") == null ? null : document.getElementById("txt_submit_game");
         if (txt_submit_game != null) {
             txt_submit_game.addEventListener('change', displayGameImage);   
         }
 
+        // Event handler for change in the "YT URL" input field.
         const txt_YT_URL = document.getElementById("txt_YT_URL") == null ? null : document.getElementById("txt_YT_URL");
         if (txt_YT_URL != null) {
             txt_YT_URL.addEventListener('change', displayYTPrev); //inputHandler);
@@ -1823,6 +1986,7 @@ $( document ).ready(function() {
             //document.getElementById("in_submit_fulltime_HH").addEventListener("input", enforce_min_max(in_submit_fulltime_HH, min_HH_MM_SS_sss, -1));
         }
 
+        // Full time seconds
         const in_submit_fulltime_SS = document.getElementById("in_submit_fulltime_SS") == null ? null : document.getElementById("in_submit_fulltime_SS");
         if (in_submit_fulltime_SS != null) {
             in_submit_fulltime_SS.addEventListener('input', enforce_min_max); //inputHandler);
@@ -1830,6 +1994,7 @@ $( document ).ready(function() {
             in_submit_fulltime_SS.max_limit = max_MM_SS;
         }
 
+        // Full time milliseconds
         const in_submit_fulltime_sss = document.getElementById("in_submit_fulltime_sss") == null ? null : document.getElementById("in_submit_fulltime_sss");
         if (in_submit_fulltime_sss != null) {
             in_submit_fulltime_sss.addEventListener('input', enforce_min_max); //inputHandler);
@@ -1838,7 +2003,7 @@ $( document ).ready(function() {
         }
 
         
-        // Full time hours
+        // Best lap time hours
         const in_submit_bestlaptime_HH = document.getElementById("in_submit_bestlaptime_HH") == null ? null : document.getElementById("in_submit_bestlaptime_HH");
         if (in_submit_bestlaptime_HH != null) {
             in_submit_bestlaptime_HH.addEventListener('input', enforce_min_max); //inputHandler);
@@ -1847,7 +2012,7 @@ $( document ).ready(function() {
             //document.getElementById("in_submit_fulltime_HH").addEventListener("input", enforce_min_max(in_submit_fulltime_HH, min_HH_MM_SS_sss, -1));
         }
 
-        // Full time minutes
+        // Best lap time minutes
         const in_submit_bestlaptime_MM = document.getElementById("in_submit_bestlaptime_MM") == null ? null : document.getElementById("in_submit_bestlaptime_MM");
         if (in_submit_bestlaptime_MM != null) {
             in_submit_bestlaptime_MM.addEventListener('input', enforce_min_max); //inputHandler);
@@ -1856,6 +2021,7 @@ $( document ).ready(function() {
             //document.getElementById("in_submit_fulltime_HH").addEventListener("input", enforce_min_max(in_submit_fulltime_HH, min_HH_MM_SS_sss, -1));
         }
 
+        // Best lap time seconds
         const in_submit_bestlaptime_SS = document.getElementById("in_submit_bestlaptime_SS") == null ? null : document.getElementById("in_submit_bestlaptime_SS");
         if (in_submit_bestlaptime_SS != null) {
             in_submit_bestlaptime_SS.addEventListener('input', enforce_min_max); //inputHandler);
@@ -1863,6 +2029,7 @@ $( document ).ready(function() {
             in_submit_bestlaptime_SS.max_limit = max_MM_SS;
         }
 
+        // Best lap time milliseconds
         const in_submit_bestlaptime_sss = document.getElementById("in_submit_bestlaptime_sss") == null ? null : document.getElementById("in_submit_bestlaptime_sss");
         if (in_submit_bestlaptime_sss != null) {
             in_submit_bestlaptime_sss.addEventListener('input', enforce_min_max); //inputHandler);
@@ -1874,7 +2041,6 @@ $( document ).ready(function() {
         
     }
 
-    //console.log(page_type);
     if (page_type == "home" || page_type == "search" || page_type == "submit") {
         // for search field AND submit field suggestions
         var dictSearchFields = {
@@ -2004,67 +2170,13 @@ $( document ).ready(function() {
         }
     }
 
-    // load default submissions
+    // load submissions
     var submissions_section = document.getElementById("submissions_section");
     
     if(submissions_section) {
 
         if (page_type == "profile")
         {
-            getUserProfileDisplayInfo(page_type);
-
-            getUserProfileStats();
-
-            // get the user's statistics
-            /*
-            getUserNumOfSubmissions();
-
-            var dictProfileFields = {
-                "game":
-                    {
-                        "table":"tblGames",
-                        "dbIDCol":"iGameID",
-                        "dbNameCol":"strGameName",
-                        "profileElemID":"idMostSubGame"
-                    },
-                "track":
-                    {  
-                        "table":"tblTracks",
-                        "dbIDCol":"iTrackID",
-                        "dbNameCol":"strTrackName",
-                        "profileElemID":"idMostSubTrack"
-                    },
-                "vehicle":
-                    {  
-                        "table":"tblVehicles",
-                        "dbIDCol":"iVehicleID",
-                        "dbNameCol":"strVehicleName",
-                        "profileElemID":"idMostSubVehicle"
-                    },
-                "gameMode":
-                    {  
-                        "table":"tblGameMode",
-                        "dbIDCol":"iGameModeID",
-                        "dbNameCol":"strGameModeName",
-                        "profileElemID":"idMostSubGameMode"
-                    }
-            }
-            
-            // I think looping and having so many calls causes this error sometimes:
-            // Need to fix > RuntimeError: fewer placeholder () than values (3) for app.py function getUserMostSubmittedX that happens sometimes due to timeout(?)
-            // I will perform the loop within the app.py function and see if the timeout does not occur for the above error
-            //      app.py: 
-            //          ERROR > RuntimeError: fewer placeholder () than values (3)
-            //          ERROR LINE > rows = db.execute("SELECT count(iSubmissionID) as 'subCnt' FROM tblSubmissions WHERE iUserID = ?", userID)
-            //          WOW SOLUTION > WHERE iUserID = ? AND iUserID = ?", userID, userID) // IF CANT EVEN RECOGNIZE 1 placeholder, FORCE 2
-            //      NEVER MIND, IT STILL BREACKS SOMETIMES> I'M GOING CRAZY
-            for (const key of Object.keys(dictProfileFields))
-            {
-                getUserMostSubmittedX(dictProfileFields[key]);            
-            }
-            */
-
-
             // get submissions by the current user
             search("profile");
         }
@@ -2087,7 +2199,7 @@ $( document ).ready(function() {
         }
     }
     document.getElementById("search_params").value = "";
-    // /load default submissions
+    // /load submissions
 
     // load comment section
     /*

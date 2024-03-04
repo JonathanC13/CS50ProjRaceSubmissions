@@ -328,7 +328,7 @@ def nav_login_JS():
 
 
 """
-Process Login operation.
+Process the Login operation to validate the user's log in.
 """
 @app.route("/login_SQL", methods=["POST"])
 def login_SQL():
@@ -358,7 +358,7 @@ def login_SQL():
 
 
 """
-Process Logout operation.
+Process the Logout operation to log the current user out.
 """
 @app.route("/logout")
 def logout():
@@ -391,7 +391,7 @@ def nav_register_JS():
 
 
 """
-Process registration operation.
+Process the registration operation to register a new user to the system.
 """
 @app.route("/validate_registration", methods=["POST"])
 def validate_registration():
@@ -476,7 +476,7 @@ def inputSuggestions():
     
 
 """
-Process submission submit operation.
+Process the submit operation to add a submission to the system.
 """
 @app.route("/submit_record", methods=["POST"])
 def submit_record():
@@ -601,7 +601,7 @@ def submit_record():
     
 
 """
-Process Delete submission operation.
+Process the Delete submission operation to remove the submission from the system.
 """
 @app.route("/deleteSubmission", methods=["POST"])
 def deleteSubmission():
@@ -920,7 +920,7 @@ if (updateSection == "profile_pic"):
 
 
 """
-Process update Profile picture operation.
+Process the update Profile picture operation to change the user's profile picture source.
 """
 @app.route("/updateProfilePic", methods=["GET", "POST"])
 def updateProfilePic():
@@ -1020,7 +1020,7 @@ def updateProfilePic():
 
 
 """
-Process update Profile's display name and password.
+Process the update Profile's display name and password to update the target fields.
 """
 @app.route("/update_user_settings_initiate", methods=["POST"])
 def update_user_settings_initiate():
