@@ -1,3 +1,15 @@
+/*
+Instructions to create the database and tables while also populating the tables.
+
+// open or create db.
+sqlite3 raceSubmissions.db
+
+// Execute the queries within the .sql file on the database and then output to a text file.
+$ cat ./sqlFolder/sql_init_tables.sql | sqlite3 raceSubmissions.db > output.txt 
+
+*/
+
+
 CREATE TABLE tblUsers (
     iUserID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     strJoinDateEST INTEGER NOT NULL,
