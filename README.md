@@ -23,11 +23,9 @@ My raceSubmissions database, this can be deleted and start anew by viewing ./sql
 ###### testCases.txt
 Contains the test cases conducted on the web pages.
 
-
 ##### Folder /sqlFolder
 ###### sql_init_tables.sql
 Contains the instructions to create the database and tables while also populating the tables with initial data.
-
 
 ##### Folder /templates
 ###### layout.html
@@ -85,15 +83,12 @@ This template contains the elements for updating the profile's information.
 - Image: Profile's picture
 - Input field: For image file for new image
 - Button: Update profile picture
-
 - Input field: Profile's display name
 - Button: Update display name
-
 - Input field: Current Password
 - Input field: New Password
 - Input field: Confirm new Password
 - Button: Update password
-
 
 ##### Folder /static
 ###### js.js
@@ -107,5 +102,3 @@ Contains images used for the web pages.
 
 ###### Folder /userProfilePics
 Contains images used for users' profile pictures.
-
-
