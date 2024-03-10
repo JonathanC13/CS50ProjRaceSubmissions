@@ -13,8 +13,8 @@ The skills that may or may not have been improved, assuming that I even had a mi
 1. Ensure you have VScode installed.
 2. Ensure you have Flask installed.
 3. **git clone https://github.com/JonathanC13/CS50ProjRaceSubmissions.git**
-4. If starting fresh database, delete raceSubmissions.db and then see **Folder /sqlFolder/sql_init_tables.sql**
-5. Delete Folder /flask_session
+4. If starting fresh database, delete raceSubmissions.db and then see Folder **/sqlFolder/sql_init_tables.sql**
+5. Delete Folder **/flask_session**
 6. run command: **Flask run**
    - If missing modules:
         - Install them one by one as errors occur, i.e.:
