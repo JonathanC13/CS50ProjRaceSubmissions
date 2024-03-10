@@ -9,6 +9,24 @@ Truthfully, I am of the opinion that I am not a very creative person, an ideas m
 
 The skills that may or may not have been improved, assuming that I even had a minuscule amount of understanding to begin with, are JavaScript and applying the method of Asynchronous JavaScript and XML, AJAX, on some sections of the web pages in an attempt to minimize the number of times the page reloads. At least I put some time behind the wheel, even if it was only mere minutes or a few hours each day. This project definitely took longer than it should have considering the scope of it.
 
+#### Install instructions
+1. Ensure you have VScode installed.
+2. Ensure you have Flask installed.
+3. **git clone https://github.com/JonathanC13/CS50ProjRaceSubmissions.git**
+4. If starting fresh database, delete raceSubmissions.db and then see **Folder /sqlFolder/sql_init_tables.sql**
+5. Delete Folder /flask_session
+6. run command: **Flask run**
+   - If missing modules:
+        - Install them one by one as errors occur, i.e.:
+        - pip/pip3 install pillow
+        - pip/pip3 install cs50
+        - pip/pip3 install flask_session
+        - pip/pip3 install pytz
+        - pip/pip3 install requests
+7. Finally, with all modules installed, run: **Flask run** again
+8. Hopefully the server will start and you will be able to see the web page: 
+    - e.g. * Running on http://127.0.0.1:5000
+
 #### Files' purposes
 ##### Folder /Root
 ###### app.py
