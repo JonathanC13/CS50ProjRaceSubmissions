@@ -1476,12 +1476,17 @@ function deleteSubmissionInitiate(mode, user_id, owner, submission_id) {
             }
             else
             {   
+                if (getPageMode() == "profile") {
+                    getUserProfileStats();
+                }
+
                 search(mode);
 
                 topFunction();
 
                 alert(response["message"]);
             }
+
         }).fail(function(response) {
             alert('Failure, dev has low IQ.');
     });
