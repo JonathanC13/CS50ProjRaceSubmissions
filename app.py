@@ -459,8 +459,8 @@ def inputSuggestions():
         suggestionType = data["suggestionType"]
 
         if (suggestionType == "search"):
-            sqlQuery = "SELECT " + column + " FROM :table a INNER JOIN tblSubmissions b ON b.:relCol = a.:relCol GROUP BY b.:relCol;"
-            rows = db.execute(sqlQuery,table = table, relCol = relCol)
+            sqlQuery = "SELECT " + column + " FROM :tb a INNER JOIN tblSubmissions b ON b.:rC = a.:rC GROUP BY b.:rC;"
+            rows = db.execute(sqlQuery,tb = table, rC = relCol)
 
         elif (suggestionType == "submit"):
             sqlQuery = "SELECT * FROM " + table + " WHERE " + column + " LIKE ?"
