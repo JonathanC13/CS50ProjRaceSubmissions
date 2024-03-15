@@ -1285,6 +1285,53 @@ async function inputSuggestionsListener(evt) {
 
 
 /*
+Datalist didn't need events, just load the items
+Params:
+    > Which field is active
+    > the db table to search 
+    > column name that contains the suggestion string
+    > relCol for the relational column
+    > suggestion type for if "Submit" or "Search" suggestions
+    > current value in the input field.
+Return:
+    > N/A
+*/
+function inputSuggestionsLoad(searchField, dbTable, dbColName, dbRelCol, suggestionType, userSearchTerm) {
+    
+    const obj = {table: dbTable, column: dbColName, relCol: dbRelCol, userSearch: userSearchTerm, suggestionType: suggestionType};
+    const myJSON = JSON.stringify(obj);
+    //console.log(myJSON);
+
+    $.ajax({
+        url: "/inputSuggestions",
+        type: "POST",
+        dataType: 'json',
+        contentType: 'application/json',
+        data: myJSON
+    }).done(function(response) {
+        let suggestions = response;
+        //console.log(suggestions);
+        let html = '';
+        //html += '<option value="existing">';
+
+        for (let id in suggestions) {
+
+            let optionVal = suggestions[id][dbColName].replace('<', '&lt;').replace('&', '&amp;');
+            // <option value="game">
+            html += '<option value="' + optionVal + '">';
+        }
+        //console.log(html);
+        let idList = '#list_' + searchField;
+        //console.log(idList);
+        document.querySelector(idList).innerHTML = html;
+    }).fail(function(response) {
+        alert('Failure, dev has low IQ.');
+    });
+    
+}
+
+
+/*
 Starting point to search by a the value of a clicked section of a submission. i.e. Clicked a game "F1 22" and it will populate the submission section with all submissions with game "F1 22".
 Params:
     > String curr_page_type: The current page that the submission section is on.
@@ -2157,15 +2204,16 @@ $( document ).ready(function() {
             {
                 continue;
             }
-
-            arrSearchVars[i].addEventListener('focus', inputSuggestionsListener);
+            inputSuggestionsLoad(key, dictSearchFields[key]["table"], dictSearchFields[key]["dbColName"], dictSearchFields[key]["dbRelCol"], dictSearchFields[key]["type"], '');
+            /*
+            arrSearchVars[i].addEventListener('click', inputSuggestionsListener);
             arrSearchVars[i].addEventListener('input', inputSuggestionsListener);
             arrSearchVars[i].currSearchField = key;
             arrSearchVars[i].currDbTable = dictSearchFields[key]["table"];
             arrSearchVars[i].currDBColName = dictSearchFields[key]["dbColName"];
             arrSearchVars[i].currDbRelCol = dictSearchFields[key]["dbRelCol"];
             arrSearchVars[i].currSuggestionType = dictSearchFields[key]["type"];
-
+            */
             i ++;
         }
     }
