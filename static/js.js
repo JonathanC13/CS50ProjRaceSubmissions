@@ -66,7 +66,7 @@ function register() {
         msg_register.textContent = "Please confirm the password!";
         document.getElementById("reg_password_again").focus;
     }
-    else if(data_password == data_password_again)
+    else if(data_password != data_password_again)
     {
         msg_register.textContent = "Passwords do not match!";
         document.getElementById("reg_password_again").focus;
