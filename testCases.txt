@@ -121,7 +121,7 @@
 > Without any entered values, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a game!"
     > Pass
 
-> Click on the "* Game" input field once, a dropdown icon will appear with the input field on the right. Click the input field again, it will display all suggestions based on default values and previous submissions.
+> Click on the "* Game" input field once, it will display all suggestions based on default values and previous submissions.
     > Pass
 
 > Referencing a game suggesstion from the previous test case, begin entering the value and the suggestions will adjust. E.g. "F1" suggests "F1 22"
@@ -136,7 +136,7 @@
 > With a value within the "* Game" input field and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a platform!"
     > Pass
 
-> Click on the "* Platform" input field once, a dropdown icon will appear with the input field on the right. Click the input field again, it will display all suggestions based on default values and previous submissions.
+> Click on the "* Platform" input field once, it will display all suggestions based on default values and previous submissions.
     > Pass
 
 > Referencing a platform suggesstion from the previous test case, begin entering the value and the suggestions will adjust. E.g. "Pla" suggests "Playstation 3", "Playstation 4", and "Playstation 5". 
@@ -145,7 +145,7 @@
 > With a value within the "* Game" and "* Platform" input fields and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a vehicle!"
     > Pass
 
-> Click on the "* Vehicle" input field once, a dropdown icon will appear with the input field on the right. Click the input field again, it will display all suggestions based on default values and previous submissions.
+> Click on the "* Vehicle" input field once, it will display all suggestions based on default values and previous submissions.
     > Pass
 
 > Referencing a vehicle suggesstion from the previous test case, begin entering the value and the suggestions will adjust. E.g. "Mc" suggests "McLaren - MCL60". 
@@ -154,7 +154,7 @@
 > With a value within the "* Game", "* Platform" and "* Vehicle" input fields and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a track!"
     > Pass
 
-> Click on the "* Track" input field once, a dropdown icon will appear with the input field on the right. Click the input field again, it will display all suggestions based on default values and previous submissions.
+> Click on the "* Track" input field once, it will display all suggestions based on default values and previous submissions.
     > Pass
 
 > Referencing a track suggesstion from the previous test case, begin entering the value and the suggestions will adjust. E.g. "Baku" suggests "Baku City Circuit (Azerbaijan)". 
@@ -163,7 +163,7 @@
 > With a value within the "* Game", "* Platform", "* Vehicle", and "* Track" input fields and without any other values in the other fields, at the bottom of the submission form click submit. It will not submit and display the message "Please enter a gamemode!"
     > Pass
 
-> Click on the "* Game mode" input field once, a dropdown icon will appear with the input field on the right. Click the input field again, it will display all suggestions based on default values and previous submissions.
+> Click on the "* Game mode" input field once, it will display all suggestions based on default values and previous submissions.
     > Pass
 
 > Referencing a game mode suggesstion from the previous test case, begin entering the value and the suggestions will adjust. E.g. "Ran" suggests "Ranked multiplayer". 
@@ -619,7 +619,7 @@
 > When the URL is http://127.0.0.1:5000/submissions, refresh the page and it will refresh the page and the search paramters container should be displayed.
     > Pass
 
-> In the search parameter container, click on the "Game" field once so that the drop down icon appears on the right in the input field. Click the field once more and it will load "Game" suggestions, which are all the games currently submitted.
+> In the search parameter container, click on the "Game" and it will load "Game" suggestions, which are all the games currently submitted.
     > Pass
 
 > Referencing a game suggestion from the previous test case, in the search parameter container begin to enter the value in the "Game" field and the suggestions will adjust to the current value. E.g. "Shi" or "ift" will display the suggestion "Shift 2".
@@ -628,7 +628,7 @@
 > In the search parameter container enter a value in the "Game" field and on click "Search" button. Ensure the "Search results" return submissions where the "Game" is LIKE what was entered. %Dirt%.
     > Pass
 
-> In the search parameter container, click on the "Platform" field once so that the drop down icon appears on the right in the input field. Click the field once more and it will load "Platform" suggestions, which are all the platforms currently submitted.
+> In the search parameter container, click on the "Platform" field and it will load "Platform" suggestions, which are all the platforms currently submitted.
     > Pass
 
 > Referencing a platform suggestion from the previous test case, in the search parameter container begin to enter the value in the "Platform" field and the suggestions will adjust to the current value. E.g. "Xb" will display the suggestion "Xbox Series X".
@@ -637,7 +637,7 @@
 > In the search parameter container enter a value in the "Platform" field and on click "Search" button. Ensure the "Search results" return submissions where the "Platform" is LIKE what was entered. %Xbox%.
     > Pass
 
-> In the search parameter container, click on the "Display name" field once so that the drop down icon appears on the right in the input field. Click the field once more and it will load "Display name" suggestions, which are all the display names currently submitted.
+> In the search parameter container, click on the "Display name" field and it will load "Display name" suggestions, which are all the display names currently submitted.
     > Pass
 
 > Referencing a display name suggestion from the previous test case, in the search parameter container begin to enter the value in the "Platform" field and the suggestions will adjust to the current value. E.g. "te" will display the suggestions "test", "test1".
@@ -646,7 +646,7 @@
 > In the search parameter container enter a value in the "Display name" field and on click "Search" button. Ensure the "Search results" return submissions where the "Display name" is LIKE what was entered. %test%.
     > Pass
 
-> In the search parameter container, click on the "Vehicle" field once so that the drop down icon appears on the right in the input field. Click the field once more and it will load "Vehicle" suggestions, which are all the vehicles currently submitted.
+> In the search parameter container, click on the "Vehicle" field and it will load "Vehicle" suggestions, which are all the vehicles currently submitted.
     > Pass
 
 > Referencing a vehicle suggestion from the previous test case, in the search parameter container begin to enter the value in the "Vehicle" field and the suggestions will adjust to the current value. E.g. "toy" will display the suggestions "1992 Toyota Celica GT-Four WRC".
@@ -655,7 +655,7 @@
 > In the search parameter container enter a value in the "Vehicle" field and on click "Search" button. Ensure the "Search results" return submissions where the "Vehicle" is LIKE what was entered. %mazda%.
     > Pass
 
-> In the search parameter container, click on the "Track" field once so that the drop down icon appears on the right in the input field. Click the field once more and it will load "Track" suggestions, which are all the tracks currently submitted.
+> In the search parameter container, click on the "Track" field and it will load "Track" suggestions, which are all the tracks currently submitted.
     > Pass
 
 > Referencing a track suggestion from the previous test case, in the search parameter container begin to enter the value in the "Track" field and the suggestions will adjust to the current value. E.g. "hun" will display the suggestions "Hungaroring (Hungary)".
@@ -664,7 +664,7 @@
 > In the search parameter container enter a value in the "Track" field and on click "Search" button. Ensure the "Search results" return submissions where the "Track" is LIKE what was entered. %Hungary%.
     > Pass
 
-> In the search parameter container, click on the "Game mode" field once so that the drop down icon appears on the right in the input field. Click the field once more and it will load "Game mode" suggestions, which are all the game modes currently submitted.
+> In the search parameter container, click on the "Game mode" field and it will load "Game mode" suggestions, which are all the game modes currently submitted.
     > Pass
 
 > Referencing a game mode suggestion from the previous test case, in the search parameter container begin to enter the value in the "Game mode" field and the suggestions will adjust to the current value. E.g. "ral" will display the suggestions "Rallycross".
