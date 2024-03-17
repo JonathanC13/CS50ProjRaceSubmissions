@@ -1,5 +1,6 @@
 # Race Submissions
-#### Video Demo:  <URL HERE> TODO
+#### Video Demo:  https://youtu.be/qtV3cjUwEb4
+- Over 3 minutes due to I did not plan on submitting it and it is way past the end of 2023.
 #### Description:
 https://cs50.harvard.edu/x/2023/project/
 
