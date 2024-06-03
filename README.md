@@ -13,10 +13,11 @@ The skills that may or may not have been improved, assuming that I even had a mi
 #### Install instructions
 1. Ensure you have VScode installed.
 2. Ensure you have Flask installed.
-3. **git clone https://github.com/JonathanC13/CS50ProjRaceSubmissions.git**
-4. If starting fresh database, delete raceSubmissions.db and then see Folder **/sqlFolder/sql_init_tables.sql**
-5. Delete Folder **/flask_session**
-6. run command: **Flask run**
+  https://flask.palletsprojects.com/en/3.0.x/installation/
+4. **git clone https://github.com/JonathanC13/CS50ProjRaceSubmissions.git**
+5. If starting fresh database, delete raceSubmissions.db and then see Folder **/sqlFolder/sql_init_tables.sql**
+6. Delete Folder **/flask_session**
+7. Within the folder for CS50ProjRaceSubmissions, run command: **Flask run**
    - If missing modules:
         - Install them one by one as errors occur, i.e.:
         - pip/pip3 install pillow
@@ -24,8 +25,8 @@ The skills that may or may not have been improved, assuming that I even had a mi
         - pip/pip3 install flask_session
         - pip/pip3 install pytz
         - pip/pip3 install requests
-7. Finally, with all modules installed, run: **Flask run** again
-8. Hopefully the server will start and you will be able to see the web page: 
+8. Finally, with all modules installed, run: **Flask run** again
+9. Hopefully the server will start and you will be able to see the web page: 
     - e.g. * Running on http://127.0.0.1:5000
 
 #### Files' purposes
